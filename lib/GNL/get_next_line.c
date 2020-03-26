@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: judecuyp <judecuyp@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 19:08:16 by judecuyp          #+#    #+#             */
-/*   Updated: 2020/02/05 13:06:27 by judecuyp         ###   ########.fr       */
+/*   Updated: 2020/03/14 22:18:08 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static int		ft_i_dup(char *str)
 	return (i);
 }
 
-static int		gnl_ret(char *tab[OPEN_MAX + 1], int fd, char **line)
+static int		gnl_ret(char *tab[1025], int fd, char **line)
 {
 	int		i;
 	char	*tmp;
@@ -66,13 +66,13 @@ static int		gnl_ret(char *tab[OPEN_MAX + 1], int fd, char **line)
 
 int				get_next_line(int fd, char **line)
 {
-	static char		*tab[OPEN_MAX + 1];
+	static char		*tab[1025];
 	char			reader[BUFFER_SIZE + 1];
 	char			*tmp;
 	int				ret;
 	int				test;
 
-	if (fd < 0 || fd > OPEN_MAX || BUFFER_SIZE < 1 || !line)
+	if (fd < 0 || fd > 1025 || BUFFER_SIZE < 1 || !line)
 		return (-1);
 	if ((ret = 1) && (!tab[fd] || (tab[fd] && !ft_strchr_g(tab[fd], '\n'))))
 		while ((ret = read(fd, reader, BUFFER_SIZE)) > 0)

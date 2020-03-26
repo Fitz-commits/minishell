@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 18:14:04 by judecuyp          #+#    #+#             */
-/*   Updated: 2020/03/14 02:34:28 by marvin           ###   ########.fr       */
+/*   Updated: 2020/03/14 22:17:20 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,15 @@ size_t		ft_strlen_g(const char *s)
 	return (i);
 }
 
-char		*ft_strchr_g(const char *s, int c)
+int			ft_strchr_g(const char *s, int c)
 {
-	int i;
-
-	i = 0;
 	while (*s != c)
 	{
 		if (*s == 0)
 			return (0);
 		s++;
 	}
-	return ((char *)s);
+	return (1);
 }
 
 char		*ft_substr_g(char const *s, unsigned int start, size_t len)

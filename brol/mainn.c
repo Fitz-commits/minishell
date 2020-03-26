@@ -3,7 +3,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "mylib/includes/libft.h"
+#include "lib/includes/libft.h"
+#include "lib/includes/get_next_line.h"
 #define BUFFER_SIZE 100
 
 int		tablen(char **tab)
