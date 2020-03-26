@@ -1,38 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*   ft_strnjoin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/03/26 17:17:27 by marvin            #+#    #+#             */
-/*   Updated: 2020/03/26 17:17:27 by marvin           ###   ########.fr       */
+/*   Created: 2020/03/26 23:22:13 by marvin            #+#    #+#             */
+/*   Updated: 2020/03/26 23:22:13 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int		ft_echo(t_mshl *m)
+char	*ft_strnjoin(char const *s1, char const *s2, int start, size_t len)
 {
-	int		i;
-	short	flag;
+	char	*str;
+	char	*ptr_str;
+	size_t	i;
 
-	i = 1;
-	flag = 0;
-	if (m->nb_args > 1 && m->args[1])
+	i = 0;
+	if (!s2)
+		return (NULL);
+	if (!(str = (char *)malloc((ft_ilen(s1) + len + 1))))
+		return (NULL);
+	ptr_str = str;
+	if (s1)
+		while (*s1)
+			*str++ = *s1++;
+	while (i < len && s2[start + i])
 	{
-		while (m->args[i] && !ft_strcmp(m->args[i], "-n"))
-			i++;
-		flag = (i > 1) ? 1 : 0;
-		while (m->args[i])
-		{
-			ft_putstr_fd(m->args[i], 1);
-			if (i < m->nb_args - 1)
-				ft_putchar_fd(' ', 1);
-			i++;
-		}
+		*str++ = s2[start + i];
+		i++;
 	}
-	if (!flag)
-		ft_putchar_fd('\n', 1);
-	return (1);
+	*str = '\0';
+	return (ptr_str);
 }

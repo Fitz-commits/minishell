@@ -13,7 +13,8 @@
 NAME = Minishell
 HEADER_PATH = ./includes
 LIB_PATH = ./lib/libft.a
-SRCS = srcs/main.c srcs/ft_free.c srcs/utils.c srcs/ft_exit.c srcs/ft_echo.c
+SRCS = srcs/main.c srcs/ft_free.c srcs/utils.c srcs/ft_exit.c srcs/ft_echo.c \
+	srcs/ft_splitq.c srcs/ft_append.c
 OBJS = $(SRCS:.c=.o)
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror

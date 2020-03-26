@@ -1,38 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*   ft_append.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/03/26 17:17:27 by marvin            #+#    #+#             */
-/*   Updated: 2020/03/26 17:17:27 by marvin           ###   ########.fr       */
+/*   Created: 2020/03/26 20:06:09 by marvin            #+#    #+#             */
+/*   Updated: 2020/03/26 20:06:09 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		ft_echo(t_mshl *m)
+char	**ft_append(char **tab, char *str)
 {
+	char	**new_tab;
 	int		i;
-	short	flag;
 
-	i = 1;
-	flag = 0;
-	if (m->nb_args > 1 && m->args[1])
-	{
-		while (m->args[i] && !ft_strcmp(m->args[i], "-n"))
-			i++;
-		flag = (i > 1) ? 1 : 0;
-		while (m->args[i])
+	i = tablen(tab);
+	if (str)
+		i += 1;
+	if (!(new_tab = malloc((i + 1) * sizeof(char *))))
+		return (NULL);
+	i = 0;
+	if (tab)
+		while (tab[i])
 		{
-			ft_putstr_fd(m->args[i], 1);
-			if (i < m->nb_args - 1)
-				ft_putchar_fd(' ', 1);
+			new_tab[i] = ft_strdup(tab[i]);
 			i++;
 		}
-	}
-	if (!flag)
-		ft_putchar_fd('\n', 1);
-	return (1);
+	if (str)
+	{
+		new_tab[i] = ft_strdup(str);
+		i++;
+	}	
+	new_tab[i] = NULL;
+	return (new_tab);
 }
