@@ -12,6 +12,13 @@
 
 #include "minishell.h"
 
+/*
+**	Skip all the first "-n"
+**	if we have -n turn the flag at 1
+**  putstr all the args
+**  if the flag isn't 1 write \n
+*/
+
 int		ft_echo(t_mshl *m)
 {
 	int		i;
@@ -19,7 +26,7 @@ int		ft_echo(t_mshl *m)
 
 	i = 1;
 	flag = 0;
-	if (m->nb_args > 1 && m->args[1])
+	if (m->nb_args > 1 && m->args[1]) 
 	{
 		while (m->args[i] && !ft_strcmp(m->args[i], "-n"))
 			i++;

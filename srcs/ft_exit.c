@@ -15,6 +15,6 @@
 int		ft_exit(t_mshl *m, int ret)
 {
 	ft_putendl_fd("Free struct", 1);
-	free_tab(m->args, 1);
+	free_tab(m->args, 1, 1);
 	return (ret);
 }

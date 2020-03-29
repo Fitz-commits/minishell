@@ -26,12 +26,12 @@ int		get_args(t_mshl *m)
 int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige vers la fonction adequate
 {
 	if (!m->nb_args)
-		return (2);
+		return (2); 		//code a modifier si pas arguments juste rien faire
 	else if (!ft_strcmp(m->args[0], "echo"))
 		return (ft_echo(m));
 	else if (!ft_strcmp(m->args[0], "exit"))
-		return(0);
-	return (1);
+		return(0); 			//code a modifier ici il retourne 0 pour exit
+	return (1); 			//a modifier juste pour return pour l'instant
 }
 
 void	ft_init(t_mshl *m)  //initialise la structure

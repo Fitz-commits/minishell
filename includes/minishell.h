@@ -15,7 +15,7 @@ typedef struct	s_mshl
 }				t_mshl;
 char				**free_tabs(char **tab);
 int				free_str(char **str, int ret);
-int				free_tab(char **tab, int ret);
+int				free_tab(char **tab, int ret, char code);
 int				ft_exit(t_mshl *m, int ret);
 int				tablen(char **tab);
 int				ft_echo(t_mshl *m);

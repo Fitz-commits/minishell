@@ -26,12 +26,12 @@ char	**ft_append(char **tab, char *str)
 	if (tab)
 		while (tab[i])
 		{
-			new_tab[i] = ft_strdup(tab[i]);
+			new_tab[i] = tab[i];
 			i++;
 		}
 	if (str)
 	{
-		new_tab[i] = ft_strdup(str);
+		new_tab[i] = str;
 		i++;
 	}	
 	new_tab[i] = NULL;
