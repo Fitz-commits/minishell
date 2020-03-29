@@ -3,12 +3,12 @@
 int	until_dquotes(char *line)
 {
 	int i;
-	
+
 	i = 0;
 	while(line[i])
 	{
-		if (i == '=')
-			return (i + 1);
+		if (line[i] == '=')
+			return (i);
 		i++;
 	}
 	return (-1); // strerror env baddly config tbh
@@ -18,12 +18,15 @@ int	until_dquotes(char *line)
 int	find_env(char **env, char *key)
 {
 	int i;
+	int dq;
 	i = 0;
-	
+
 	while(env[i])
 	{
-		if (ft_strncmp(key, env[i], until_dquotes(env[i])))
+		dq = until_dquotes(env[i]);
+		if (!ft_strncmp(key, env[i], dq))
 			return (i);
+		i++;
 	}
 	return (-1);
 }
@@ -35,7 +38,7 @@ char	*pair_value_key(char *value, char *key)
 	int j;
 	int size;
 	char *ret;
-	
+
 	i = 0;
 	j = 0;
 	size = ft_strlen(value) + ft_strlen(key) + 2;
@@ -62,16 +65,30 @@ char	*getvar(char **env, char *key)
 		return (&env[nline][until_dquotes(env[nline]) + 1]);
 }
 // export seems okay need testing
-char **export(t_mshl *m, char *key, char *value)
+int	ft_export(t_mshl *m)
 {
 	int temp;
-	if (find_env(m->cenv, key) == -1)
-		m->cenv = ft_append(m->cenv, pair_value_key(value,key)); // append chelou
-	else
-	{	temp = find_env(m->cenv, key);
-		free(m->cenv[temp]);
-		m->cenv[temp] = pair_value_key(value,key);
+	int i;
+	char *tempc;
+
+	i = 1;
+	while (m->args[i])
+	{
+		if (find_env(m->cenv, m->args[i]) == -1)
+		{
+			if (!(tempc = ft_strdup(m->args[i])))
+				return (0);
+			m->cenv = ft_append(m->cenv, tempc); // append chelou add maloc prot
+		}
+		else
+		{	
+			temp = find_env(m->cenv, m->args[i]);
+			free(m->cenv[temp]);
+			if(!(m->cenv[temp] = ft_strdup(m->args[i])))
+				return (0);
+		}
+		i++;
 	}
-	return (m->cenv);
+	return (1);
 }
 

@@ -26,7 +26,7 @@ int     		until_dquotes(char *line);
 int			find_env(char **env, char *key);
 char			*pair_value_key(char *value, char *key);
 char    		*getvar(char **env, char *key);
-char 			**export(t_mshl *m, char *key, char *value);
-void			env(t_mshl *m);
+int 			ft_export(t_mshl *m);
+int			env(t_mshl *m);
 char                    **ft_getenv(char **env);
 #endif

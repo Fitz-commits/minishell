@@ -29,6 +29,10 @@ int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige ver
 		return (2); 		//code a modifier si pas arguments juste rien faire
 	else if (!ft_strcmp(m->args[0], "echo"))
 		return (ft_echo(m));
+	else if (!ft_strcmp(m->args[0], "env"))
+		return (env(m));
+	else if (!ft_strcmp(m->args[0], "export"))
+		return (ft_export(m));
 	else if (!ft_strcmp(m->args[0], "exit"))
 		return(0); 			//code a modifier ici il retourne 0 pour exit
 	return (1); 			//a modifier juste pour return pour l'instant
@@ -40,13 +44,16 @@ void	ft_init(t_mshl *m)  //initialise la structure
 	m->nb_args = 0;
 }
 
-int		main()
+int		main(int ac, char **av, char **envp)
 {
 	t_mshl	m;		//Struct globale pour l'instant
 	int		test;
+	(void)av;
+	(void)ac;
 
 	m.prompt = "Minishell$> ";
 	test = 1;
+	m.cenv = ft_getenv(envp);
 	ft_init(&m);
 	while (test)
 	{
