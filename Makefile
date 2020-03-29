@@ -13,15 +13,16 @@
 NAME = Minishell
 HEADER_PATH = ./includes
 LIB_PATH = ./lib/libft.a
+LIB_REPO_PATH = ./lib
 SRCS = srcs/main.c srcs/ft_free.c srcs/utils.c srcs/ft_exit.c srcs/ft_echo.c \
 	srcs/ft_splitq.c srcs/ft_append.c srcs/ft_getenv.c srcs/free_tabs.c \
-	srcs/env.c srcs/ft_getenv.c srcs/export.c
+	srcs/env.c srcs/export.c
 OBJS = $(SRCS:.c=.o)
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 RM = rm -rf
 
-all: $(NAME)
+all: libft_make $(NAME)
 
 $(NAME):	$(OBJS)
 			@echo "Compiling $@"
@@ -41,8 +42,14 @@ fclean:	clean
 
 re: fclean all
 
+libft_make:
+	make -C $(LIB_REPO_PATH) all
+
+
 rec: fclean all
 	@echo "Removing .o"
 	@$(RM) $(OBJS)
+	@echo "Removing lib .o"
+	@make -C $(LIB_REPO_PATH) clean
 
 .PHONY: all clean fclean re rec
