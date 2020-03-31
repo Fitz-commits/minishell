@@ -4,6 +4,9 @@
 # include "../lib/includes/libft.h"
 # include "../lib/includes/get_next_line.h"
 # include <fcntl.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <sys/wait.h>
 # include <stdio.h>
 
 typedef struct	s_mshl
@@ -29,4 +32,7 @@ char    		*getvar(char **env, char *key);
 int 			ft_export(t_mshl *m);
 int			env(t_mshl *m);
 char                    **ft_getenv(char **env);
+//EXEC
+char			*path_join(char *path, char *arg);
+int			launch_exec(t_mshl *m, char *path);
 #endif

@@ -34,7 +34,9 @@ int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige ver
 	else if (!ft_strcmp(m->args[0], "export"))
 		return (ft_export(m));
 	else if (!ft_strcmp(m->args[0], "exit"))
-		return(0); 			//code a modifier ici il retourne 0 pour exit
+		return (0);
+	else
+		return (launch_exec(m, getvar(m->cenv, "PATH")));
 	return (1); 			//a modifier juste pour return pour l'instant
 }
 
@@ -53,8 +55,8 @@ int		main(int ac, char **av, char **envp)
 
 	m.prompt = "Minishell$> ";
 	test = 1;
-	m.cenv = ft_getenv(envp);
 	ft_init(&m);
+	m.cenv = ft_getenv(envp);
 	while (test)
 	{
 		write(1, m.prompt, 12);
