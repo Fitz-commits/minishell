@@ -4,6 +4,7 @@
 # include "../lib/includes/libft.h"
 # include "../lib/includes/get_next_line.h"
 # include <fcntl.h>
+# include <errno.h>
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
@@ -35,4 +36,6 @@ char                    **ft_getenv(char **env);
 //EXEC
 char			*path_join(char *path, char *arg);
 int			launch_exec(t_mshl *m, char *path);
+//CD
+int			ft_cd(t_mshl *m);
 #endif
