@@ -38,4 +38,6 @@ char			*path_join(char *path, char *arg);
 int			launch_exec(t_mshl *m, char *path);
 //CD
 int			ft_cd(t_mshl *m);
+char		**parse_cli(char *line);
+void		print_tab(char **tab);
 #endif
