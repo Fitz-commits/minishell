@@ -23,3 +23,11 @@ int		tablen(char **tab)
 		i++;
 	return (i);
 }
+
+void print_tab(char **tab)
+{
+	int i;
+	i = 0;
+	while (tab[i])
+		ft_putendl_fd(tab[i++], 1);
+}

@@ -17,7 +17,7 @@ int		get_args(t_mshl *m)
 	char	*reader;
 
 	get_next_line(0, &reader);
-	if (!(m->args = ft_splitq(reader, ' ')))
+	if (!(m->args = parse_cli(reader)))
 		return (free_str(&reader, 1));  //recolter msg erreur
 	m->nb_args = tablen(m->args);
 	return (free_str(&reader, 1));
@@ -33,6 +33,8 @@ int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige ver
 		return (env(m));
 	else if (!ft_strcmp(m->args[0], "export"))
 		return (ft_export(m));
+	else if (!ft_strcmp(m->args[0], "cd"))
+		return (ft_cd(m));
 	else if (!ft_strcmp(m->args[0], "exit"))
 		return (0);
 	else
