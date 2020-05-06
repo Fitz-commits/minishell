@@ -22,9 +22,15 @@ int			set_quotes(int flag, char c)
 		return (2);
 	if (flag == 0 && c == '\'')
 		return (1);
-	if (flag == 1 && (c == '\'' || c == '"'))
+	if (flag == 1 && c == '\'')
 		return (0);
-	return (0);
+	if (flag == 2 && c == '"')
+		return (0);
+	if (flag == 0 && c == '\\')
+		return(3);
+	if (flag == 3)
+		return 0;
+	return (flag);
 }
 
 int			count_arg(char *line)
@@ -32,23 +38,24 @@ int			count_arg(char *line)
 	int flag;
 	int i;
 	int j;
+	int k;
 
 	flag = 0;
 	i = 0;
-	j = 1;
+	j = 0;
+	k = 0;
 	while (line[i])
 	{
-		if (line[i] == '\\' && flag != 1 && line[i + 1])
-			i += 2;
-		if (line[i] == '"' || line[i] == '\'')
-			flag = set_quotes(flag, line[i]);
-		if (!flag && is_delim(line[i]))
-			{
-				j += 1;
-				while (is_space(line[i]))
-					i++;
-			}
-		i += 1;
+		k = 0;
+		while (is_space(line[i]))
+			i++;
+		if (is_delim(line[i]))
+			j++ && i++;
+		while (line[k + i] && !(!(flag) && is_delim(line[k + i])))
+				flag = set_quotes(flag, line[k++ + i]);
+		if (k != 0)
+			j ++;
+		i += k;
 	}
 	return(j);
 }
@@ -65,42 +72,59 @@ int			count_arg(char *line)
 **
 **
 */
+char *alloc_sep(char c, int *i)
+{
+	char *ret;
+	if (!(ret = malloc(sizeof(char) * 2)))
+		return NULL;
+	ret[0] = c;
+	ret[1] = 0;
+	(*i) += 1;
+	return ret;
+}
+int		triming(char **line, char ***ret, int *flag, int *j)
+{
+	int k;
+	char *nline;
+	char **nret;
+	int i;
+
+	i = 0;
+	nret = *ret;
+	nline = *line;
+	while (nline[i])
+	{
+		k = 0;
+		while(is_space(nline[i]))
+			i += 1;
+		if (is_delim(nline[i]))
+			if (!(nret[(*j)++] = alloc_sep(nline[i], &i)))
+				return 0;
+		while (nline[k + i] && !(!(*flag) && is_delim(nline[k + i])))
+				*flag = set_quotes(*flag, nline[k++ + i]);
+		if (k != 0)
+			if (!(nret[(*j)++] = strndup(&nline[i], k)))
+				return (0);
+		i += k;
+	}
+	return 1;
+}
+
 char		**parse_cli(char *line)
 {
-	int i;
 	int j;
 	int flag;
-	int k;
 	char **ret;
 
 	if (!(ret = malloc(sizeof(char*) * (count_arg(line) + 1))))
 		return (NULL);
+	printf("%d\n", count_arg(line));
 	flag = 0;
 	j = 0;
-	i = 0;
-	while (line[i])
+	if ((triming(&line, &ret, &flag, &j) == 0))
 	{
-		while (is_space(line[i]))
-			i++;
-		if (is_delim(line[i]))
-			if(!(ret[j++] = ft_strndup(&line[i++], 1)))
-				return (NULL);
-		k = 0;
-		while (line[k + i] && !(!flag && is_delim(line[k + i])))
-		{
-			if (line[k + i] == '\\' && flag != 1 && line[k + i + 1])
-				{
-					k += 2;
-					continue;
-				}
-			if (line[i + k] == '"' || line[i + k] == '\'')
-				flag = set_quotes(flag, line[i + k]);
-			k++;
-		}
-		if (k != 0)
-			if (!(ret[j++] = ft_strndup(&line[i], k)))
-				return (NULL);
-		i += k;
+		free_tab(ret, 0, 1);
+		return (NULL);
 	}
 	ret[j] = 0;
 	return (ret);

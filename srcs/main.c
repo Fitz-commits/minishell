@@ -19,6 +19,7 @@ int		get_args(t_mshl *m)
 	get_next_line(0, &reader);
 	if (!(m->args = parse_cli(reader)))
 		return (free_str(&reader, 1));  //recolter msg erreur
+	print_tab(m->args);
 	m->nb_args = tablen(m->args);
 	return (free_str(&reader, 1));
 }
