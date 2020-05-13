@@ -5,6 +5,7 @@ int			is_space(char c)
 		return 1;
 	return 0;
 }
+
 int			is_delim(char c)
 {
 	if (c == ';' || c == '>' || c == '<' || is_space(c))
@@ -50,7 +51,10 @@ int			count_arg(char *line)
 		while (is_space(line[i]))
 			i++;
 		if (is_delim(line[i]))
-			j++ && i++;
+		{
+			j++;
+			i++;
+		}
 		while (line[k + i] && !(!(flag) && is_delim(line[k + i])))
 				flag = set_quotes(flag, line[k++ + i]);
 		if (k != 0)
@@ -82,6 +86,7 @@ char *alloc_sep(char c, int *i)
 	(*i) += 1;
 	return ret;
 }
+
 int		triming(char **line, char ***ret, int *flag, int *j)
 {
 	int k;

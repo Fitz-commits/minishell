@@ -73,7 +73,7 @@ char	**ft_quotes(int *i, char **tab, char *s, char c)
 			if (*i > 0 && s[*i - 1] == '\\')
 			{
 				if (!stnjf(&str_append, s, j, (*i - 1) - j))
-					return (0); //attention a free
+					return (NULL); //attention a free
 				j = *i;
 			}
 			else

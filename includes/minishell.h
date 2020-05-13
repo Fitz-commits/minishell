@@ -40,4 +40,6 @@ int			launch_exec(t_mshl *m, char *path);
 int			ft_cd(t_mshl *m);
 char		**parse_cli(char *line);
 void		print_tab(char **tab);
+//UNSET
+int			ft_unset(t_mshl *m);
 #endif

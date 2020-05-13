@@ -38,6 +38,8 @@ int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige ver
 		return (ft_cd(m));
 	else if (!ft_strcmp(m->args[0], "exit"))
 		return (0);
+	else if (!ft_strcmp(m->args[0], "unset"))
+		return (ft_unset(m));
 	else
 		return (launch_exec(m, getvar(m->cenv, "PATH")));
 	return (1); 			//a modifier juste pour return pour l'instant

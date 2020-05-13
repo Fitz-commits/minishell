@@ -16,7 +16,8 @@ LIB_PATH = ./lib/libft.a
 LIB_REPO_PATH = ./lib
 SRCS = srcs/main.c srcs/ft_free.c srcs/utils.c srcs/ft_exit.c srcs/ft_echo.c \
 	srcs/ft_splitq.c srcs/ft_append.c srcs/ft_getenv.c srcs/free_tabs.c \
-	srcs/env.c srcs/export.c srcs/launch_exec.c srcs/ft_cd.c srcs/parsing.c
+	srcs/env.c srcs/export.c srcs/launch_exec.c srcs/ft_cd.c srcs/parsing.c \
+	srcs/ft_unset.c
 OBJS = $(SRCS:.c=.o)
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
