@@ -45,7 +45,7 @@ char *env_expansion(char *line, t_mshl *m, int j)
     while (ret[i])
     {
         j = 0;
-        while (ret[i] != '$' && (i == 0 | ret[i - 1] != '\\'))
+        while (ret[i] != '$' && (i == 0 || ret[i - 1] != '\\'))
             i++;
         pos = i++;
         if (!ret[i] || ret[i] == ' ')
