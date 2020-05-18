@@ -44,6 +44,7 @@ char            *ft_strncpy(char *dest, const char *src, size_t n);
 char            *ft_strndup(const char *src, size_t n);
 char            *ft_strnjoin(char const *s1, char const *s2,
                 int start, size_t len);
+char            *ft_strcat(char *dest, const char *src);
 
 /*
 ** CHAR

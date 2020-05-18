@@ -19,14 +19,18 @@ int		get_args(t_mshl *m)
 	get_next_line(0, &reader);
 	if (!(m->args = parse_cli(reader)))
 		return (free_str(&reader, 1));  //recolter msg erreur
+	if (!(check_for_exp(m)))
+		return (free_str(&reader, 1));
+	check_for_qr(m);
 	print_tab(m->args);
 	m->nb_args = tablen(m->args);
+	
 	return (free_str(&reader, 1));
 }
 
 int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige vers la fonction adequate
 {
-	if (!m->nb_args)
+	if (!m->args || !m->args[0])
 		return (2); 		//code a modifier si pas arguments juste rien faire
 	else if (!ft_strcmp(m->args[0], "echo"))
 		return (ft_echo(m));

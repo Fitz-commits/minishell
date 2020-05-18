@@ -19,6 +19,10 @@ int			is_delim(char c)
 */
 int			set_quotes(int flag, char c)
 {
+	if (flag == 2 && c == '\\')
+		return (5);
+	if (flag == 5)
+		return (2);
 	if (flag == 0 && c == '"')
 		return (2);
 	if (flag == 0 && c == '\'')
@@ -131,6 +135,8 @@ char		**parse_cli(char *line)
 		free_tab(ret, 0, 1);
 		return (NULL);
 	}
+	if (flag != 0)
+		return free_tabs(ret);
 	ret[j] = 0;
 	return (ret);
 }

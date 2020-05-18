@@ -25,21 +25,27 @@ int				tablen(char **tab);
 int				ft_echo(t_mshl *m);
 char			**ft_append(char **tab, char *str);
 char			**ft_splitq(char *s, char c);
+//PARSING
+int				set_quotes(int flag, char c);
+int				check_for_exp(t_mshl *m);
+int				check_for_qr(t_mshl *m);
 //ENV
 int     		until_dquotes(char *line);
-int			find_env(char **env, char *key);
+int				find_env(char **env, char *key);
 char			*pair_value_key(char *value, char *key);
 char    		*getvar(char **env, char *key);
 int 			ft_export(t_mshl *m);
-int			env(t_mshl *m);
+int				env(t_mshl *m);
 char                    **ft_getenv(char **env);
 //EXEC
 char			*path_join(char *path, char *arg);
-int			launch_exec(t_mshl *m, char *path);
+int				launch_exec(t_mshl *m, char *path);
 //CD
-int			ft_cd(t_mshl *m);
-char		**parse_cli(char *line);
-void		print_tab(char **tab);
+int				ft_cd(t_mshl *m);
+char			**parse_cli(char *line);
+void			print_tab(char **tab);
 //UNSET
-int			ft_unset(t_mshl *m);
+int				ft_unset(t_mshl *m);
+//REDIRECTION
+char			*put_stdin(char *path);
 #endif
