@@ -53,7 +53,7 @@ void	ft_init(t_mshl *m)  //initialise la structure
 {
 	m->args = NULL;
 	m->nb_args = 0;
-	m->tstdout = 0;
+	m->tstdout = 1;
 }
 
 int		main(int ac, char **av, char **envp)
