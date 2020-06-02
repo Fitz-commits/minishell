@@ -18,6 +18,8 @@ typedef struct	s_mshl
 	char	**cenv;
 	int		nb_args;
 	int		tstdout;
+	int		tstin;
+	int		tstderr;
 }				t_mshl;
 char				**free_tabs(char **tab);
 int				free_str(char **str, int ret);
