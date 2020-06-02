@@ -9,6 +9,7 @@
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <stdio.h>
+# include <signal.h>
 
 typedef struct	s_mshl
 {
@@ -16,12 +17,12 @@ typedef struct	s_mshl
 	char	**args;  	//Tab contenant les arguments splites
 	char	**cenv;
 	int		nb_args;
+	int		tstdout;
 }				t_mshl;
 char				**free_tabs(char **tab);
 int				free_str(char **str, int ret);
 int				free_tab(char **tab, int ret, char code);
 int				ft_exit(t_mshl *m, int ret);
-int				tablen(char **tab);
 int				ft_echo(t_mshl *m);
 char			**ft_append(char **tab, char *str);
 char			**ft_splitq(char *s, char c);
@@ -43,9 +44,14 @@ int				launch_exec(t_mshl *m, char *path);
 //CD
 int				ft_cd(t_mshl *m);
 char			**parse_cli(char *line);
+//UTILS
 void			print_tab(char **tab);
+int				tablen(char **tab);
+void			display_prompt(t_mshl *m);
 //UNSET
 int				ft_unset(t_mshl *m);
 //REDIRECTION
 char			*put_stdin(char *path);
+//SIGNAL
+int				handler(int sign);
 #endif

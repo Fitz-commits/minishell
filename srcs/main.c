@@ -53,26 +53,27 @@ void	ft_init(t_mshl *m)  //initialise la structure
 {
 	m->args = NULL;
 	m->nb_args = 0;
+	m->tstdout = 0;
 }
 
 int		main(int ac, char **av, char **envp)
 {
 	t_mshl	m;		//Struct globale pour l'instant
-	int		test;
 	(void)av;
 	(void)ac;
 
-	m.prompt = "Minishell$> ";
-	test = 1;
+	//signal(SIGINT, SIG_IGN);
+	m.prompt = "minishell$> ";
 	ft_init(&m);
 	m.cenv = ft_getenv(envp);
-	while (test)
+	while (1)
 	{
-		write(1, m.prompt, 12);
+		display_prompt(&m);
+		signal(SIGINT, SIG_IGN);
 		if (!get_args(&m))		//Recuperation des args sous forme de char** dans m->args
 			return (ft_exit(&m, 1));
 		if (!choice_command(&m))   //!!recup du retour a modifier pour envoyre msg erreurs etc!!
-			return(ft_exit(&m, 0));
+			return(ft_exit(&m, 1));
 	}
 	return (0);
 }

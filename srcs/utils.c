@@ -29,5 +29,10 @@ void print_tab(char **tab)
 	int i;
 	i = 0;
 	while (tab[i])
-		ft_putendl_fd(tab[i++], 1);
+		ft_putendl_fd(tab[i++], m->tstdout);
+}
+
+void	display_prompt(t_mshl *m)
+{
+	write(m->tstdout, m->prompt, ft_ilen(m->prompt));
 }

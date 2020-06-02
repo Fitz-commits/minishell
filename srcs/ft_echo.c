@@ -33,13 +33,13 @@ int		ft_echo(t_mshl *m)
 		flag = (i > 1) ? 1 : 0;
 		while (m->args[i])
 		{
-			ft_putstr_fd(m->args[i], 1);
+			ft_putstr_fd(m->args[i], m->tstdout);
 			if (i < m->nb_args - 1)
-				ft_putchar_fd(' ', 1);
+				ft_putchar_fd(' ', m->tstdout);
 			i++;
 		}
 	}
 	if (!flag)
-		ft_putchar_fd('\n', 1);
+		ft_putchar_fd('\n', m->tstdout);
 	return (1);
 }

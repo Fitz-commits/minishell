@@ -33,8 +33,8 @@ int	ft_cd(t_mshl *m)
 	}
 	else if (S_ISREG(buffer.st_mode))
 	{	
-		ft_putstr_fd(m->args[1], 1);
-		ft_putendl_fd(" is a file not a directory", 1);
+		ft_putstr_fd(m->args[1], m->tstdout);
+		ft_putendl_fd(" is a file not a directory", m->tstdout);
 	}
 	else 
 	{
