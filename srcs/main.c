@@ -11,7 +11,13 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+/*
+** ajout de differentes fonction qui permettent
+** le quote_removal et l'env expansion
+** 
+** TODO remontee d'erreur
+**
+*/
 int		get_args(t_mshl *m) 
 {
 	char	*reader;
@@ -27,22 +33,36 @@ int		get_args(t_mshl *m)
 	
 	return (free_str(&reader, 1));
 }
-
+/*
+** ici on n'envoie plus m->args on envoi une copie
+** cette copie n'a plus les elements < > | ; car on ne peut envoyer ce genre
+** d'argument
+**
+** TODO remontee d'erreur
+** TODO fractionner la fonction
+**
+*/
 int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige vers la fonction adequate
 {
-	if (!m->args || !m->args[0])
+	if(m->cpargs)
+		free(m->cpargs);
+	m->cpargs = NULL;
+	m->cpargs = cpy_args(m->args, m->begin, next_split(m));
+	m->begin = m->progr;
+	//print_tab(m->cpargs); // debugging only
+	if (!m->cpargs)
 		return (2); 		//code a modifier si pas arguments juste rien faire
-	else if (!ft_strcmp(m->args[0], "echo"))
+	else if (!ft_strcmp(m->cpargs[0], "echo"))
 		return (ft_echo(m));
-	else if (!ft_strcmp(m->args[0], "env"))
+	else if (!ft_strcmp(m->cpargs[0], "env"))
 		return (env(m));
-	else if (!ft_strcmp(m->args[0], "export"))
+	else if (!ft_strcmp(m->cpargs[0], "export"))
 		return (ft_export(m));
-	else if (!ft_strcmp(m->args[0], "cd"))
+	else if (!ft_strcmp(m->cpargs[0], "cd"))
 		return (ft_cd(m));
-	else if (!ft_strcmp(m->args[0], "exit"))
-		return (0);
-	else if (!ft_strcmp(m->args[0], "unset"))
+	else if (!ft_strcmp(m->cpargs[0], "exit"))
+		exit(0);
+	else if (!ft_strcmp(m->cpargs[0], "unset"))
 		return (ft_unset(m));
 	else
 		return (launch_exec(m, getvar(m->cenv, "PATH")));
@@ -52,10 +72,18 @@ int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige ver
 void	ft_init(t_mshl *m)  //initialise la structure
 {
 	m->args = NULL;
+	m->cpargs = NULL;
 	m->nb_args = 0;
-	m->tstdout = 1;
 	m->tstdin = 0;
+	m->tstdout = 1;
 	m->tstderr = 2;
+	m->redir = 0;
+}
+
+void set_zpb(t_mshl *m)
+{
+	m->progr = 0;
+	m->begin = 0;
 }
 
 int		main(int ac, char **av, char **envp)
@@ -72,10 +100,15 @@ int		main(int ac, char **av, char **envp)
 	{
 		display_prompt(&m);
 		signal(SIGINT, SIG_IGN);
+		set_zpb(&m);
 		if (!get_args(&m))		//Recuperation des args sous forme de char** dans m->args
 			return (ft_exit(&m, 1));
-		if (!choice_command(&m))   //!!recup du retour a modifier pour envoyre msg erreurs etc!!
-			return(ft_exit(&m, 1));
+		if (set_stdior(&m) == -1)   //!!recup du retour a modifier pour envoyre msg erreurs etc!!
+			return(ft_exit(&m, 0));
+		clear_std(&m);
+		if (m.cpargs)
+			free(m.cpargs);
+		m.cpargs = NULL;
 	}
 	return (0);
 }

@@ -127,7 +127,6 @@ char		**parse_cli(char *line)
 
 	if (!(ret = malloc(sizeof(char*) * (count_arg(line) + 1))))
 		return (NULL);
-	printf("%d\n", count_arg(line));
 	flag = 0;
 	j = 0;
 	if ((triming(&line, &ret, &flag, &j) == 0))

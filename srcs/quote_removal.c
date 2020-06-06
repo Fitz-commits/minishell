@@ -37,11 +37,11 @@ int     count_aqr(char *line)
     }
     return (j);
 }
-char *remove_quotes(char *line)
+char *remove_quotes(char *line, int j)
 {
     int i;
-    int j;
     int flag;
+    int pass;
     char *ret;
 
     i = -1;
@@ -51,14 +51,13 @@ char *remove_quotes(char *line)
         return (NULL);
     while (line[++i])
     {
+        pass = 0;
+        pass = (pass || ((flag == 2 || flag == 0) && line[i] == '"')) ? 1 : 0;
+        pass = (pass || ((flag == 1 || flag == 0) && line[i] == '\'')) ? 1 : 0;
+        pass = (pass || (((flag == 0 || flag == 2)) && line[i] == '\\')) ? 1 : 0;
         flag = set_quotes(flag, line[i]);
-        if ((flag == 2 || flag == 0) && line[i] == '"')
-            continue;
-        if ((flag == 1 || flag == 0) && line[i] == '\'')
-            continue;
-        if (((flag == 0 || flag == 2)) && line[i] == '\\')
-            continue;
-        ret[j++] = line[i];
+        if (!pass)
+            ret[j++] = line[i];
     }
     free(line);
     ret[j] = 0;
@@ -72,7 +71,7 @@ int check_for_qr(t_mshl *m)
 
     while (m->args[++i])
         if (check_quotes(m->args[i]))
-            if (!(m->args[i] = remove_quotes(m->args[i])))
+            if (!(m->args[i] = remove_quotes(m->args[i], 0)))
                 return (1);
     return (0);
 }

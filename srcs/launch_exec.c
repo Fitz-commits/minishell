@@ -39,9 +39,14 @@ int	ft_exec(t_mshl *m, char *path)
 	pid_t child_pid;
 	
 	child_pid = fork();
-	
 	if (child_pid == 0)
-		execve(path, m->args, m->cenv);
+	{	
+		if (m->tstdin != 0)
+			dup2(m->tstdin, 0);
+		if (m->tstdout != 1)
+			dup2(m->tstdout, 1);
+		execve(path, m->cpargs, m->cenv);
+	}
 	else
 		wait(&child_pid);
 	return (1);
@@ -60,17 +65,17 @@ int	launch_exec(t_mshl *m, char *path)
 	struct stat buffer;
 
 	i = 0;
-	if (ft_strchr(m->args[0], '/'))
+	if (ft_strchr(m->cpargs[0], '/'))
 	{
-		stat(m->args[0], &buffer);
+		stat(m->cpargs[0], &buffer);
 		if (S_ISREG(buffer.st_mode))
-			return ft_exec(m, m->args[0]);
+			return ft_exec(m, m->cpargs[0]);
 	}
 	if (!(pathtab = ft_split(path, ':')))
 		return 3;
 	while (pathtab[i])
 	{
-		temp = path_join(pathtab[i], m->args[0]);
+		temp = path_join(pathtab[i], m->cpargs[0]);
 		stat(temp, &buffer);
 		if (S_ISREG(buffer.st_mode))
 			return (ft_exec(m, temp));

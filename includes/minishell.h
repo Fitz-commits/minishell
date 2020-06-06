@@ -17,9 +17,14 @@ typedef struct	s_mshl
 	char	**args;  	//Tab contenant les arguments splites
 	char	**cenv;
 	int		nb_args;
+	char	**cpargs;
+	int		piped[2];
+	int		begin;
+	int		progr;
+	int		tstdin;
 	int		tstdout;
-	int		tstin;
 	int		tstderr;
+	int		redir;
 }				t_mshl;
 char				**free_tabs(char **tab);
 int				free_str(char **str, int ret);
@@ -53,7 +58,11 @@ void			display_prompt(t_mshl *m);
 //UNSET
 int				ft_unset(t_mshl *m);
 //REDIRECTION
-char			*put_stdin(char *path);
+int				clear_std(t_mshl *m);
+char			**cpy_args(char **args, int beg, int end);
+int				set_stdior(t_mshl *m);
+int				choice_command(t_mshl *m);
+int     		next_split(t_mshl *m);
 //SIGNAL
 int				handler(int sign);
 #endif

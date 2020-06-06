@@ -45,12 +45,12 @@ char *env_expansion(char *line, t_mshl *m, int j)
     while (ret[i])
     {
         j = 0;
-        while (ret[i] != '$' && (i == 0 || ret[i - 1] != '\\'))
+        while (ret[i] && ret[i] != '$' && (i == 0 || ret[i - 1] != '\\'))
             i++;
         pos = i++;
         if (!ret[i] || ret[i] == ' ')
             return (ret);
-        while (ret[i] && ret[i] != ' ' && ret[i] != '"')
+        while (ret[i] && ret[i] != ' ' && ret[i] != '"' && ret[i] != '\'')
             buf[j++] = ret[i++];
         buf[j] = 0;
         remove_in_str(ret, pos, j + 1);
