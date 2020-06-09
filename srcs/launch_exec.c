@@ -43,8 +43,12 @@ int	ft_exec(t_mshl *m, char *path)
 	{	
 		if (m->tstdin != 0)
 			dup2(m->tstdin, 0);
+		else if (m->piped[1])
+			dup2(m->piped[1], 0);
 		if (m->tstdout != 1)
 			dup2(m->tstdout, 1);
+		else if (m->piped[0] != 1)
+			dup2(m->piped[0], 1);
 		execve(path, m->cpargs, m->cenv);
 	}
 	else

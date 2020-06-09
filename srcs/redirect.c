@@ -106,6 +106,22 @@ int set_stdin(t_mshl *m)
         }
     return (fd);
 }
+
+int set_pipes(t_mshl *m)
+{
+    if (m->tstdin)
+        close(m->tstdin);
+    m->tstdin = 0;
+    if (m->piped[1] != 1)
+		close(m->piped[1]);
+	m->piped[1] = 1;
+	if (m->piped[0] != 0)
+		close(m->piped[0]);
+	m->piped[0] = 0;
+    if (!pipe(m->piped))
+        return (-1);
+    return(0);
+}
 /*
 ** fonction que l'on fait boucler dans le main pour progresser dans
 ** m->args et permet de rediriger le cas echeant
@@ -121,6 +137,8 @@ int set_stdin(t_mshl *m)
 */
 int set_stdior(t_mshl *m)
 {
+    if (!m->nb_args)
+        return (0);
     while (m->nb_args > m->progr && m->args[m->progr])
     {
         m->redir = check_red(m);
@@ -132,11 +150,11 @@ int set_stdior(t_mshl *m)
             m->tstdout = set_stdout(m);
         if (m->redir == 3)
             m->tstdout = set_stdouta(m);
-        //if (m->redir == 4)
-        //    set_pipes(m);
         if ((m->progr == 1  && m->redir) || (m->progr == 2 && m->redir == 3))
             return (0);
-        //printf("progr = %d\nbegin = %d\nredir = %d\nm->tstdout = %d\n", m->progr, m->begin, m->redir, m->tstdout);
+        if (m->redir == 4)
+            set_pipes(m);
+        printf("progr = %d\nbegin = %d\nredir = %d\nm->tstdout = %d\n", m->progr, m->begin, m->redir, m->tstdout);
         if (m->redir == 5 || m->redir == 4 || m->redir == 0)
             choice_command(m);
         if (m->redir == 5)

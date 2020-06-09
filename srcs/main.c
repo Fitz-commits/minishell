@@ -22,13 +22,13 @@ int		get_args(t_mshl *m)
 {
 	char	*reader;
 
-	get_next_line(0, &reader);
+	if ((get_next_line(0, &reader)) == 0)
+		return(1);
 	if (!(m->args = parse_cli(reader)))
 		return (free_str(&reader, 1));  //recolter msg erreur
 	if (!(check_for_exp(m)))
 		return (free_str(&reader, 1));
 	check_for_qr(m);
-	print_tab(m->args);
 	m->nb_args = tablen(m->args);
 	
 	return (free_str(&reader, 1));
@@ -78,6 +78,8 @@ void	ft_init(t_mshl *m)  //initialise la structure
 	m->tstdout = 1;
 	m->tstderr = 2;
 	m->redir = 0;
+	m->piped[0] = 1;
+	m->piped[1] = 0;
 }
 
 void set_zpb(t_mshl *m)
