@@ -68,7 +68,14 @@ void print_tab(char **tab)
 		ft_putendl_fd(tab[i++], 1);
 }
 
-void	display_prompt(t_mshl *m)
+/*
+**	To talk :
+**	With the struct we can modify the prompt with a command but
+**	for the signal I need to print the prompt but my function can only
+**	take one INT arg...
+*/ 
+void	display_prompt(/*t_mshl *m*/ void)
 {
-	write(m->tstdout, m->prompt, ft_ilen(m->prompt));
+	//write(m->tstdout, m->prompt, ft_ilen(m->prompt));
+	write(1, "minishell$> ", 12);
 }

@@ -19,6 +19,12 @@
 **  if the flag isn't 1 write \n
 */
 
+/*
+** TODO verifier que nb args = nb args du cpargs
+** TODO echo >  doit renvoyer une error  -bash: syntax error near unexpected token `newline'
+** TODO echo blabla > directory lancer une erreur
+*/
+
 int		ft_echo(t_mshl *m)
 {
 	int		i;
@@ -26,14 +32,14 @@ int		ft_echo(t_mshl *m)
 
 	i = 1;
 	flag = 0;
-	if (m->nb_args > 1 && m->args[1]) 
+	if (m->nb_args > 1 && m->cpargs[1]) 
 	{
-		while (m->args[i] && !ft_strcmp(m->args[i], "-n"))
+		while (m->cpargs[i] && !ft_strcmp(m->cpargs[i], "-n"))
 			i++;
 		flag = (i > 1) ? 1 : 0;
-		while (m->args[i])
+		while (m->cpargs[i])
 		{
-			ft_putstr_fd(m->args[i], m->tstdout);
+			ft_putstr_fd(m->cpargs[i], m->tstdout);
 			if (i < m->nb_args - 1)
 				ft_putchar_fd(' ', m->tstdout);
 			i++;

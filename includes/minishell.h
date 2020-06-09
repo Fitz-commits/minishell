@@ -26,7 +26,8 @@ typedef struct	s_mshl
 	int		tstderr;
 	int		redir;
 }				t_mshl;
-char				**free_tabs(char **tab);
+
+char			**free_tabs(char **tab);
 int				free_str(char **str, int ret);
 int				free_tab(char **tab, int ret, char code);
 int				ft_exit(t_mshl *m, int ret);
@@ -54,7 +55,7 @@ char			**parse_cli(char *line);
 //UTILS
 void			print_tab(char **tab);
 int				tablen(char **tab);
-void			display_prompt(t_mshl *m);
+void			display_prompt(void);
 //UNSET
 int				ft_unset(t_mshl *m);
 //REDIRECTION
@@ -64,5 +65,6 @@ int				set_stdior(t_mshl *m);
 int				choice_command(t_mshl *m);
 int     		next_split(t_mshl *m);
 //SIGNAL
-int				handler(int sign);
+void			handler(int sign);
+void			var_handler(int sign);
 #endif

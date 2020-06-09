@@ -58,6 +58,8 @@ char	*pair_value_key(char *value, char *key)
 char	*getvar(char **env, char *key)
 {
 	int nline;
+	
+	signal(SIGINT, var_handler);
 	nline = find_env(env, key);
 	if (nline == -1)
 		return "";

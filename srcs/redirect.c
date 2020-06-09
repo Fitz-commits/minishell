@@ -101,7 +101,7 @@ int set_stdin(t_mshl *m)
         m->tstdin = close(m->tstdin);
     if ((fd = open(m->args[m->progr], O_RDONLY)) == -1)
         {
-            printf("could not open file");
+            printf("could not open file"); /* ATTENTION delete this printf */
             exit(0);
         }
     return (fd);
