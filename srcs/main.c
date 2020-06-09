@@ -11,28 +11,34 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 /*
 ** ajout de differentes fonction qui permettent
 ** le quote_removal et l'env expansion
 ** 
 ** TODO remontee d'erreur
+** TODO pour la fin pas oublier de retirer / modifier les printf + virer splitq2
 **
 */
+
 int		get_args(t_mshl *m) 
 {
 	char	*reader;
 
+	reader = NULL;
 	get_next_line(0, &reader);
 	if (!(m->args = parse_cli(reader)))
 		return (free_str(&reader, 1));  //recolter msg erreur
 	if (!(check_for_exp(m)))
 		return (free_str(&reader, 1));
 	check_for_qr(m);
+	printf("\n-- Tests\n-------------\n");
 	print_tab(m->args);
+	printf("-------------\n");
 	m->nb_args = tablen(m->args);
-	
 	return (free_str(&reader, 1));
 }
+
 /*
 ** ici on n'envoie plus m->args on envoi une copie
 ** cette copie n'a plus les elements < > | ; car on ne peut envoyer ce genre
@@ -40,7 +46,7 @@ int		get_args(t_mshl *m)
 **
 ** TODO remontee d'erreur
 ** TODO fractionner la fonction
-**
+** TODO leaks sur le free cpargs
 */
 int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige vers la fonction adequate
 {
@@ -64,6 +70,8 @@ int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige ver
 		exit(0);
 	else if (!ft_strcmp(m->cpargs[0], "unset"))
 		return (ft_unset(m));
+	else if (!ft_strcmp(m->cpargs[0], "^D"))
+		return (0);
 	else
 		return (launch_exec(m, getvar(m->cenv, "PATH")));
 	return (1); 			//a modifier juste pour return pour l'instant
@@ -86,20 +94,24 @@ void set_zpb(t_mshl *m)
 	m->begin = 0;
 }
 
+
+/*
+** TODO regarder boucle infinie du ctrl d !!
+**
+*/ 
 int		main(int ac, char **av, char **envp)
 {
 	t_mshl	m;		//Struct globale pour l'instant
 	(void)av;
 	(void)ac;
 
-	//signal(SIGINT, SIG_IGN);
-	m.prompt = "minishell$> ";
+	signal(SIGINT, handler);
+	//m.prompt = "minishell$> ";
 	ft_init(&m);
 	m.cenv = ft_getenv(envp);
 	while (1)
 	{
-		display_prompt(&m);
-		signal(SIGINT, SIG_IGN);
+		display_prompt();
 		set_zpb(&m);
 		if (!get_args(&m))		//Recuperation des args sous forme de char** dans m->args
 			return (ft_exit(&m, 1));
