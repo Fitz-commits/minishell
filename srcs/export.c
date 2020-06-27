@@ -67,6 +67,7 @@ char	*getvar(char **env, char *key)
 		return (&env[nline][until_dquotes(env[nline]) + 1]);
 }
 // export seems okay need testing
+// if no = seems not to esport anything need fixing
 int	ft_export(t_mshl *m)
 {
 	int temp;

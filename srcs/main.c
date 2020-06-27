@@ -47,34 +47,39 @@ int		get_args(t_mshl *m)
 ** TODO remontee d'erreur
 ** TODO fractionner la fonction
 ** TODO leaks sur le free cpargs
+** close_rp to add
 */
+int		prep_cpargs(t_mshl *m)
+{
+	if (m->cpargs)
+		free(m->cpargs); //Redondant ?
+	m->cpargs = NULL;
+	if (!(m->cpargs = cpy_args(m->args, m->begin, next_split(m))))
+		return (EXIT_FAILURE);
+	m->begin = m->progr;
+	return (0);
+	}
 int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige vers la fonction adequate
 {
-	if(m->cpargs)
-		free(m->cpargs);
-	m->cpargs = NULL;
-	m->cpargs = cpy_args(m->args, m->begin, next_split(m));
-	m->begin = m->progr;
+	int		(*pt_f[6])(t_mshl*);
+	int		n;
+
+	init_ptf(pt_f);
+	if (prep_cpargs(m))
+		return (EXIT_FAILURE);
+	n = n_command(m);
 	//print_tab(m->cpargs); // debugging only
 	if (!m->cpargs)
 		return (2); 		//code a modifier si pas arguments juste rien faire
-	else if (!ft_strcmp(m->cpargs[0], "echo"))
-		return (ft_echo(m));
-	else if (!ft_strcmp(m->cpargs[0], "env"))
-		return (env(m));
-	else if (!ft_strcmp(m->cpargs[0], "export"))
-		return (ft_export(m));
-	else if (!ft_strcmp(m->cpargs[0], "cd"))
-		return (ft_cd(m));
+	if (n >= 0 && n <= 4)
+		return (pt_f[n](m));
 	else if (!ft_strcmp(m->cpargs[0], "exit"))
 		exit(0);
-	else if (!ft_strcmp(m->cpargs[0], "unset"))
-		return (ft_unset(m));
 	else if (!ft_strcmp(m->cpargs[0], "^D"))
-		return (0);
+		return (EXIT_SUCCESS);
 	else
 		return (launch_exec(m, getvar(m->cenv, "PATH")));
-	return (1); 			//a modifier juste pour return pour l'instant
+	//a modifier juste pour return pour l'instant
 }
 
 void	ft_init(t_mshl *m)  //initialise la structure
@@ -84,10 +89,10 @@ void	ft_init(t_mshl *m)  //initialise la structure
 	m->nb_args = 0;
 	m->tstdin = 0;
 	m->tstdout = 1;
-	m->tstderr = 2;
+	//m->tstderr = 2;
 	m->redir = 0;
-	m->piped[0] = 1;
-	m->piped[1] = 0;
+	zeroing_pipes(m);
+	zeroing_process(m);
 }
 
 void set_zpb(t_mshl *m)
@@ -107,7 +112,7 @@ int		main(int ac, char **av, char **envp)
 	(void)av;
 	(void)ac;
 
-	//signal(SIGINT, handler);
+	signal(SIGINT, handler);
 	//m.prompt = "minishell$> ";
 	ft_init(&m);
 	m.cenv = ft_getenv(envp);
@@ -119,10 +124,12 @@ int		main(int ac, char **av, char **envp)
 			return (ft_exit(&m, 1));
 		if (set_stdior(&m) == -1)   //!!recup du retour a modifier pour envoyre msg erreurs etc!!
 			return(ft_exit(&m, 0));
+		waiter(&m);
 		clear_std(&m);
 		if (m.cpargs)
 			free(m.cpargs);
 		m.cpargs = NULL;
+		close_pipes(&m);
 	}
 	return (0);
 }

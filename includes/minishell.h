@@ -10,20 +10,27 @@
 # include <sys/wait.h>
 # include <stdio.h>
 # include <signal.h>
+typedef struct	s_proc
+{
+	pid_t	child_pid[512];
+	int		curpro;
+}				t_proc;
 
 typedef struct	s_mshl
 {
+	t_proc	proc;
 	char	*prompt;
 	char	**args;  	//Tab contenant les arguments splites
 	char	**cenv;
 	int		nb_args;
 	char	**cpargs;
-	int		piped[2];
+	int		cp;
+	int		tpiped[512][2];
 	int		begin;
 	int		progr;
 	int		tstdin;
 	int		tstdout;
-	int		tstderr;
+	int		tstemp;
 	int		redir;
 }				t_mshl;
 
@@ -64,7 +71,16 @@ char			**cpy_args(char **args, int beg, int end);
 int				set_stdior(t_mshl *m);
 int				choice_command(t_mshl *m);
 int     		next_split(t_mshl *m);
+int				close_reset(int fd, int nb);
+//PIPES
+int				zeroing_pipes(t_mshl *m);
+int				close_pipes(t_mshl *m);
+int				waiter(t_mshl *m);
+int 			zeroing_process(t_mshl *m);
+int				close_rp(t_mshl *m);
 //SIGNAL
 void			handler(int sign);
 void			var_handler(int sign);
+int				init_ptf(int (*pt_f[6])(t_mshl*));
+int				n_command(t_mshl *m);
 #endif

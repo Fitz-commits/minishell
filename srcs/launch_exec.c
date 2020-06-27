@@ -36,23 +36,23 @@ char	*path_join(char *path, char *arg)
 */
 int	ft_exec(t_mshl *m, char *path)
 {
-	pid_t child_pid;
-	
-	child_pid = fork();
-	if (child_pid == 0)
+	// need to close unused end
+	m->proc.child_pid[m->proc.curpro] = fork();
+	if (m->proc.child_pid[m->proc.curpro] == 0)
 	{	
+		if (m->cp >= 0 && m->tstdout == m->tpiped[m->cp][1] && m->tpiped[m->cp][0])
+			close(m->tpiped[m->cp][0]);
+		if (m->cp >= 0 && m->tstdin && m->tstdin == m->tpiped[m->cp][0] && m->tpiped[m->cp][1])
+			close(m->tpiped[m->cp][1]);
 		if (m->tstdin != 0)
-			dup2(m->tstdin, 0);
-		else if (m->piped[1])
-			dup2(m->piped[1], 0);
+			dup2(m->tstdin, STDIN_FILENO);
 		if (m->tstdout != 1)
-			dup2(m->tstdout, 1);
-		else if (m->piped[0] != 1)
-			dup2(m->piped[0], 1);
+			dup2(m->tstdout, STDOUT_FILENO);
 		execve(path, m->cpargs, m->cenv);
 	}
-	else
-		wait(&child_pid);
+	close_rp(m);
+	m->proc.curpro++;
+	free(path);
 	return (1);
 }
 /*
@@ -73,7 +73,7 @@ int	launch_exec(t_mshl *m, char *path)
 	{
 		stat(m->cpargs[0], &buffer);
 		if (S_ISREG(buffer.st_mode))
-			return ft_exec(m, m->cpargs[0]);
+			return (ft_exec(m, m->cpargs[0]));
 	}
 	if (!(pathtab = ft_split(path, ':')))
 		return 3;

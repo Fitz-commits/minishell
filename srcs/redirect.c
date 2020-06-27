@@ -72,7 +72,7 @@ int		check_red(t_mshl *m)
 int set_stdouta(t_mshl *m)
 {
     int fd;
-    if (m->tstdout != 1)
+    if (m->tstdout != 1 && (m->cp < 0 || m->tstdout != m->tpiped[m->cp][1]))
         close(m->tstdout);
     if (!m->args[m->progr])
         return (1);
@@ -86,7 +86,7 @@ int set_stdout(t_mshl *m)
 {
     int fd;
 
-    if (m->tstdout != 1)
+    if (m->tstdout != 1 && (m->cp < 0 || m->tstdout != m->tpiped[m->cp][1]))
         close(m->tstdout);
     if (((fd = open(m->args[m->progr], O_WRONLY | O_CREAT
 		| O_TRUNC , 0666)) < 0))
@@ -97,30 +97,31 @@ int set_stdout(t_mshl *m)
 int set_stdin(t_mshl *m)
 {
     int fd;
-    if (m->tstdin)
+    if (m->tstdin && (m->cp < 0 || m->tstdin != m->tpiped[m->cp][0]))
         m->tstdin = close(m->tstdin);
     if ((fd = open(m->args[m->progr], O_RDONLY)) == -1)
-        {
-            printf("could not open file"); /* ATTENTION delete this printf */
-            exit(0);
-        }
+        return (0);
     return (fd);
 }
-
-int set_pipes(t_mshl *m)
+int set_apipes(t_mshl *m)
 {
-    if (m->tstdin)
+    if (m->tstdin  && (m->cp < 0 || m->tstdin != m->tpiped[m->cp - 1][0]))
         close(m->tstdin);
-    m->tstdin = 0;
-    if (m->piped[1] != 1)
-		close(m->piped[1]);
-	m->piped[1] = 1;
-	if (m->piped[0] != 0)
-		close(m->piped[0]);
-	m->piped[0] = 0;
-    if (!pipe(m->piped))
-        return (-1);
+    m->tstdin = m->tpiped[m->cp][0];
+    m->tstdout = 1;
     return(0);
+}
+
+int set_bpipes(t_mshl *m)
+{
+    int err;
+
+    m->cp++;
+    err = pipe(m->tpiped[m->cp]);
+    if (m->tstdout == 1 || (m->cp > 0 && m->tstdout == m->tpiped[m->cp - 1][1]))
+        m->tstdout = m->tpiped[m->cp][1];
+    return (0);
+
 }
 /*
 ** fonction que l'on fait boucler dans le main pour progresser dans
@@ -151,13 +152,16 @@ int set_stdior(t_mshl *m)
         if (m->redir == 3)
             m->tstdout = set_stdouta(m);
         if ((m->progr == 1  && m->redir) || (m->progr == 2 && m->redir == 3))
-            return (0);
+            return (0); // parse error might want to
         if (m->redir == 4)
-            set_pipes(m);
-        printf("progr = %d\nbegin = %d\nredir = %d\nm->tstdout = %d\n", m->progr, m->begin, m->redir, m->tstdout);
+            set_bpipes(m);
         if (m->redir == 5 || m->redir == 4 || m->redir == 0)
             choice_command(m);
-        if (m->redir == 5)
+        if (m->redir != 4)
+            waiter(m);
+        if (m->redir == 4)
+            set_apipes(m);
+        if (m->redir == 5) // need to clear pipes and processes
             if(clear_std(m))
                 printf("error");
     }

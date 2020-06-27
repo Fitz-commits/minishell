@@ -42,13 +42,6 @@ char **cpy_args(char **args, int beg, int end)
 
 int clear_std(t_mshl *m)
 {
-	/*if (m->piped[1] != 1)
-		close(m->piped[1]);
-	m->piped[1] = 1;
-	if (m->piped[0] != 0)
-		close(m->piped[0]);
-	m->piped[0] = 0;
-	*/
 	if (m->tstdout != 1)
 		if (close(m->tstdout) == -1)
 			return (1);
@@ -78,4 +71,45 @@ void	display_prompt(/*t_mshl *m*/ void)
 {
 	//write(m->tstdout, m->prompt, ft_ilen(m->prompt));
 	write(1, "minishell$> ", 12);
+}
+
+int close_reset(int fd, int nb)
+{
+	if (close(fd) == -1)
+		return (nb); // fd error reviewing
+	return (nb);
+}
+
+int close_rp(t_mshl *m)
+{
+	if (m->cp >= 0 && m->tstdin && m->tstdin == m->tpiped[m->cp][0])
+	{
+		close(m->tstdin);
+		m->tstdin = 0;
+		m->tpiped[m->cp][0] = 0;
+	}
+	if (m->cp >= 0 && m->tpiped[m->cp][1])
+	{
+		close(m->tpiped[m->cp][1]);
+		if (m->tstdout == m->tpiped[m->cp][1])
+			m->tstdout = 0;
+		m->tpiped[m->cp][1] = 0;
+	}
+	return (1);
+}
+
+int n_command(t_mshl *m)
+{
+	if (!ft_strcmp(m->cpargs[0], "echo"))
+		return (0);
+	else if (!ft_strcmp(m->cpargs[0], "env"))
+		return (1);
+	else if (!ft_strcmp(m->cpargs[0], "export"))
+		return (4);
+	else if (!ft_strcmp(m->cpargs[0], "cd"))
+		return (3);
+	else if (!ft_strcmp(m->cpargs[0], "unset"))
+		return (2);
+	else
+		return (-1);
 }
