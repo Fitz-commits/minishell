@@ -66,11 +66,10 @@ char *env_expansion(char *line, t_mshl *m, int j, int l)
         while (ret[i] && ret[i] != ' ' && ret[i] != '"' && ret[i] != '\'' && ret[i] != '}' && ret[i] != '$')
             buf[j++] = ret[i++];
         buf[j] = 0;
-        printf("%s\n", buf);
         remove_in_str(ret, pos, j + 1, &l);
-        if (!(ret = insert_into_string(ret, getvar(m->cenv, buf), pos)))
+        if (!(ret = insert_into_string(ret, getvar(m, buf), pos)))
             return (ret); // might want to do better than that
-        i = i - j + ft_strlen(getvar(m->cenv, buf)) - 1;
+        i = i - j + ft_strlen(getvar(m, buf)) - 1;
     }
     return (ret);
 }

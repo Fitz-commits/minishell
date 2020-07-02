@@ -113,3 +113,13 @@ int n_command(t_mshl *m)
 	else
 		return (-1);
 }
+
+int		reat_crval(t_mshl *m, int i)
+{
+	m->rvalue = i;
+	if (m->crvalue)
+		free(m->crvalue);
+	if (!(m->crvalue = ft_itoa(m->rvalue)))
+		return (1);
+	return (0);
+}

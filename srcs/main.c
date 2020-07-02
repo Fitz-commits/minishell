@@ -78,11 +78,11 @@ int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige ver
 	else if (!ft_strcmp(m->cpargs[0], "^D"))
 		return (EXIT_SUCCESS);
 	else
-		return (launch_exec(m, getvar(m->cenv, "PATH")));
+		return (launch_exec(m, getvar(m, "PATH")));
 	//a modifier juste pour return pour l'instant
 }
 
-void	ft_init(t_mshl *m)  //initialise la structure
+void	ft_init(t_mshl *m)  //initialise la structure might want to failproof it now that it malloc's
 {
 	m->args = NULL;
 	m->cpargs = NULL;
@@ -91,6 +91,8 @@ void	ft_init(t_mshl *m)  //initialise la structure
 	m->tstdout = 1;
 	//m->tstderr = 2;
 	m->redir = 0;
+	m->rvalue = 0;
+	m->crvalue = ft_itoa(0);
 	zeroing_pipes(m);
 	zeroing_process(m);
 }

@@ -9,7 +9,7 @@ int	change_pwd(t_mshl *m)
 	i = find_env(m->cenv, "OLDPWD=");
 	j = find_env(m->cenv, "PWD=");
 	free(m->cenv[i]);
-	if (!(m->cenv[i] = pair_value_key(getvar(m->cenv, "PWD"), "OLDPWD")))
+	if (!(m->cenv[i] = pair_value_key(getvar(m, "PWD"), "OLDPWD")))
 		return 22;
 	free(m->cenv[j]);
 	getcwd(buffer, PATH_MAX);

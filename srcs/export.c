@@ -55,16 +55,18 @@ char	*pair_value_key(char *value, char *key)
 }
 // get the value associated with "$key" variable
 
-char	*getvar(char **env, char *key)
+char	*getvar(t_mshl *m, char *key)
 {
 	int nline;
 	
 	signal(SIGINT, var_handler);
-	nline = find_env(env, key);
+	if (key[0] == '?')
+		return (m->crvalue);
+	nline = find_env(m->cenv, key);
 	if (nline == -1)
 		return "";
 	else
-		return (&env[nline][until_dquotes(env[nline]) + 1]);
+		return (&m->cenv[nline][until_dquotes(m->cenv[nline]) + 1]);
 }
 // export seems okay need testing
 // if no = seems not to esport anything need fixing

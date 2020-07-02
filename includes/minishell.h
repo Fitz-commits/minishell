@@ -32,6 +32,8 @@ typedef struct	s_mshl
 	int		tstdout;
 	int		tstemp;
 	int		redir;
+	int		rvalue;
+	char	*crvalue;
 }				t_mshl;
 
 char			**free_tabs(char **tab);
@@ -49,7 +51,7 @@ int				check_for_qr(t_mshl *m);
 int     		until_dquotes(char *line);
 int				find_env(char **env, char *key);
 char			*pair_value_key(char *value, char *key);
-char    		*getvar(char **env, char *key);
+char			*getvar(t_mshl *m, char *key);
 int 			ft_export(t_mshl *m);
 int				env(t_mshl *m);
 char                    **ft_getenv(char **env);
@@ -83,4 +85,6 @@ void			handler(int sign);
 void			var_handler(int sign);
 int				init_ptf(int (*pt_f[6])(t_mshl*));
 int				n_command(t_mshl *m);
+// $?
+int				reat_crval(t_mshl *m, int i);
 #endif
