@@ -120,6 +120,8 @@ int set_bpipes(t_mshl *m)
     err = pipe(m->tpiped[m->cp]);
     if (m->tstdout == 1 || (m->cp > 0 && m->tstdout == m->tpiped[m->cp - 1][1]))
         m->tstdout = m->tpiped[m->cp][1];
+	// pour compiler
+	err += 1;
     return (0);
 
 }

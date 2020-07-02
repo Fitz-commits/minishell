@@ -18,7 +18,7 @@
 ** 
 ** TODO remontee d'erreur
 ** TODO pour la fin pas oublier de retirer / modifier les printf + virer splitq2
-**
+** TODO virer le err += 1 dans redirect.c mis pour la compilation
 */
 
 int		get_args(t_mshl *m) 
@@ -26,7 +26,8 @@ int		get_args(t_mshl *m)
 	char	*reader;
 
 	reader = NULL;
-	get_next_line(0, &reader);
+	if (!get_next_line(0, &reader))
+		return (0);
 	if (!(m->args = parse_cli(reader)))
 		return (free_str(&reader, 1));  //recolter msg erreur
 	if (!(check_for_exp(m)))
