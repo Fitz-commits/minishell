@@ -49,6 +49,7 @@ int	ft_exec(t_mshl *m, char *path)
 		if (m->tstdout != 1)
 			dup2(m->tstdout, STDOUT_FILENO);
 		execve(path, m->cpargs, m->cenv);
+		printf("Salut\n");
 	}
 	close_rp(m);
 	m->proc.curpro++;

@@ -8,7 +8,7 @@ int			is_space(char c)
 
 int			is_delim(char c)
 {
-	if (c == ';' || c == '>' || c == '<' || is_space(c))
+	if (c == ';' || c == '>' || c == '<' || c == '|' || is_space(c))
 		return (1);
 	return (0);
 }
@@ -108,15 +108,15 @@ int		triming(char **line, char ***ret, int *flag, int *j)
 			i += 1;
 		if (is_delim(nline[i]))
 			if (!(nret[(*j)++] = alloc_sep(nline[i], &i)))
-				return 0;
+				return (EXIT_FAILURE);
 		while (nline[k + i] && !(!(*flag) && is_delim(nline[k + i])))
 				*flag = set_quotes(*flag, nline[k++ + i]);
 		if (k != 0)
 			if (!(nret[(*j)++] = strndup(&nline[i], k)))
-				return (0);
+				return (EXIT_FAILURE);
 		i += k;
 	}
-	return 1;
+	return (EXIT_SUCCESS);
 }
 
 char		**parse_cli(char *line)
@@ -129,7 +129,7 @@ char		**parse_cli(char *line)
 		return (NULL);
 	flag = 0;
 	j = 0;
-	if ((triming(&line, &ret, &flag, &j) == 0))
+	if ((triming(&line, &ret, &flag, &j) == EXIT_FAILURE))
 	{
 		free_tab(ret, 0, 1);
 		return (NULL);

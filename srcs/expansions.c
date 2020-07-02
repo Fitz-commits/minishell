@@ -10,20 +10,31 @@
 **  With remove in char i just need to shift every char to size on the left from pos
 **
 */
-char *remove_in_str(char *str, int pos, int size)
+char *remove_in_str(char *str, int pos, int size, int *l)
 {
     int i;
+    int j;
 
+    j = 0;
     i = -1;
-    while (str[pos + size + ++i])
-        str[pos + i] = str[i + pos + size];
-    str[pos + i] = 0;
+    while (str[pos + *l + size + ++i])
+    {
+        if (str[pos + *l + size + i] == '}' && *l && !j)
+        {
+            j = 1;
+            continue;
+        }
+        str[pos + i - j] = str[i + pos + size + *l];
+    }
+    *l = 0;
+    str[pos + i - j] = 0;
     return str;
 }
+
 char *insert_into_string(char *str, char *to_insert, int pos)
 {
     char *ret;
-
+    
     if (!(ret = malloc(sizeof(char) * (ft_strlen(str) + ft_strlen(to_insert) + 1))))
         return (NULL);
     ret = ft_strncpy(ret, str, pos);
@@ -33,11 +44,11 @@ char *insert_into_string(char *str, char *to_insert, int pos)
     return (ret);
 }
 
-char *env_expansion(char *line, t_mshl *m, int j)
+char *env_expansion(char *line, t_mshl *m, int j, int l)
 {
     int i;
     int pos;
-    char buf[64];
+    char buf[128];
     char *ret;
 
     i = 0;
@@ -48,15 +59,18 @@ char *env_expansion(char *line, t_mshl *m, int j)
         while (ret[i] && ret[i] != '$' && (i == 0 || ret[i - 1] != '\\'))
             i++;
         pos = i++;
-        if (!ret[i] || ret[i] == ' ')
-            return (ret);
-        while (ret[i] && ret[i] != ' ' && ret[i] != '"' && ret[i] != '\'')
+        if (!ret[i] || ret[i] == ' ' || ret[i] == '$')
+            continue;
+        if (ret[i] == '{' && !(l++))
+            i++;
+        while (ret[i] && ret[i] != ' ' && ret[i] != '"' && ret[i] != '\'' && ret[i] != '}' && ret[i] != '$')
             buf[j++] = ret[i++];
         buf[j] = 0;
-        remove_in_str(ret, pos, j + 1);
+        printf("%s\n", buf);
+        remove_in_str(ret, pos, j + 1, &l);
         if (!(ret = insert_into_string(ret, getvar(m->cenv, buf), pos)))
             return (ret); // might want to do better than that
-        i = i - j + ft_strlen(getvar(m->cenv, buf));
+        i = i - j + ft_strlen(getvar(m->cenv, buf)) - 1;
     }
     return (ret);
 }
@@ -82,7 +96,7 @@ int check_for_exp(t_mshl *m)
     i = -1;
     while(m->args[++i])
         if (check_lee(m->args[i]))
-            if (!(m->args[i] = env_expansion(m->args[i], m, 0)))
+            if (!(m->args[i] = env_expansion(m->args[i], m, 0, 0)))
                 return 0;
     return (1);
 }
