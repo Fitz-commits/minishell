@@ -21,6 +21,38 @@
 ** TODO virer le err += 1 dans redirect.c mis pour la compilation
 */
 
+
+/*
+**
+**
+**
+*/ 
+int		first_parsing(char *str)
+{
+	int i;
+	int q;
+
+	i = 0;
+	q = 0;
+	while (str[i])
+	{
+		q = set_quotes(q, str[i]);
+		if (!q)
+		{
+			if (str[i] == '*' || !ft_strncmp(&str[i], "&&", 2) ||
+				!ft_strncmp(&str[i], "||", 2) || !ft_strncmp(&str[i], "<<", 2))
+				return (1); // not implemented
+			if (str[i] == '&' || !ft_strncmp(&str[i], "<|", 2) ||
+				!ft_strncmp(&str[i], "|<", 2) || !ft_strncmp(&str[i], ">|", 2) ||
+				!ft_strncmp(&str[i], "|>", 2) || !ft_strncmp(&str[i], "><", 2) ||
+				!ft_strncmp(&str[i], "<>", 2))
+				return (2); //Parsing error
+		}
+		i++;
+	}
+	return (0);
+}
+ 
 int		get_args(t_mshl *m) 
 {
 	char	*reader;
@@ -28,6 +60,9 @@ int		get_args(t_mshl *m)
 	reader = NULL;
 	if (!get_next_line(0, &reader))
 		return (0);
+	// first parsing
+	if (first_parsing(reader))
+		return (-1); // refaire les retours                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 	if (!(m->args = parse_cli(reader)))
 		return (free_str(&reader, 1));  //recolter msg erreur
 	if (!(check_for_exp(m)))
@@ -59,7 +94,8 @@ int		prep_cpargs(t_mshl *m)
 		return (EXIT_FAILURE);
 	m->begin = m->progr;
 	return (0);
-	}
+}
+
 int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige vers la fonction adequate
 {
 	int		(*pt_f[6])(t_mshl*);
@@ -109,11 +145,13 @@ void set_zpb(t_mshl *m)
 ** TODO regarder boucle infinie du ctrl d !!
 **
 */ 
+
 int		main(int ac, char **av, char **envp)
 {
 	t_mshl	m;		//Struct globale pour l'instant
 	(void)av;
 	(void)ac;
+	int tmp; //partira après gestion erreurs
 
 	signal(SIGINT, handler);
 	//m.prompt = "minishell$> ";
@@ -122,9 +160,17 @@ int		main(int ac, char **av, char **envp)
 	while (1)
 	{
 		display_prompt();
-		set_zpb(&m);
-		if (!get_args(&m))		//Recuperation des args sous forme de char** dans m->args
-			return (ft_exit(&m, 1));
+		set_zpb(&m);   //a voir pour mettre dans ft_init
+		if ((tmp = get_args(&m)) <= 0)		//Recuperation des args sous forme de char** dans m->args
+		{
+			if (tmp < 0)
+			{
+				write(2, "parsing error\n", 14);
+				continue;
+			}
+			else if (!tmp)
+				return (ft_exit(&m, 1));
+		}
 		if (set_stdior(&m) == -1)   //!!recup du retour a modifier pour envoyre msg erreurs etc!!
 			return(ft_exit(&m, 0));
 		waiter(&m);
@@ -136,3 +182,4 @@ int		main(int ac, char **av, char **envp)
 	}
 	return (0);
 }
+
