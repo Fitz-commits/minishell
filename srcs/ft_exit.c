@@ -22,7 +22,7 @@ int		ft_exit(t_mshl *m, int ret)
 	ft_putendl_fd("free cenv", 1);
 	free_tab(m->cenv, 1, 1);
 	ft_putendl_fd("free prompt", 1);
-	free_str(&m->prompt, 1);
+	//free_str(&m->prompt, 1);
 	//ft_putendl_fd("free struct pointer", 1);
 	//free(m);
 	return (ret);

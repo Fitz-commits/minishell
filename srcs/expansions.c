@@ -96,6 +96,6 @@ int check_for_exp(t_mshl *m)
     while(m->args[++i])
         if (check_lee(m->args[i]))
             if (!(m->args[i] = env_expansion(m->args[i], m, 0, 0)))
-                return 0;
-    return (1);
+                return (EXIT_FAILURE);
+    return (EXIT_SUCCESS);
 }

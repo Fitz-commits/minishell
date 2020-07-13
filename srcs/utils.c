@@ -42,13 +42,23 @@ char **cpy_args(char **args, int beg, int end)
 
 int clear_std(t_mshl *m)
 {
+	int i;
+
+	i = -1;
 	if (m->tstdout != 1)
 		if (close(m->tstdout) == -1)
 			return (1);
+	while (++i <= m->cp)
+		if (m->tpiped[i][1] == m->tstdout)
+			m->tpiped[i][1] = 0;
 	m->tstdout = 1;
 	if (m->tstdin)
 		if ((close(m->tstdin) == -1))
 			return (1);
+	i = -1;
+	while (++i <= m->cp)
+		if (m->tpiped[i][0] == m->tstdin)
+			m->tpiped[i][0] = 0;
 	m->tstdin = 0;
 	return (0);
 }

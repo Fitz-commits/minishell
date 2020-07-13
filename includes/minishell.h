@@ -19,21 +19,22 @@ typedef struct	s_proc
 typedef struct	s_mshl
 {
 	t_proc	proc;
-	char	*prompt;
-	char	**args;  	//Tab contenant les arguments splites
-	char	**cenv;
+	char	*prompt; // malloc to free
+	char	**args;  // malloc to free 
+	char	**cenv; // malloc to free
+	char	**buf_cmd; // malloc to free sans ;
 	int		nb_args;
-	char	**cpargs;
-	int		cp;
-	int		tpiped[512][2];
-	int		begin;
+	char	**cpargs; // malloc to free < > | 
+	int		cp; // current pipe to see on which pipe we are working currently and to close up to it after
+	int		tpiped[512][2]; // we can open up to 1024 file descriptor
+	int		begin; 
 	int		progr;
 	int		tstdin;
 	int		tstdout;
 	int		tstemp;
 	int		redir;
-	int		rvalue;
-	char	*crvalue;
+	int		rvalue; // return value $?
+	char	*crvalue; // malloc to free
 }				t_mshl;
 
 char			**free_tabs(char **tab);
@@ -43,10 +44,14 @@ int				ft_exit(t_mshl *m, int ret);
 int				ft_echo(t_mshl *m);
 char			**ft_append(char **tab, char *str);
 char			**ft_splitq(char *s, char c);
+int				clean_args(t_mshl *m);
 //PARSING
 int				set_quotes(int flag, char c);
 int				check_for_exp(t_mshl *m);
 int				check_for_qr(t_mshl *m);
+char			**fill_buffer(t_mshl *m, int i);
+int				check_for_dc(char **args);
+int				buffer_to_args(t_mshl *m);
 //ENV
 int     		until_dquotes(char *line);
 int				find_env(char **env, char *key);
