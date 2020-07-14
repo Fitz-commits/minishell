@@ -10,6 +10,7 @@
 **  With remove in char i just need to shift every char to size on the left from pos
 **
 */
+
 char *remove_in_str(char *str, int pos, int size, int *l)
 {
     int i;
@@ -96,6 +97,6 @@ int check_for_exp(t_mshl *m)
     while(m->args[++i])
         if (check_lee(m->args[i]))
             if (!(m->args[i] = env_expansion(m->args[i], m, 0, 0)))
-                return 0;
+                return (0);
     return (1);
 }

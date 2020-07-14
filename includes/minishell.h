@@ -10,6 +10,7 @@
 # include <sys/wait.h>
 # include <stdio.h>
 # include <signal.h>
+
 typedef struct	s_proc
 {
 	pid_t	child_pid[512];
@@ -34,6 +35,8 @@ typedef struct	s_mshl
 	int		redir;
 	int		rvalue;
 	char	*crvalue;
+	int		error; 		//errno
+	int		err;   		//erreur perso
 }				t_mshl;
 
 char			**free_tabs(char **tab);

@@ -21,12 +21,6 @@
 ** TODO virer le err += 1 dans redirect.c mis pour la compilation
 */
 
-
-/*
-**
-**
-**
-*/ 
 int		first_parsing(char *str)
 {
 	int i;
@@ -53,7 +47,7 @@ int		first_parsing(char *str)
 	return (0);
 }
  
-int		get_args(t_mshl *m) 
+/*int		get_args(t_mshl *m) 
 {
 	char	*reader;
 
@@ -73,7 +67,30 @@ int		get_args(t_mshl *m)
 	//printf("-------------\n");
 	m->nb_args = tablen(m->args);
 	return (free_str(&reader, 1));
+}*/
+
+int		get_args(t_mshl *m) 
+{
+	char	*reader;
+
+	reader = NULL;
+	if (get_next_line(0, &reader) < 1)
+		return (-1);  //a faire : gérer si on a 0 de kill prog mais pas error?
+	if ((m->err = first_parsing(reader)))
+		return (free_str(&reader, m->err));
+	if (!(m->args = parse_cli(reader)))
+		return (free_str(&reader, 3));
+
+	if (!(check_for_exp(m)))
+		return (free_str(&reader, 1));
+	check_for_qr(m);
+	//printf("\n-- Tests\n-------------\n");
+	print_tab(m->args);
+	//printf("-------------\n");
+	m->nb_args = tablen(m->args);
+	return (free_str(&reader, 0));
 }
+
 
 /*
 ** ici on n'envoie plus m->args on envoi une copie
@@ -130,22 +147,20 @@ void	ft_init(t_mshl *m)  //initialise la structure might want to failproof it no
 	m->redir = 0;
 	m->rvalue = 0;
 	m->crvalue = ft_itoa(0);
+	m->error = 0;
+	m->err = 0;
 	zeroing_pipes(m);
 	zeroing_process(m);
 }
 
-void set_zpb(t_mshl *m)
+void	set_zpb(t_mshl *m)
 {
 	m->progr = 0;
 	m->begin = 0;
+	m->error = 0;
 }
 
-
 /*
-** TODO regarder boucle infinie du ctrl d !!
-**
-*/ 
-
 int		main(int ac, char **av, char **envp)
 {
 	t_mshl	m;		//Struct globale pour l'instant
@@ -181,5 +196,51 @@ int		main(int ac, char **av, char **envp)
 		close_pipes(&m);
 	}
 	return (0);
+}*/
+
+int		ft_error(t_mshl *m, int err)
+{
+	if (m->error)
+	{
+		ft_putendl_fd(strerror(m->error), 2);
+		return (m->error);
+	}
+	(m->err == 1) ? ft_putendl_fd("Not Implemented", 2) : 0;
+	(m->err == 2) ? ft_putendl_fd("Parsing Error", 2) : 0;
+	(m->err == 3) ? ft_putendl_fd("Memory Error", 2) : 0;
+	return (m->err);
 }
 
+int		main_loop(t_mshl *m)
+{
+	set_zpb(m);
+	if ((m->err = get_args))
+		return (ft_error(m));
+	if (set_stdior(m) == -1)
+		return (-1);
+	waiter(m);
+	clear_std(m);
+	if (m->cpargs)
+		fee(m->cpargs);
+	m->cpargs = NULL;
+	close_pipes(m);
+}
+
+int		main(int ac, char **av, char **envp)
+{
+	t_mshl	m;		//Struct globale
+	(void)av;
+	(void)ac;
+
+	signal(SIGINT, handler);
+	//m.prompt = "minishell$> ";
+	ft_init(&m);
+	m.cenv = ft_getenv(envp);
+	while (1)
+	{
+		display_prompt();
+		if (main_loop(&m) < 0)
+			return (ft_exit(&m, -1)) //code erreur -1 en cas d'erreur ?
+	}
+	return (0);
+}
