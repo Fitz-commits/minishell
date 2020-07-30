@@ -47,5 +47,5 @@ int		ft_echo(t_mshl *m)
 	}
 	if (!flag)
 		ft_putchar_fd('\n', m->tstdout);
-	return (1);
+	return (0);
 }

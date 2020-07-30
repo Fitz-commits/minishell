@@ -19,6 +19,7 @@
 ** TODO remontee d'erreur
 ** TODO pour la fin pas oublier de retirer / modifier les printf + virer splitq2
 ** TODO virer le err += 1 dans redirect.c mis pour la compilation
+** TODO alias dans le .h
 */
 
 int		first_parsing(char *str)
@@ -56,17 +57,14 @@ int		first_parsing(char *str)
 		return (0);
 	// first parsing
 	if (first_parsing(reader))
-		return (-1); // refaire les retours                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+		return (-1); // refaire les retours   `                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
 	if (!(m->args = parse_cli(reader)))
 		return (free_str(&reader, 1));  //recolter msg erreur
-	if (!(check_for_exp(m)))
-		return (free_str(&reader, 1));
-	check_for_qr(m);
 	//printf("\n-- Tests\n-------------\n");
-	print_tab(m->args);
+	//print_tab(m->args);
 	//printf("-------------\n");
 	m->nb_args = tablen(m->args);
-	return (free_str(&reader, 1));
+	return (free_str(&reader, 0));
 }*/
 
 int		get_args(t_mshl *m) 
@@ -79,10 +77,11 @@ int		get_args(t_mshl *m)
 	if ((m->err = first_parsing(reader)))
 		return (free_str(&reader, m->err));
 	if (!(m->args = parse_cli(reader)))
-		return (free_str(&reader, 3));
-
-	if (!(check_for_exp(m)))
-		return (free_str(&reader, 1));
+		return (free_str(&reader, 3));  //3 = memory error | faire les alias .h 
+	/*if (!(check_for_exp(m)))
+		return (free_str(&reader, 3));*/
+	check_for_exp(m);
+	//printf("\ntest\n");
 	check_for_qr(m);
 	//printf("\n-- Tests\n-------------\n");
 	print_tab(m->args);
@@ -124,7 +123,7 @@ int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige ver
 	n = n_command(m);
 	//print_tab(m->cpargs); // debugging only
 	if (!m->cpargs)
-		return (2); 		//code a modifier si pas arguments juste rien faire
+		return (0); 		//code a modifier si pas arguments juste rien faire
 	if (n >= 0 && n <= 4)
 		return (pt_f[n](m));
 	else if (!ft_strcmp(m->cpargs[0], "exit"))
@@ -146,6 +145,9 @@ void	ft_init(t_mshl *m)  //initialise la structure might want to failproof it no
 	//m->tstderr = 2;
 	m->redir = 0;
 	m->rvalue = 0;
+	m->buf_cmd = NULL;
+	m->progr = 0;
+	m->begin = 0;
 	m->crvalue = ft_itoa(0);
 	m->error = 0;
 	m->err = 0;
@@ -160,13 +162,16 @@ void	set_zpb(t_mshl *m)
 	m->error = 0;
 }
 
+
 /*
+** Ancien main au cas où
+**
+
 int		main(int ac, char **av, char **envp)
 {
 	t_mshl	m;		//Struct globale pour l'instant
 	(void)av;
 	(void)ac;
-	int tmp; //partira après gestion erreurs
 
 	signal(SIGINT, handler);
 	//m.prompt = "minishell$> ";
@@ -174,31 +179,41 @@ int		main(int ac, char **av, char **envp)
 	m.cenv = ft_getenv(envp);
 	while (1)
 	{
-		display_prompt();
-		set_zpb(&m);   //a voir pour mettre dans ft_init
-		if ((tmp = get_args(&m)) <= 0)		//Recuperation des args sous forme de char** dans m->args
-		{
-			if (tmp < 0)
+		if (!m.buf_cmd)
 			{
-				write(2, "parsing error\n", 14);
-				continue;
+				display_prompt();
+				if (get_args(&m))
+					return (ft_exit(&m, 1));
+				if (check_for_dc(m.args) && m.args[check_for_dc(m.args) + 1])
+					if (!(m.buf_cmd = fill_buffer(&m, check_for_dc(m.args))))
+						return (ft_exit(&m, 1));
 			}
-			else if (!tmp)
-				return (ft_exit(&m, 1));
+		else
+		{
+			buffer_to_args(&m);
 		}
-		if (set_stdior(&m) == -1)   //!!recup du retour a modifier pour envoyre msg erreurs etc!!
-			return(ft_exit(&m, 0));
-		waiter(&m);
-		clear_std(&m);
-		if (m.cpargs)
-			free(m.cpargs);
-		m.cpargs = NULL;
-		close_pipes(&m);
+		if (m.args)
+		{
+			if (check_for_qr(&m))
+				return (ft_exit(&m, 1));
+			if ((check_for_exp(&m)))
+				return (ft_exit(&m, 1));
+			if (set_stdior(&m) == -1)   //!!recup du retour a modifier pour envoyre msg erreurs etc!!
+				return(ft_exit(&m, 0));
+			//waiter(&m);
+			//cleaning if an error occur we need to call those function to reset the shell
+			set_zpb(&m);
+			clear_std(&m);
+			close_pipes(&m);
+			clean_args(&m);
+		}
+		
 	}
 	return (0);
-}*/
+}
+*/
 
-int		ft_error(t_mshl *m, int err)
+int		ft_error(t_mshl *m)
 {
 	if (m->error)
 	{
@@ -213,24 +228,46 @@ int		ft_error(t_mshl *m, int err)
 
 int		main_loop(t_mshl *m)
 {
-	set_zpb(m);
-	if ((m->err = get_args))
-		return (ft_error(m));
-	if (set_stdior(m) == -1)
-		return (-1);
-	waiter(m);
-	clear_std(m);
-	if (m->cpargs)
-		fee(m->cpargs);
-	m->cpargs = NULL;
-	close_pipes(m);
+	if (!m->buf_cmd)
+	{
+		display_prompt();
+		if ((m->err = get_args(m)))
+			return (ft_error(m));
+		if (check_for_dc(m->args) && m->args[check_for_dc(m->args) + 1])
+			if (!(m->buf_cmd = fill_buffer(m, check_for_dc(m->args))))
+				return (-1); //a voir pour num retour
+	}
+	else
+	{
+		buffer_to_args(m);
+	}
+	if (m->args)
+	{
+		if (check_for_qr(m))
+			return (-1);
+		if ((check_for_exp(m)))
+			return (-1);
+		if (set_stdior(m) == -1)
+			return (-1);
+		set_zpb(m);
+		clear_std(m);
+		close_pipes(m);
+		clean_args(m);
+	}
+	//waiter(m);
+	//if (m->cpargs)
+	//	free(m->cpargs);
+	//m->cpargs = NULL;
+	return (0);
 }
 
 int		main(int ac, char **av, char **envp)
 {
 	t_mshl	m;		//Struct globale
+	int		ret;
 	(void)av;
 	(void)ac;
+	
 
 	signal(SIGINT, handler);
 	//m.prompt = "minishell$> ";
@@ -238,9 +275,8 @@ int		main(int ac, char **av, char **envp)
 	m.cenv = ft_getenv(envp);
 	while (1)
 	{
-		display_prompt();
-		if (main_loop(&m) < 0)
-			return (ft_exit(&m, -1)) //code erreur -1 en cas d'erreur ?
+		if ((ret = main_loop(&m) < 0))
+			return (ft_exit(&m, ret)); //code erreur -1 en cas d'erreur ?
 	}
 	return (0);
 }

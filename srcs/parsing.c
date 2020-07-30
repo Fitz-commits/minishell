@@ -134,8 +134,8 @@ char		**parse_cli(char *line)
 		free_tab(ret, 0, 1);
 		return (NULL);
 	}
-	if (flag != 0)
-		return free_tabs(ret);
 	ret[j] = 0;
+	if (flag != 0)
+		return (free_tabs(ret)); // can catch " or ' isolation
 	return (ret);
 }

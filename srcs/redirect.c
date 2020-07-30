@@ -73,12 +73,17 @@ int set_stdouta(t_mshl *m)
 {
     int fd;
     if (m->tstdout != 1 && (m->cp < 0 || m->tstdout != m->tpiped[m->cp][1]))
+    {
         close(m->tstdout);
+        m->tstdout = 1;
+    }
     if (!m->args[m->progr])
-        return (1);
+        return (EXIT_FAILURE);
     if (((fd = open(m->args[m->progr], O_CREAT | O_WRONLY | O_APPEND, 0666)) == -1))
-        return (-1);
-    return (fd);
+        return (EXIT_FAILURE);
+    else
+        m->tstdout = fd;
+    return (EXIT_SUCCESS);
 
 }
 
@@ -87,22 +92,38 @@ int set_stdout(t_mshl *m)
     int fd;
 
     if (m->tstdout != 1 && (m->cp < 0 || m->tstdout != m->tpiped[m->cp][1]))
+    {
         close(m->tstdout);
+        m->tstdout = 1;
+    }
+    if (!m->args[m->progr])
+        return (EXIT_FAILURE); // parse error
     if (((fd = open(m->args[m->progr], O_WRONLY | O_CREAT
 		| O_TRUNC , 0666)) < 0))
-            return (-1);
-    return (fd);
-
+            return (EXIT_FAILURE);
+    else
+        m->tstdout = fd;
+    return (EXIT_SUCCESS);
 }
+
 int set_stdin(t_mshl *m)
 {
     int fd;
+
     if (m->tstdin && (m->cp < 0 || m->tstdin != m->tpiped[m->cp][0]))
+    {
         m->tstdin = close(m->tstdin);
+        m->tstdin = 0;
+    }
+    if (!m->args[m->progr])
+        return (EXIT_FAILURE); // parse error
     if ((fd = open(m->args[m->progr], O_RDONLY)) == -1)
-        return (0);
-    return (fd);
+        return (EXIT_FAILURE);
+    else
+        m->tstdin = fd;
+    return (EXIT_SUCCESS);
 }
+
 int set_apipes(t_mshl *m)
 {
     if (m->tstdin  && (m->cp < 0 || m->tstdin != m->tpiped[m->cp - 1][0]))
@@ -120,9 +141,7 @@ int set_bpipes(t_mshl *m)
     err = pipe(m->tpiped[m->cp]);
     if (m->tstdout == 1 || (m->cp > 0 && m->tstdout == m->tpiped[m->cp - 1][1]))
         m->tstdout = m->tpiped[m->cp][1];
-	// pour compiler
-	err += 1;
-    return (0);
+    return (err);
 
 }
 /*
@@ -138,36 +157,50 @@ int set_bpipes(t_mshl *m)
 ** TODO gerer les pipes
 ** TODO fractionner cette fonction
 */
+int set_progr_tabl(t_mshl *m)
+{
+    int i;
+
+    i = 0;
+    while (m->args[i])
+        i ++;
+    m->progr = i;
+    return (0); 
+}
+
+int     init_ptfr(int (*pt_f[5])(t_mshl*))
+{
+    pt_f[0] = set_progr_tabl;
+    pt_f[1] = set_stdin;
+    pt_f[2] = set_stdout;
+    pt_f[3] = set_stdouta;
+    pt_f[4] = set_bpipes;
+    return (0);
+}
+
 int set_stdior(t_mshl *m)
 {
+    int		(*pt_fr[5])(t_mshl*);
+
+    init_ptfr(pt_fr);
     if (!m->nb_args)
-        return (0);
+        return (EXIT_FAILURE);
     while (m->nb_args > m->progr && m->args[m->progr])
     {
         m->redir = check_red(m);
-        if (m->redir == 0)
-            m->progr = tablen(m->args);
-        if (m->redir == 1)
-            m->tstdin = set_stdin(m);
-        if (m->redir == 2)
-            m->tstdout = set_stdout(m);
-        if (m->redir == 3)
-            m->tstdout = set_stdouta(m);
         if ((m->progr == 1  && m->redir) || (m->progr == 2 && m->redir == 3))
-            return (0); // parse error might want to
-        if (m->redir == 4)
-            set_bpipes(m);
+            return (0); // parse error might want to do this upper
+        if (m->redir >= 0 && m->redir <= 4)
+            if (pt_fr[m->redir](m))
+                return (EXIT_FAILURE);
         if (m->redir == 5 || m->redir == 4 || m->redir == 0)
             choice_command(m);
         if (m->redir != 4)
             waiter(m);
         if (m->redir == 4)
             set_apipes(m);
-        if (m->redir == 5) // need to clear pipes and processes
-            if(clear_std(m))
-                printf("error");
     }
-    return (0);
+    return (EXIT_SUCCESS);
 }
 
 /*

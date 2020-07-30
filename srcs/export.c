@@ -82,7 +82,7 @@ int	ft_export(t_mshl *m)
 		if (find_env(m->cenv, m->args[i]) == -1)
 		{
 			if (!(tempc = ft_strdup(m->args[i])))
-				return (0);
+				return (1);
 			m->cenv = ft_append(m->cenv, tempc); // append chelou add maloc prot
 		}
 		else
@@ -90,10 +90,10 @@ int	ft_export(t_mshl *m)
 			temp = find_env(m->cenv, m->args[i]);
 			free(m->cenv[temp]);
 			if(!(m->cenv[temp] = ft_strdup(m->args[i])))
-				return (0);
+				return (1);
 		}
 		i++;
 	}
-	return (1);
+	return (0);
 }
 
