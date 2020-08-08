@@ -64,16 +64,17 @@ int     init_ptf(int (*pt_f[6])(t_mshl*))
 int waiter(t_mshl *m)
 {
     int i;
+    int o;
+
     i = -1;
 
     while(++i < m->proc.curpro)
     {
         //printf("m->proc.child_pid[%d] = %d\n", i, m->proc.child_pid[i]);
-        wait(&m->proc.child_pid[i]);
-        if (m->rvalue != WEXITSTATUS(m->proc.child_pid[i]))
-            if (reat_crval(m, WEXITSTATUS(m->proc.child_pid[i])))
+        waitpid(m->proc.child_pid[i], &o, 0);
+        if (m->rvalue != WEXITSTATUS(o))
+            if (reat_crval(m, WEXITSTATUS(o)))
                 return (1);
-        //printf("m->proc.wr_clo[%d] = %d\nm->proc.r_clo[%d] = %d\n", i, m->proc.wr_clo[i], i, m->proc.r_clo[i]);
         m->proc.child_pid[i] = 0;
     }
     m->proc.curpro = 0;
