@@ -97,12 +97,11 @@ int set_stdout(t_mshl *m)
         m->tstdout = 1;
     }
     if (!m->args[m->progr])
-        return (EXIT_FAILURE); // parse error
+        return ((m->err = 2)); // parse error
     if (((fd = open(m->args[m->progr], O_WRONLY | O_CREAT
 		| O_TRUNC , 0666)) < 0))
-            return (EXIT_FAILURE);
-    else
-        m->tstdout = fd;
+        ;
+    m->tstdout = fd;
     return (EXIT_SUCCESS);
 }
 
@@ -116,11 +115,10 @@ int set_stdin(t_mshl *m)
         m->tstdin = 0;
     }
     if (!m->args[m->progr])
-        return (EXIT_FAILURE); // parse error
+        return ((m->err = 2)); // parse error
     if ((fd = open(m->args[m->progr], O_RDONLY)) == -1)
-        return (EXIT_FAILURE);
-    else
-        m->tstdin = fd;
+        ;
+    m->tstdin = fd;
     return (EXIT_SUCCESS);
 }
 
@@ -177,28 +175,54 @@ int     init_ptfr(int (*pt_f[5])(t_mshl*))
     pt_f[4] = set_bpipes;
     return (0);
 }
+void print_errno(char *str)
+{
+    ft_putstr_fd("minishell : ", 2);
+    ft_putstr_fd(str, 2);
+    ft_putstr_fd(" : ", 2);
+    ft_putendl_fd(strerror(errno), 2);
+}
+
+void print_error(t_mshl *m)
+{
+    if (!errno && (!m->err || m->err != 4))
+        reat_crval(m, 0);
+    if (errno)
+    {
+        print_errno(m->args[m->progr]);
+        reat_crval(m, errno);
+    }
+    else if (m->err && m->err != 4)
+    {
+        reat_crval(m, m->err);
+        (m->err == 1) ? ft_putendl_fd("Not Implemented", 2) : 0;
+	    (m->err == 2) ? ft_putendl_fd("Parsing Error", 2) : 0;
+	    (m->err == 3) ? ft_putendl_fd("Memory Error", 2) : 0;
+        (m->err == 127) ? ft_putendl_fd("Command not found", 2) : 0;
+    }
+    errno = 0;
+    m->err = 0;
+}
 
 int set_stdior(t_mshl *m)
 {
     int		(*pt_fr[5])(t_mshl*);
 
     init_ptfr(pt_fr);
-    if (!m->nb_args)
-        return (EXIT_FAILURE);
     while (m->nb_args > m->progr && m->args[m->progr])
     {
         m->redir = check_red(m);
         if ((m->progr == 1  && m->redir) || (m->progr == 2 && m->redir == 3))
-            return (0); // parse error might want to do this upper
+            m->err = 2; // parse error might want to do this upper
         if (m->redir >= 0 && m->redir <= 4)
-            if (pt_fr[m->redir](m))
-                return (EXIT_FAILURE);
-        if (m->redir == 5 || m->redir == 4 || m->redir == 0)
+            pt_fr[m->redir](m);
+        if ((m->redir == 5 || m->redir == 4 || m->redir == 0))
             choice_command(m);
         if (m->redir != 4)
             waiter(m);
         if (m->redir == 4)
             set_apipes(m);
+        print_error(m);
     }
     return (EXIT_SUCCESS);
 }

@@ -37,6 +37,11 @@ char	*path_join(char *path, char *arg)
 int	ft_exec(t_mshl *m, char *path)
 {
 	// need to close unused end
+	errno = 0;
+	if (m->tstdout == -1)
+		return (m->tstdout = 1);
+	if (m->tstdout == -1)
+		return (m->tstdout = 0);
 	m->proc.child_pid[m->proc.curpro] = fork();
 	if (m->proc.child_pid[m->proc.curpro] == 0)
 	{	
@@ -53,7 +58,7 @@ int	ft_exec(t_mshl *m, char *path)
 	close_rp(m);
 	m->proc.curpro++;
 	free(path);
-	return (1);
+	return (0);
 }
 /*
 **
@@ -76,7 +81,7 @@ int	launch_exec(t_mshl *m, char *path)
 			return (ft_exec(m, m->cpargs[0]));
 	}
 	if (!(pathtab = ft_split(path, ':')))
-		return 3;
+		return (m->err = 3); // Memory error
 	while (pathtab[i])
 	{
 		temp = path_join(pathtab[i], m->cpargs[0]);
@@ -86,5 +91,6 @@ int	launch_exec(t_mshl *m, char *path)
 		free(temp);
 		i++;
 	}
-	return (1);
+	errno = 0;
+	return (m->err = 127); // not command not found 127
 }

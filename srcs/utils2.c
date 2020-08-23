@@ -21,9 +21,8 @@ int check_for_dc(char **args)
 
 // push dans le buffer ce qu'il y a apres le ; et garde dans le m->args ce qu'il y a avant
 
-char **fill_buffer(t_mshl *m, int i)
+int     fill_buffer(t_mshl *m, int i)
 {
-    char **ret;
     int count;
     int j;
 
@@ -31,15 +30,16 @@ char **fill_buffer(t_mshl *m, int i)
     count = 1;
     while (m->args[i + count++])
         ;
-    if (!(ret = malloc(sizeof(char*) * (count + 1))))
-        return (NULL);
+    if (!(m->buf_cmd = malloc(sizeof(char*) * (count + 1))))
+        return (free_tab(m->args, EXIT_FAILURE, 3));
     count = i++;
     while (m->args[i])
-        ret[j++] = m->args[i++];
-    ret[j] = NULL;
+        m->buf_cmd[j++] = m->args[i++];
+    m->buf_cmd[j] = NULL;
+    free(m->args[count]);
     m->args[count] = NULL;
     //print_tab(ret);
-    return (ret);
+    return (0);
 }
 /*
 ** got the feeling that we got a leak lurking around here
@@ -47,6 +47,13 @@ char **fill_buffer(t_mshl *m, int i)
 **
 **
 */
+int switch_args_buf(t_mshl *m)
+{
+    free(m->args);
+    m->args = m->buf_cmd;
+    m->buf_cmd = NULL;
+    return (0);
+}
 int buffer_to_args(t_mshl *m)
 {
     int i;
@@ -57,12 +64,7 @@ int buffer_to_args(t_mshl *m)
         while (++i < j)
             m->args[i] = m->buf_cmd[i];
     else // a mettre dans une fonction
-    {
-        free(m->args);
-        m->args = m->buf_cmd;
-        m->buf_cmd = NULL;
-        return (0);
-    }
+        return (switch_args_buf(m));
     free(m->buf_cmd[j]);
     m->buf_cmd[j] = NULL;
     m->args[i] = NULL;

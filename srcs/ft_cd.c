@@ -10,23 +10,25 @@ int	change_pwd(t_mshl *m)
 	j = find_env(m->cenv, "PWD=");
 	free(m->cenv[i]);
 	if (!(m->cenv[i] = pair_value_key(getvar(m, "PWD"), "OLDPWD")))
-		return 22;
+		return (1);
 	free(m->cenv[j]);
 	getcwd(buffer, PATH_MAX);
 	if (!(m->cenv[j] = pair_value_key(buffer, "PWD")))
-		return 22;
-	return (1);
+		return (1);
+	return (0);
 }
 //might want to return other value for error
 int	ft_cd(t_mshl *m)
 {
 	struct stat buffer;
 	
-	stat(m->args[1], &buffer);
+	stat(m->cpargs[1], &buffer);
+	if (errno == EACCES)
+		return (1);
 	if (S_ISDIR(buffer.st_mode))
 	{
 		chdir(m->args[1]);
-		if (errno == EACCES)
+		if (errno == EACCES || errno == ENOTDIR || errno == ENOENT)
 			return (1);
 		else
 			return (change_pwd(m)); //protect malloc

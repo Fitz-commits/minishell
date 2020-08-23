@@ -40,7 +40,7 @@ int		first_parsing(char *str)
 			if (str[i] == '&' || !ft_strncmp(&str[i], "<|", 2) ||
 				!ft_strncmp(&str[i], "|<", 2) || !ft_strncmp(&str[i], ">|", 2) ||
 				!ft_strncmp(&str[i], "|>", 2) || !ft_strncmp(&str[i], "><", 2) ||
-				!ft_strncmp(&str[i], "<>", 2))
+				!ft_strncmp(&str[i], "<>", 2) || !ft_strncmp(&str[i], ">>>", 2))
 				return (2); //Parsing error
 		}
 		i++;
@@ -72,17 +72,16 @@ int		get_args(t_mshl *m)
 	char	*reader;
 
 	reader = NULL;
-	if (get_next_line(0, &reader) < 1)
+	if (get_next_line(0, &reader) < 0)
 		return (-1);  //a faire : gérer si on a 0 de kill prog mais pas error?
 	if ((m->err = first_parsing(reader)))
 		return (free_str(&reader, m->err));
 	if (!(m->args = parse_cli(reader)))
 		return (free_str(&reader, 3));  //3 = memory error | faire les alias .h 
-	/*if (!(check_for_exp(m)))
-		return (free_str(&reader, 3));*/
-	check_for_exp(m);
-	//printf("\ntest\n");
-	check_for_qr(m);
+	if ((check_for_exp(m)))
+		return (free_str(&reader, 3));
+	if (check_for_qr(m))
+		return (free_str(&reader, 3));
 	//printf("\n-- Tests\n-------------\n");
 	print_tab(m->args);
 	//printf("-------------\n");
@@ -129,14 +128,22 @@ int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige ver
 	else if (!ft_strcmp(m->cpargs[0], "exit"))
 		exit(0);
 	else if (!ft_strcmp(m->cpargs[0], "^D"))
-		return (EXIT_SUCCESS);
+		exit(0);
 	else
 		return (launch_exec(m, getvar(m, "PATH")));
 	//a modifier juste pour return pour l'instant
 }
 
+int		prep_rv(t_mshl *m)
+{
+	if (!(m->crvalue = malloc(sizeof(char) * 10)))
+		return (1);
+	reat_crval(m, 0);
+	return (0);
+}
 void	ft_init(t_mshl *m)  //initialise la structure might want to failproof it now that it malloc's
 {
+
 	m->args = NULL;
 	m->cpargs = NULL;
 	m->nb_args = 0;
@@ -148,7 +155,6 @@ void	ft_init(t_mshl *m)  //initialise la structure might want to failproof it no
 	m->buf_cmd = NULL;
 	m->progr = 0;
 	m->begin = 0;
-	m->crvalue = ft_itoa(0);
 	m->error = 0;
 	m->err = 0;
 	zeroing_pipes(m);
@@ -234,8 +240,8 @@ int		main_loop(t_mshl *m)
 		if ((m->err = get_args(m)))
 			return (ft_error(m));
 		if (check_for_dc(m->args) && m->args[check_for_dc(m->args) + 1])
-			if (!(m->buf_cmd = fill_buffer(m, check_for_dc(m->args))))
-				return (-1); //a voir pour num retour
+			if ((m->err = fill_buffer(m, check_for_dc(m->args))))
+				return (ft_error(m)); //a voir pour num retour
 	}
 	else
 	{
@@ -243,10 +249,6 @@ int		main_loop(t_mshl *m)
 	}
 	if (m->args)
 	{
-		if (check_for_qr(m))
-			return (-1);
-		if ((check_for_exp(m)))
-			return (-1);
 		if (set_stdior(m) == -1)
 			return (-1);
 		set_zpb(m);
@@ -271,6 +273,8 @@ int		main(int ac, char **av, char **envp)
 
 	signal(SIGINT, handler);
 	//m.prompt = "minishell$> ";
+	if (prep_rv(&m))
+		return (1);
 	ft_init(&m);
 	m.cenv = ft_getenv(envp);
 	while (1)

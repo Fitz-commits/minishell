@@ -32,7 +32,7 @@ typedef struct	s_mshl
 	int		progr;
 	int		tstdin;
 	int		tstdout;
-	int		tstemp;
+	int		tstemp ;
 	int		redir;
 	int		error; 		//errno
 	int		err;   		//erreur perso
@@ -52,7 +52,7 @@ int				clean_args(t_mshl *m);
 int				set_quotes(int flag, char c);
 int				check_for_exp(t_mshl *m);
 int				check_for_qr(t_mshl *m);
-char			**fill_buffer(t_mshl *m, int i);
+int				fill_buffer(t_mshl *m, int i);
 int				check_for_dc(char **args);
 int				buffer_to_args(t_mshl *m);
 //ENV

@@ -94,11 +94,19 @@ int check_lee(char *line)
 int check_for_exp(t_mshl *m)
 {
     int i;
+    int j;
 
+    j = 0;
     i = -1;
     while(m->args[++i])
         if (check_lee(m->args[i]))
             if (!(m->args[i] = env_expansion(m->args[i], m, 0, 0)))
+            {
+                while (m->args[j] || j == i)
+                    free(m->args[j++]);
+                free(m->args);
+                m->args = NULL;
                 return (EXIT_FAILURE);
+            }
     return (EXIT_SUCCESS);
 }

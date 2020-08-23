@@ -124,12 +124,38 @@ int n_command(t_mshl *m)
 		return (-1);
 }
 
+int size(int a)
+{
+    int i;
+    
+    i = 1;
+    while (a/10)
+    {
+        a = a/10;
+        i++;
+    }
+    return (i);
+}
+
+void itaob(int a, char **buff)
+{
+    int j;
+    char *buf;
+
+    buf = *buff;
+    j = size(a); 
+    buf[j] = 0;
+    j -= 1;
+    while(j >= 0)
+    {
+        buf[j--] = (a % 10) + 48;
+        a = a / 10;
+    }
+}
+
 int		reat_crval(t_mshl *m, int i)
 {
 	m->rvalue = i;
-	if (m->crvalue)
-		free(m->crvalue);
-	if (!(m->crvalue = ft_itoa(m->rvalue)))
-		return (1);
+	itaob(i, &m->crvalue);
 	return (0);
 }

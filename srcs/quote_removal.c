@@ -67,11 +67,19 @@ char *remove_quotes(char *line, int j)
 int check_for_qr(t_mshl *m)
 {
     int i;
-    i = -1;
+    int j;
 
+    i = -1;
+    j =0;
     while (m->args[++i])
         if (check_quotes(m->args[i]))
             if (!(m->args[i] = remove_quotes(m->args[i], 0)))
-                return (1);
-    return (0);
+            {
+                while (m->args[j] || i == j)
+                    free(m->args[i]);
+                free(m->args);
+                m->args = NULL;
+                return (EXIT_FAILURE);
+            }
+    return (EXIT_SUCCESS);
 }

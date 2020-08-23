@@ -73,8 +73,11 @@ int waiter(t_mshl *m)
         //printf("m->proc.child_pid[%d] = %d\n", i, m->proc.child_pid[i]);
         waitpid(m->proc.child_pid[i], &o, 0);
         if (m->rvalue != WEXITSTATUS(o))
+        {
             if (reat_crval(m, WEXITSTATUS(o)))
                 return (1);
+            m->err = 4;
+        }
         m->proc.child_pid[i] = 0;
     }
     m->proc.curpro = 0;
