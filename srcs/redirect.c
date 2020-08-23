@@ -72,7 +72,7 @@ int		check_red(t_mshl *m)
 int set_stdouta(t_mshl *m)
 {
     int fd;
-    if (m->tstdout != 1 && (m->cp < 0 || m->tstdout != m->tpiped[m->cp][1]))
+    if (m->tstdout > 1 && (m->cp < 0 || m->tstdout != m->tpiped[m->cp][1]))
     {
         close(m->tstdout);
         m->tstdout = 1;
@@ -91,7 +91,7 @@ int set_stdout(t_mshl *m)
 {
     int fd;
 
-    if (m->tstdout != 1 && (m->cp < 0 || m->tstdout != m->tpiped[m->cp][1]))
+    if (m->tstdout > 1 && (m->cp < 0 || m->tstdout != m->tpiped[m->cp][1]))
     {
         close(m->tstdout);
         m->tstdout = 1;
@@ -178,8 +178,11 @@ int     init_ptfr(int (*pt_f[5])(t_mshl*))
 void print_errno(char *str)
 {
     ft_putstr_fd("minishell : ", 2);
-    ft_putstr_fd(str, 2);
-    ft_putstr_fd(" : ", 2);
+    if (str)
+        {
+        ft_putstr_fd(str, 2);
+        ft_putstr_fd(" : ", 2);
+        }
     ft_putendl_fd(strerror(errno), 2);
 }
 
@@ -187,10 +190,10 @@ void print_error(t_mshl *m)
 {
     if (!errno && (!m->err || m->err != 4))
         reat_crval(m, 0);
-    if (errno)
+    if (errno && !m->err)
     {
         print_errno(m->args[m->progr]);
-        reat_crval(m, errno);
+        reat_crval(m, 1);
     }
     else if (m->err && m->err != 4)
     {

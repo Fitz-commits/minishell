@@ -123,7 +123,7 @@ int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige ver
 	//print_tab(m->cpargs); // debugging only
 	if (!m->cpargs)
 		return (0); 		//code a modifier si pas arguments juste rien faire
-	if (n >= 0 && n <= 4)
+	if (n >= 0 && n <= 4 && m->tstdout != -1)
 		return (pt_f[n](m));
 	else if (!ft_strcmp(m->cpargs[0], "exit"))
 		exit(0);

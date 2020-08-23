@@ -45,7 +45,7 @@ int clear_std(t_mshl *m)
 	int i;
 
 	i = -1;
-	if (m->tstdout != 1)
+	if (m->tstdout > 1)
 		if (close(m->tstdout) == -1)
 			return (1);
 	while (++i <= m->cp)
