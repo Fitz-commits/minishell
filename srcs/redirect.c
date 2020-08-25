@@ -188,8 +188,6 @@ void print_errno(char *str)
 
 void print_error(t_mshl *m)
 {
-    if (!errno && (!m->err || m->err != 4))
-        reat_crval(m, 0);
     if (errno && !m->err)
     {
         print_errno(m->args[m->progr]);
@@ -204,7 +202,6 @@ void print_error(t_mshl *m)
         (m->err == 127) ? ft_putendl_fd("Command not found", 2) : 0;
     }
     errno = 0;
-    m->err = 0;
 }
 
 int set_stdior(t_mshl *m)
@@ -214,6 +211,10 @@ int set_stdior(t_mshl *m)
     init_ptfr(pt_fr);
     while (m->nb_args > m->progr && m->args[m->progr])
     {
+        if (errno || m->err)
+            print_error(m);
+        else
+            reat_crval(m, 0);
         m->redir = check_red(m);
         if ((m->progr == 1  && m->redir) || (m->progr == 2 && m->redir == 3))
             m->err = 2; // parse error might want to do this upper
@@ -225,8 +226,11 @@ int set_stdior(t_mshl *m)
             waiter(m);
         if (m->redir == 4)
             set_apipes(m);
-        print_error(m);
     }
+    if (errno || m->err)
+            print_error(m);
+        else
+            reat_crval(m, 0);
     return (EXIT_SUCCESS);
 }
 

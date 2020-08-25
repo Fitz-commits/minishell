@@ -72,7 +72,7 @@ int		get_args(t_mshl *m)
 	char	*reader;
 
 	reader = NULL;
-	if (get_next_line(0, &reader) < 0)
+	if (get_next_line(0, &reader) < 1)
 		return (-1);  //a faire : gérer si on a 0 de kill prog mais pas error?
 	if ((m->err = first_parsing(reader)))
 		return (free_str(&reader, m->err));
@@ -226,6 +226,7 @@ int		ft_error(t_mshl *m)
 		ft_putendl_fd(strerror(m->error), 2);
 		return (m->error);
 	}
+	reat_crval(m, m->err);
 	(m->err == 1) ? ft_putendl_fd("Not Implemented", 2) : 0;
 	(m->err == 2) ? ft_putendl_fd("Parsing Error", 2) : 0;
 	(m->err == 3) ? ft_putendl_fd("Memory Error", 2) : 0;
