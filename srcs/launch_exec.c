@@ -33,15 +33,13 @@ char	*path_join(char *path, char *arg)
 /*
 **lance un sous process avec fork et exec la commande donnée en args[0]
 **
+** might want to add after errno = 0 mechanism for std -1
 */
 int	ft_exec(t_mshl *m, char *path)
 {
 	// need to close unused end
 	errno = 0;
-	if (m->tstdout == -1)
-		return (m->tstdout = 1);
-	if (m->tstdout == -1)
-		return (m->tstdout = 0);
+
 	m->proc.child_pid[m->proc.curpro] = fork();
 	if (m->proc.child_pid[m->proc.curpro] == 0)
 	{	

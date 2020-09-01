@@ -105,7 +105,7 @@ int close_rp(t_mshl *m)
 			m->tstdout = 0;
 		m->tpiped[m->cp][1] = 0;
 	}
-	return (1);
+	return (EXIT_SUCCESS);
 }
 
 int n_command(t_mshl *m)

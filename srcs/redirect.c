@@ -51,7 +51,7 @@ int		check_red(t_mshl *m)
     red = 0;
     while (m->args[m->progr] && !red)
     {
-        red = is_redir(m->args[m->progr]);
+        red = is_redir(m->args[m->progr]); // qr here
         m->progr++;
     }
     if (red == 2 && m->args[m->progr] && !ft_strcmp(m->args[m->progr], ">"))
@@ -66,9 +66,12 @@ int		check_red(t_mshl *m)
 ** cas et parmet l'ouverture d'un fd tout en fermant le fd precedent
 ** car il peut y avoir plusieurs redirection a la suite mais la derniere
 ** est celle prise en compte
-** TODO remontee d'erreur
 ** 
+** Standardiser ces trois functions sur les erreurs 
+** Ajouter une liste de symbole sur lesquel on ne cree pas de fd
+** maybee that the quote reduction is happening too early
 */
+
 int set_stdouta(t_mshl *m)
 {
     int fd;
@@ -203,7 +206,12 @@ void print_error(t_mshl *m)
     }
     errno = 0;
 }
-
+/*
+** Open to discussion we might want to check something else than errno
+** In c programming looking at errno without safefailing fonction is 
+** Not usual but since we program a shell we might need to make it as is
+**
+*/
 int set_stdior(t_mshl *m)
 {
     int		(*pt_fr[5])(t_mshl*);
@@ -215,7 +223,7 @@ int set_stdior(t_mshl *m)
             print_error(m);
         else
             reat_crval(m, 0);
-        m->redir = check_red(m);
+        m->redir = check_red(m);  // quote reduction here
         if ((m->progr == 1  && m->redir) || (m->progr == 2 && m->redir == 3))
             m->err = 2; // parse error might want to do this upper
         if (m->redir >= 0 && m->redir <= 4)
