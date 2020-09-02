@@ -51,7 +51,8 @@ int				clean_args(t_mshl *m);
 //PARSING
 int				set_quotes(int flag, char c);
 int				check_for_exp(t_mshl *m);
-int				check_for_qr(t_mshl *m);
+int				remove_quotes(t_mshl *m, int j, int pos);
+//int				check_for_qr(t_mshl *m);
 int				fill_buffer(t_mshl *m, int i);
 int				check_for_dc(char **args);
 int				buffer_to_args(t_mshl *m);

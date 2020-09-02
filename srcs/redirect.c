@@ -33,6 +33,7 @@ int     next_split(t_mshl *m)
     {
         if (is_redir(m->args[i]) || !ft_strcmp(m->args[i], ";"))
             return (i);
+        remove_quotes(m, 0, i);
         i++;
     }
     return(tablen(m->args));
@@ -212,6 +213,14 @@ void print_error(t_mshl *m)
 ** Not usual but since we program a shell we might need to make it as is
 **
 */
+void print_reat(t_mshl *m)
+{
+        if (errno || m->err)
+            print_error(m);
+        else
+            reat_crval(m, 0);
+}
+
 int set_stdior(t_mshl *m)
 {
     int		(*pt_fr[5])(t_mshl*);
@@ -219,10 +228,7 @@ int set_stdior(t_mshl *m)
     init_ptfr(pt_fr);
     while (m->nb_args > m->progr && m->args[m->progr])
     {
-        if (errno || m->err)
-            print_error(m);
-        else
-            reat_crval(m, 0);
+        print_reat(m);
         m->redir = check_red(m);  // quote reduction here
         if ((m->progr == 1  && m->redir) || (m->progr == 2 && m->redir == 3))
             m->err = 2; // parse error might want to do this upper
@@ -235,10 +241,7 @@ int set_stdior(t_mshl *m)
         if (m->redir == 4)
             set_apipes(m);
     }
-    if (errno || m->err)
-            print_error(m);
-        else
-            reat_crval(m, 0);
+    print_reat(m);
     return (EXIT_SUCCESS);
 }
 

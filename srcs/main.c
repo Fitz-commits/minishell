@@ -80,9 +80,9 @@ int		get_args(t_mshl *m)
 		return (free_str(&reader, 3));  //3 = memory error | faire les alias .h 
 	if ((check_for_exp(m)))
 		return (free_str(&reader, 3));
-	if (check_for_qr(m))
+	/*if (check_for_qr(m))
 		return (free_str(&reader, 3));
-	//printf("\n-- Tests\n-------------\n");
+	//printf("\n-- Tests\n-------------\n");*/
 	print_tab(m->args);
 	//printf("-------------\n");
 	m->nb_args = tablen(m->args);
