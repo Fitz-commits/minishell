@@ -76,6 +76,12 @@ int				tablen(char **tab);
 void			display_prompt(void);
 //UNSET
 int				ft_unset(t_mshl *m);
+//SET STD
+int				set_stdouta(t_mshl *m);
+int				set_stdout(t_mshl *m);
+int				set_stdin(t_mshl *m);
+int				set_apipes(t_mshl *m);
+int				set_bpipes(t_mshl *m);
 //REDIRECTION
 int				clear_std(t_mshl *m);
 char			**cpy_args(char **args, int beg, int end);
