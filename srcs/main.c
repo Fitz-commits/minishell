@@ -107,6 +107,7 @@ int		prep_cpargs(t_mshl *m)
 	m->cpargs = NULL;
 	if (!(m->cpargs = cpy_args(m->args, m->begin, next_split(m))))
 		return (EXIT_FAILURE);
+	m->nb_cpargs = tablen(m->cpargs);
 	m->begin = m->progr;
 	return (0);
 }

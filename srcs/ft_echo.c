@@ -32,7 +32,7 @@ int		ft_echo(t_mshl *m)
 
 	i = 1;
 	flag = 0;
-	if (m->nb_args > 1 && m->cpargs[1]) 
+	if (m->nb_cpargs > 1 && m->cpargs[1]) 
 	{
 		while (m->cpargs[i] && !ft_strcmp(m->cpargs[i], "-n"))
 			i++;
@@ -40,7 +40,7 @@ int		ft_echo(t_mshl *m)
 		while (m->cpargs[i])
 		{
 			ft_putstr_fd(m->cpargs[i], m->tstdout);
-			if (i < m->nb_args - 1)
+			if (i < m->nb_cpargs - 1)
 				ft_putchar_fd(' ', m->tstdout);
 			i++;
 		}

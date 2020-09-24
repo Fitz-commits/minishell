@@ -25,6 +25,7 @@ typedef struct	s_mshl
 	char	**cenv; // malloc to free
 	char	**buf_cmd; // malloc to free sans ;
 	int		nb_args;
+	int		nb_cpargs;
 	char	**cpargs; // malloc to free < > | 
 	int		cp; // current pipe to see on which pipe we are working currently and to close up to it after
 	int		tpiped[512][2]; // we can open up to 1024 file descriptor
