@@ -37,7 +37,7 @@ int     count_aqr(char *line)
     }
     return (j);
 }
-int remove_quotes(t_mshl *m, int j, int pos)
+char *remove_quotes(char *line, int j)
 {
     int i;
     int flag;
@@ -47,24 +47,23 @@ int remove_quotes(t_mshl *m, int j, int pos)
     i = -1;
     j = 0;
     flag = 0;
-    if (!(ret = malloc(sizeof(char) * (count_aqr(m->args[pos]) + 1))))
-        return (m->err = 3);
-    while (m->args[pos][++i])
+    if (!(ret = malloc(sizeof(char) * (count_aqr(line) + 1))))
+        return (NULL);
+    while (line[++i])
     {
         pass = 0;
-        pass = (pass || ((flag == 2 || flag == 0) && m->args[pos][i] == '"')) ? 1 : 0;
-        pass = (pass || ((flag == 1 || flag == 0) && m->args[pos][i] == '\'')) ? 1 : 0;
-        pass = (pass || (((flag == 0 || flag == 2)) && m->args[pos][i] == '\\')) ? 1 : 0;
-        flag = set_quotes(flag, m->args[pos][i]);
+        pass = (pass || ((flag == 2 || flag == 0) && line[i] == '"')) ? 1 : 0;
+        pass = (pass || ((flag == 1 || flag == 0) && line[i] == '\'')) ? 1 : 0;
+        pass = (pass || (((flag == 0 || flag == 2)) && line[i] == '\\')) ? 1 : 0;
+        flag = set_quotes(flag, line[i]);
         if (!pass)
-            ret[j++] = m->args[pos][i];
+            ret[j++] = line[i];
     }
-    free(m->args[pos]);
+    free(line);
     ret[j] = 0;
-    m->args[pos] = ret;
-    return (0);
+    return (ret);
 }
-/*
+
 int check_for_qr(t_mshl *m)
 {
     int i;
@@ -83,4 +82,4 @@ int check_for_qr(t_mshl *m)
                 return (EXIT_FAILURE);
             }
     return (EXIT_SUCCESS);
-    }*/
+}
