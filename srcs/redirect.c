@@ -123,7 +123,7 @@ void print_error(t_mshl *m)
 	    (m->err == 2) ? ft_putendl_fd("Parsing Error", 2) : 0;
 	    (m->err == 3) ? ft_putendl_fd("Memory Error", 2) : 0;
         (m->err == 127) ? ft_putendl_fd("Command not found", 2) : 0;
-        m->err = 127;
+        m->err = 0;
     }
     errno = 0;
 }
