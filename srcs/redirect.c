@@ -7,9 +7,9 @@ int is_redir(char *line)
     else if (!ft_strcmp(line, ">"))
         return (2);
     else if (!ft_strcmp(line, "|"))
-        return (4);
-    else if (!ft_strcmp(line, ";"))
         return (5);
+    else if (!ft_strcmp(line, ";"))
+        return (6);
     else
         return(0);
 }
@@ -49,6 +49,8 @@ int		check_red(t_mshl *m)
     int red;
 
     red = 0;
+    if (m->redir == 5)
+        return (4);
     while (m->args[m->progr] && !red)
     {
         red = is_redir(m->args[m->progr]); // qr here
@@ -86,13 +88,14 @@ int set_progr_tabl(t_mshl *m)
     return (0); 
 }
 
-int     init_ptfr(int (*pt_f[5])(t_mshl*))
+int     init_ptfr(int (*pt_f[6])(t_mshl*))
 {
     pt_f[0] = set_progr_tabl;
     pt_f[1] = set_stdin;
     pt_f[2] = set_stdout;
     pt_f[3] = set_stdouta;
-    pt_f[4] = set_bpipes;
+    pt_f[4] = set_apipes;
+    pt_f[5] = set_bpipes;
     return (0);
 }
 void print_errno(char *str)
@@ -120,6 +123,7 @@ void print_error(t_mshl *m)
 	    (m->err == 2) ? ft_putendl_fd("Parsing Error", 2) : 0;
 	    (m->err == 3) ? ft_putendl_fd("Memory Error", 2) : 0;
         (m->err == 127) ? ft_putendl_fd("Command not found", 2) : 0;
+        m->err = 127;
     }
     errno = 0;
 }
@@ -131,7 +135,7 @@ void print_error(t_mshl *m)
 */
 int set_stdior(t_mshl *m)
 {
-    int		(*pt_fr[5])(t_mshl*);
+    int		(*pt_fr[6])(t_mshl*);
 
     init_ptfr(pt_fr);
     while (m->nb_args > m->progr && m->args[m->progr])
@@ -141,20 +145,22 @@ int set_stdior(t_mshl *m)
         else
             reat_crval(m, 0);
         m->redir = check_red(m);  // quote reduction here
+
         if ((m->progr == 1  && m->redir) || (m->progr == 2 && m->redir == 3))
-            m->err = 2; // parse error might want to do this upper
-        if (m->redir >= 0 && m->redir <= 4)
+          m->err = 2; // parse error might want to do this upper
+        if (m->redir >= 0 && m->redir <= 6)
             if (pt_fr[m->redir](m))
             {
                 m->begin = m->progr;
-                continue;
             }
-        if ((m->redir == 5 || m->redir == 4 || m->redir == 0))
+        printf("-------------------------\n");
+        printf("m->err = %d\n", m->err);
+        printf("m->args[m->begin] = %s\nm->tpiped[0][0] = %d\nm->tpiped[0][1] = %d\nm->redir = %d\nm->tstdin = %d\nm->tstdout = %d\n",m->args[m->begin], m->tpiped[0][0], m->tpiped[0][1], m->redir, m->tstdin, m->tstdout);
+        printf("-------------------------\n");
+        if ((m->redir == 5 || m->redir == 0) && !m->err)
             choice_command(m);
-        if (m->redir != 4)
+        if (m->redir != 5 && m->redir != 4)
             waiter(m);
-        if (m->redir == 4)
-            set_apipes(m);
     }
     if (errno || m->err)
             print_error(m);
