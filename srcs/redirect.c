@@ -9,7 +9,7 @@ int is_redir(char *line)
     else if (!ft_strcmp(line, "|"))
         return (5);
     else if (!ft_strcmp(line, ";"))
-        return (6);
+        return (5);
     else
         return(0);
 }
@@ -113,8 +113,9 @@ void print_error(t_mshl *m)
 {
     if (errno && !m->err)
     {
-        print_errno(m->args[m->progr]);
+        print_errno(m->args[m->ierr]);
         reat_crval(m, 1);
+        errno = 0;
     }
     else if (m->err && m->err != 4)
     {
@@ -140,24 +141,23 @@ int set_stdior(t_mshl *m)
     init_ptfr(pt_fr);
     while (m->nb_args > m->progr && m->args[m->progr])
     {
-        if (errno || m->err)
+        if ((m->redir == 0 || m->redir == 4) && (errno || m->err))
             print_error(m);
+        else if (errno || m->err)
+        {
+            reat_crval(m, 0);
+            m->begin = m->progr;
+        }
         else
             reat_crval(m, 0);
         m->redir = check_red(m);  // quote reduction here
 
         if ((m->progr == 1  && m->redir) || (m->progr == 2 && m->redir == 3))
           m->err = 2; // parse error might want to do this upper
-        if (m->redir >= 0 && m->redir <= 6)
+        if (m->redir >= 0 && m->redir <= 6 && (!errno || m->redir == 5 || m->redir == 4))
             if (pt_fr[m->redir](m))
-            {
-                m->begin = m->progr;
-            }
-        printf("-------------------------\n");
-        printf("m->err = %d\n", m->err);
-        printf("m->args[m->begin] = %s\nm->tpiped[0][0] = %d\nm->tpiped[0][1] = %d\nm->redir = %d\nm->tstdin = %d\nm->tstdout = %d\n",m->args[m->begin], m->tpiped[0][0], m->tpiped[0][1], m->redir, m->tstdin, m->tstdout);
-        printf("-------------------------\n");
-        if ((m->redir == 5 || m->redir == 0) && !m->err)
+                m->ierr = m->progr;
+        if ((m->redir == 5 || m->redir == 0) && !m->err && !errno)
             choice_command(m);
         if (m->redir != 5 && m->redir != 4)
             waiter(m);

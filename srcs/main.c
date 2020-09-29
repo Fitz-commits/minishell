@@ -83,7 +83,7 @@ int		get_args(t_mshl *m)
 	if (check_for_qr(m))
 		return (free_str(&reader, 3));
 	//printf("\n-- Tests\n-------------\n");
-	print_tab(m->args);
+	//print_tab(m->args);
 	//printf("-------------\n");
 	m->nb_args = tablen(m->args);
 	return (free_str(&reader, 0));

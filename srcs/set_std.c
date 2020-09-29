@@ -58,7 +58,7 @@ int set_stdin(t_mshl *m)
     if (!m->args[m->progr])
         return ((m->err = 2)); // parse error
     if ((fd = open(m->args[m->progr], O_RDONLY)) == -1)
-        ;
+        return (EXIT_FAILURE);
     m->tstdin = fd;
     return (EXIT_SUCCESS);
 }
