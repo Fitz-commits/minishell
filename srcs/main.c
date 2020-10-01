@@ -40,7 +40,8 @@ int		first_parsing(char *str)
 			if (str[i] == '&' || !ft_strncmp(&str[i], "<|", 2) ||
 				!ft_strncmp(&str[i], "|<", 2) || !ft_strncmp(&str[i], ">|", 2) ||
 				!ft_strncmp(&str[i], "|>", 2) || !ft_strncmp(&str[i], "><", 2) ||
-				!ft_strncmp(&str[i], "<>", 2) || !ft_strncmp(&str[i], ">>>", 2))
+				!ft_strncmp(&str[i], "<>", 2) || !ft_strncmp(&str[i], ">>>", 3) ||
+                !ft_strncmp(&str[i], ";;", 2))
 				return (2); //Parsing error
 		}
 		i++;
@@ -127,9 +128,9 @@ int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige ver
 	if (n >= 0 && n <= 4 && m->tstdout != -1)
 		return (pt_f[n](m));
 	else if (!ft_strcmp(m->cpargs[0], "exit"))
-		exit(0);
+		return (ft_exit(m, 0));
 	else if (!ft_strcmp(m->cpargs[0], "^D"))
-		exit(0);
+		return (ft_exit(m, 0));
 	else
 		return (launch_exec(m, getvar(m, "PATH")));
 	//a modifier juste pour return pour l'instant
@@ -233,7 +234,12 @@ int		ft_error(t_mshl *m)
 	(m->err == 3) ? ft_putendl_fd("Memory Error", 2) : 0;
 	return (m->err);
 }
-
+void    free_and_null(t_mshl *m, int i)
+{
+    
+    free(m->args[i]);
+    m->args[i] = NULL;
+}
 int		main_loop(t_mshl *m)
 {
 	if (!m->buf_cmd)
@@ -241,16 +247,27 @@ int		main_loop(t_mshl *m)
 		display_prompt();
 		if ((m->err = get_args(m)))
 			return (ft_error(m));
-		if (check_for_dc(m->args) && m->args[check_for_dc(m->args) + 1])
-			if ((m->err = fill_buffer(m, check_for_dc(m->args))))
-				return (ft_error(m)); //a voir pour num retour
+		if (check_for_dc(m->args) >= 0)
+        {
+            if (m->args[check_for_dc(m->args) + 1])
+            {
+			    if ((m->err = fill_buffer(m, check_for_dc(m->args))))
+				    return (ft_error(m)); //a voir pour num retour
+            }
+            else
+            {
+                free_and_null(m, check_for_dc(m->args));
+            }
+        }
 	}
 	else
 	{
+        printf("test\n");
 		buffer_to_args(m);
 	}
 	if (m->args)
 	{
+        print_tab(m->args);
 		if (set_stdior(m) == -1)
 			return (-1);
 		set_zpb(m);

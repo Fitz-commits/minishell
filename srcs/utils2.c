@@ -12,11 +12,11 @@ int check_for_dc(char **args)
 
     i = -1;
     if (!args)
-        return (0);
+        return (-1);
     while (args[++i])
         if (!ft_strcmp(args[i], ";"))
             return (i);
-    return (0);
+    return (-1);
 }
 
 // push dans le buffer ce qu'il y a apres le ; et garde dans le m->args ce qu'il y a avant
@@ -38,7 +38,6 @@ int     fill_buffer(t_mshl *m, int i)
     m->buf_cmd[j] = NULL;
     free(m->args[count]);
     m->args[count] = NULL;
-    //print_tab(ret);
     return (0);
 }
 /*
@@ -60,7 +59,7 @@ int buffer_to_args(t_mshl *m)
     int j;
 
     i = -1;
-    if ((j = check_for_dc(m->buf_cmd)))
+    if ((j = check_for_dc(m->buf_cmd) > -1))
         while (++i < j)
             m->args[i] = m->buf_cmd[i];
     else // a mettre dans une fonction
