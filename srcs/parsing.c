@@ -112,7 +112,7 @@ int		triming(char **line, char ***ret, int *flag, int *j)
 		while (nline[k + i] && !(!(*flag) && is_delim(nline[k + i])))
 				*flag = set_quotes(*flag, nline[k++ + i]);
 		if (k != 0)
-			if (!(nret[(*j)++] = strndup(&nline[i], k)))
+			if (!(nret[(*j)++] = ft_strndup(&nline[i], k)))
 				return (EXIT_FAILURE);
 		i += k;
 	}

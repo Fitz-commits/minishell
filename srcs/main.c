@@ -71,10 +71,18 @@ int		first_parsing(char *str)
 int		get_args(t_mshl *m) 
 {
 	char	*reader;
+    int ret;
+
 
 	reader = NULL;
-	if (get_next_line(0, &reader) < 1)
-		return (-1);  //a faire : gérer si on a 0 de kill prog mais pas error?
+	ret = get_next_line(0, &reader);
+	if (ret == -1)
+        return (-1);
+    if (ret == 0)
+    {
+        free(reader);
+        ft_exit(m, 0);
+    }  //a faire : gérer si on a 0 de kill prog mais pas error?
 	if ((m->err = first_parsing(reader)))
 		return (free_str(&reader, m->err));
 	if (!(m->args = parse_cli(reader)))
@@ -262,7 +270,6 @@ int		main_loop(t_mshl *m)
 	}
 	else
 	{
-        printf("test\n");
 		buffer_to_args(m);
 	}
 	if (m->args)
@@ -291,6 +298,7 @@ int		main(int ac, char **av, char **envp)
 	
 
 	signal(SIGINT, handler);
+    signal(SIGQUIT, handler);
 	//m.prompt = "minishell$> ";
 	if (prep_rv(&m))
 		return (1);

@@ -41,7 +41,7 @@ int set_stdout(t_mshl *m)
         return ((m->err = 2)); // parse error
     if (((fd = open(m->args[m->progr], O_WRONLY | O_CREAT
 		| O_TRUNC , 0666)) < 0))
-        ;
+        return (EXIT_FAILURE);
     m->tstdout = fd;
     return (EXIT_SUCCESS);
 }

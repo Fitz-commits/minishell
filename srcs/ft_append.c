@@ -29,6 +29,7 @@ char	**ft_append(char **tab, char *str)
 			new_tab[i] = tab[i];
 			i++;
 		}
+    free(tab);
 	if (str)
 	{
 		new_tab[i] = str;
