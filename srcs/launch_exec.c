@@ -85,10 +85,14 @@ int	launch_exec(t_mshl *m, char *path)
 		temp = path_join(pathtab[i], m->cpargs[0]);
 		stat(temp, &buffer);
 		if (S_ISREG(buffer.st_mode))
+        {
+            free_tab(pathtab, 1, 1);
 			return (ft_exec(m, temp));
+        }
 		free(temp);
 		i++;
 	}
+    free(pathtab);
 	errno = 0;
 	return (m->err = 127); // not command not found 127
 }
