@@ -1,5 +1,6 @@
 # include "minishell.h"
 
+
 int	change_pwd(t_mshl *m)
 {
 	int i;
@@ -17,25 +18,42 @@ int	change_pwd(t_mshl *m)
 		return (1);
 	return (0);
 }
+
+int go_home(t_mshl *m)
+{
+    if (find_env(m->cenv, "HOME") != -1)
+    {
+        chdir(getvar(m, "HOME"));
+        if (errno)
+            return (1);
+        change_pwd(m);
+        return (0);
+    }
+    else
+        return (1);
+}
+
 //might want to return other value for error
 int	ft_cd(t_mshl *m)
 {
 	struct stat buffer;
 	
+    if (!m->cpargs[1])
+        return(go_home(m));
 	stat(m->cpargs[1], &buffer);
-	if (errno == EACCES)
+	if (errno)
 		return (1);
 	if (S_ISDIR(buffer.st_mode))
 	{
 		chdir(m->args[1]);
-		if (errno == EACCES || errno == ENOTDIR || errno == ENOENT)
+		if (errno)
 			return (1);
 		else
 			return (change_pwd(m)); //protect malloc
 	}
 	else if (S_ISREG(buffer.st_mode))
 	{	
-		ft_putstr_fd(m->args[1], m->tstdout);
+		ft_putstr_fd(m->cpargs[1], m->tstdout);
 		ft_putendl_fd(" is a file not a directory", m->tstdout);
 	}
 	else 

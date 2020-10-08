@@ -1,7 +1,7 @@
 #include "minishell.h"
 int			is_space(char c)
 {
-	if (c == ' ')
+	if (c == ' ' || c == '\t' || c == '\r' || c == '\n' || c == '\v' || c == '\f')
 		return 1;
 	return 0;
 }
@@ -119,7 +119,7 @@ int		triming(char **line, char ***ret, int *flag, int *j)
 	return (EXIT_SUCCESS);
 }
 
-char		**parse_cli(char *line)
+char		**parse_cli(char *line, t_mshl *m)
 {
 	int j;
 	int flag;
@@ -135,7 +135,7 @@ char		**parse_cli(char *line)
 		return (NULL);
 	}
 	ret[j] = 0;
-	if (flag != 0)
+	if (flag != 0 && (m->err = 2))
 		return (free_tabs(ret)); // can catch " or ' isolation
 	return (ret);
 }

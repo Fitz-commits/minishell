@@ -70,32 +70,30 @@ int		first_parsing(char *str)
 
 int		get_args(t_mshl *m) 
 {
-	char	*reader;
     int ret;
 
 
-	reader = NULL;
-	ret = get_next_line(0, &reader);
+    if (!m->reader)
+	    ret = get_next_line(0, &m->reader);
+    else
+        ret = 1;
 	if (ret == -1)
         return (-1);
     if (ret == 0)
     {
-        free(reader);
+        free(m->reader);
         ft_exit(m, 0);
     }  //a faire : gérer si on a 0 de kill prog mais pas error?
-	if ((m->err = first_parsing(reader)))
-		return (free_str(&reader, m->err));
-	if (!(m->args = parse_cli(reader)))
-		return (free_str(&reader, 3));  //3 = memory error | faire les alias .h 
-	if ((check_for_exp(m)))
-		return (free_str(&reader, 3));
-	if (check_for_qr(m))
-		return (free_str(&reader, 3));
+	if ((m->err = first_parsing(m->reader)))
+		return (free_str(&m->reader, m->err));
+	if (!(m->args = parse_cli(m->reader, m)))
+		return (free_str(&m->reader, 2));  //3 = memory error | faire les alias .h 
+	
 	//printf("\n-- Tests\n-------------\n");
 	//print_tab(m->args);
 	//printf("-------------\n");
 	m->nb_args = tablen(m->args);
-	return (free_str(&reader, 0));
+	return (free_str(&m->reader, 0));
 }
 
 
@@ -274,7 +272,11 @@ int		main_loop(t_mshl *m)
 	}
 	if (m->args)
 	{
-        print_tab(m->args);
+        if ((check_for_exp(m)))
+		return (-1);
+	    if (check_for_qr(m))
+		return (-1);
+        //print_tab(m->args);
 		if (set_stdior(m) == -1)
 			return (-1);
 		set_zpb(m);
@@ -293,8 +295,7 @@ int		main(int ac, char **av, char **envp)
 {
 	t_mshl	m;		//Struct globale
 	int		ret;
-	(void)av;
-	(void)ac;
+
 	
 
 	signal(SIGINT, handler);
@@ -304,10 +305,19 @@ int		main(int ac, char **av, char **envp)
 		return (1);
 	ft_init(&m);
 	m.cenv = ft_getenv(envp);
+    if (ac == 3)
+    {
+        if (!ft_strcmp(av[1], "-c"))
+            m.reader = ft_strdup(av[2]);
+    }
+    else
+        m.reader = NULL;
 	while (1)
 	{
 		if ((ret = main_loop(&m) < 0))
 			return (ft_exit(&m, ret)); //code erreur -1 en cas d'erreur ?
+        if (ac == 3 && !m.buf_cmd)
+            exit(m.rvalue);
 	}
 	return (0);
 }
