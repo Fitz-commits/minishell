@@ -29,23 +29,30 @@ char *remove_in_str(char *str, int pos, int size, int *l)
     }
     *l = 0;
     str[pos + i - j] = 0;
-    return str;
+    return (str);
 }
 
 char *insert_into_string(char *str, char *to_insert, int pos)
 {
-    char *ret;
-    
-    if (!(ret = malloc(sizeof(char) * (ft_strlen(str) + ft_strlen(to_insert) + 1))))
+    char    *ret;
+    int     m;
+
+    m = ft_strlen(str) + ft_strlen(to_insert) + 1;
+    if (!(ret = malloc(sizeof(char) * m)))
         return (NULL);
-    ret = ft_strncpy(ret, str, pos);
+    while (m >= 0)
+    {
+        ret[m--] = '\0';
+    }
+    if (pos > 0)
+        ret = ft_strncpy(ret, str, pos);
     ret = ft_strcat(ret, to_insert);
     ret = ft_strcat(ret, &str[pos]);
     free(str);
     return (ret);
 }
 
-char *env_expansion(char *line, t_mshl *m, int j, int l)
+char *env_expansion(char **line, t_mshl *m, int j, int l)
 {
     int i;
     int pos;
@@ -53,7 +60,7 @@ char *env_expansion(char *line, t_mshl *m, int j, int l)
     char *ret;
 
     i = 0;
-    ret = line;
+    ret = *line;
     while (ret[i])
     {
         j = 0;
@@ -100,7 +107,7 @@ int check_for_exp(t_mshl *m)
     i = -1;
     while(m->args[++i])
         if (check_lee(m->args[i]))
-            if (!(m->args[i] = env_expansion(m->args[i], m, 0, 0)))
+            if (!(m->args[i] = env_expansion(&m->args[i], m, 0, 0)))
             {
                 while (m->args[j] || j == i)
                     free(m->args[j++]);
