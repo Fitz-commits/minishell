@@ -61,25 +61,29 @@ int     init_ptf(int (*pt_f[6])(t_mshl*))
     return (0);
 }
 
+
 int waiter(t_mshl *m)
 {
-    int i;
     int o;
 
-    i = -1;
-
-    while(++i < m->proc.curpro)
+    if (!m->proc.curpro)
+        return (0);
+    //printf("m->proc.curpro = %d\n", m->proc.curpro);
+    waitpid(m->proc.child_pid[m->proc.curpro], &o, 0);
+    if (m->rvalue != WEXITSTATUS(o))
     {
-        //printf("m->proc.child_pid[%d] = %d\n", i, m->proc.child_pid[i]);
-        waitpid(m->proc.child_pid[i], &o, 0);
-        if (m->rvalue != WEXITSTATUS(o))
-        {
-            if (reat_crval(m, WEXITSTATUS(o)))
-                return (1);
-            m->err = 4;
-        }
-        m->proc.child_pid[i] = 0;
+        if (reat_crval(m, WEXITSTATUS(o)))
+            return (1);
+        m->err = 4;
+    }
+    m->proc.child_pid[m->proc.curpro] = 0;
+    while (--m->proc.curpro)
+    {
+        kill(m->proc.child_pid[m->proc.curpro], 0);
+        m->proc.child_pid[m->proc.curpro] = 0;
     }
     m->proc.curpro = 0;
+    if (errno == 3)
+        errno = 0;
     return (0);
 }

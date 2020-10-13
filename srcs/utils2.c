@@ -59,7 +59,7 @@ int buffer_to_args(t_mshl *m)
     int j;
 
     i = -1;
-    if ((j = check_for_dc(m->buf_cmd) > -1))
+    if (((j = check_for_dc(m->buf_cmd)) > -1))
         while (++i < j)
             m->args[i] = m->buf_cmd[i];
     else // a mettre dans une fonction
