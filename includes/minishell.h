@@ -49,7 +49,6 @@ int				free_tab(char **tab, int ret, char code);
 int				ft_exit(t_mshl *m, int ret);
 int				ft_echo(t_mshl *m);
 char			**ft_append(char **tab, char *str);
-char			**ft_splitq(char *s, char c);
 int				clean_args(t_mshl *m);
 //PARSING
 int				set_quotes(int flag, char c);
