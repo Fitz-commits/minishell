@@ -1,6 +1,5 @@
 # include "minishell.h"
 
-
 int	change_pwd(t_mshl *m)
 {
 	int i;
@@ -58,15 +57,13 @@ int go_home(t_mshl *m)
         change_pwd(m);
         return (0);
     }
-    else
-        return (1);
+    ft_putstr_fd("minishell: cd: HOME not set", m->tstdout);
+    return (1);
 }
 
 //might want to return other value for error
 int	ft_cd(t_mshl *m)
-{
-	struct stat buffer;
-	
+{	
     if (!m->cpargs[1])
         return(go_home(m));
     if (!m->cpargs[1][0])
@@ -74,26 +71,9 @@ int	ft_cd(t_mshl *m)
         chdir(".");
         return (change_pwd(m));
     }
-	stat(m->cpargs[1], &buffer);
-	if (errno)
-		return (1);
-	if (S_ISDIR(buffer.st_mode))
-	{
-        chdir(m->cpargs[1]);
-		if (errno)
-			return (1);
-		else
-			return (change_pwd(m)); //protect malloc
-	}
-	else if (S_ISREG(buffer.st_mode))
-	{	
-		ft_putstr_fd(m->cpargs[1], m->tstdout);
-		ft_putendl_fd(" is a file not a directory", m->tstdout);
-	}
-	else 
-	{
-		return (errno);
-	}
-	return (1);
+    if (check_dperm(m, m->cpargs[1]))
+        return (EXIT_FAILURE);
+    chdir(m->cpargs[1]);
+	return (change_pwd(m)); //protect malloc
 }
 

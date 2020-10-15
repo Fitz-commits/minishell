@@ -123,6 +123,8 @@ void print_error(t_mshl *m)
         (m->err == 1) ? ft_putendl_fd("Not Implemented", 2) : 0;
 	    (m->err == 2) ? ft_putendl_fd("Parsing Error", 2) : 0;
 	    (m->err == 3) ? ft_putendl_fd("Memory Error", 2) : 0;
+        (m->err == 6) ? ft_putendl_fd("is not a directory", 2) : 0;
+        (m->err == 7) ? ft_putendl_fd("permission denied", 2) : 0;
         (m->err == 127) ? ft_putendl_fd("Command not found", 2) : 0;
         m->err = 0;
     }

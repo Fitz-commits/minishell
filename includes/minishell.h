@@ -10,6 +10,7 @@
 # include <sys/wait.h>
 # include <stdio.h>
 # include <signal.h>
+# include <dirent.h>
 
 typedef struct	s_proc
 {
@@ -105,4 +106,6 @@ int				n_command(t_mshl *m);
 int				reat_crval(t_mshl *m, int i);
 int             ft_pwd(t_mshl *m);
 int             complete_env(t_mshl *m);
+// perm
+int		check_dperm(t_mshl *m, char *path);
 #endif
