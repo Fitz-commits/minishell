@@ -48,7 +48,7 @@ int				free_str(char **str, int ret);
 int				free_tab(char **tab, int ret, char code);
 int				ft_exit(t_mshl *m, int ret);
 int				ft_echo(t_mshl *m);
-char			**ft_append(char **tab, char *str);
+char			**ft_append(t_mshl *m, char *str);
 int				clean_args(t_mshl *m);
 //PARSING
 int				set_quotes(int flag, char c);
@@ -103,4 +103,6 @@ int				init_ptf(int (*pt_f[6])(t_mshl*));
 int				n_command(t_mshl *m);
 // $?
 int				reat_crval(t_mshl *m, int i);
+int             ft_pwd(t_mshl *m);
+int             complete_env(t_mshl *m);
 #endif

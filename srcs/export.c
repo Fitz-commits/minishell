@@ -84,7 +84,7 @@ int	ft_export(t_mshl *m)
 		{
 			if (!(tempc = ft_strdup(m->args[i])))
 				return (EXIT_FAILURE);
-			m->cenv = ft_append(m->cenv, tempc); // append chelou add maloc prot
+			m->cenv = ft_append(m, tempc); // append chelou add maloc prot
 		}
 		else
 		{	

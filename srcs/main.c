@@ -131,7 +131,7 @@ int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige ver
 	//print_tab(m->cpargs); // debugging only
 	if (!m->cpargs)
 		return (0); 		//code a modifier si pas arguments juste rien faire
-	if (n >= 0 && n <= 4 && m->tstdout != -1)
+	if (n >= 0 && n <= 5 && m->tstdout != -1)
 		return (pt_f[n](m));
 	else if (!ft_strcmp(m->cpargs[0], "exit"))
 		return (ft_exit(m, 0));
@@ -250,7 +250,7 @@ int		main_loop(t_mshl *m)
 {
 	if (!m->buf_cmd)
 	{
-		display_prompt();
+		//display_prompt();
 		if ((m->err = get_args(m)))
 			return (ft_error(m));
 		if (check_for_dc(m->args) >= 0)
@@ -305,6 +305,7 @@ int		main(int ac, char **av, char **envp)
 		return (1);
 	ft_init(&m);
 	m.cenv = ft_getenv(envp);
+    complete_env(&m);
     if (ac == 3)
     {
         if (!ft_strcmp(av[1], "-c"))

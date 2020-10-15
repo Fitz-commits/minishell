@@ -6,16 +6,45 @@ int	change_pwd(t_mshl *m)
 	int i;
 	int j;
 	char buffer[PATH_MAX];
+    char *tempc;
 
 	i = find_env(m->cenv, "OLDPWD=");
 	j = find_env(m->cenv, "PWD=");
-	free(m->cenv[i]);
-	if (!(m->cenv[i] = pair_value_key(getvar(m, "PWD"), "OLDPWD")))
-		return (1);
-	free(m->cenv[j]);
-	getcwd(buffer, PATH_MAX);
-	if (!(m->cenv[j] = pair_value_key(buffer, "PWD")))
-		return (1);
+    ft_bzero(buffer, PATH_MAX);
+    getcwd(buffer, PATH_MAX);
+    //HANDLES OLDPWD ATTRIBUTION
+
+    if (i != -1)
+    {
+	    free(m->cenv[i]);
+	    if (!(m->cenv[i] = pair_value_key(getvar(m, "PWD"), "OLDPWD")))
+		    return (1);
+    }
+    else if (j != -1)
+    {
+        if (!(tempc = pair_value_key(getvar(m, "PWD"), "OLDPWD")))
+            return (EXIT_FAILURE);
+        if (!(m->cenv = ft_append(m, tempc)))
+            return (EXIT_FAILURE);
+    }
+
+    //HANDLE PWD ATTRIBUTION
+
+    if (j != -1)
+    {
+	    free(m->cenv[j]);
+	    if (!(m->cenv[j] = pair_value_key(buffer, "PWD")))
+		    return (1);
+    }
+    
+    else
+    {
+        if (!(tempc = pair_value_key(buffer , "PWD")))
+            return (EXIT_FAILURE);
+        if (!(m->cenv = ft_append(m, tempc)))
+            return (EXIT_FAILURE);
+    }
+    
 	return (0);
 }
 
@@ -40,12 +69,17 @@ int	ft_cd(t_mshl *m)
 	
     if (!m->cpargs[1])
         return(go_home(m));
+    if (!m->cpargs[1][0])
+    {
+        chdir(".");
+        return (change_pwd(m));
+    }
 	stat(m->cpargs[1], &buffer);
 	if (errno)
 		return (1);
 	if (S_ISDIR(buffer.st_mode))
 	{
-		chdir(m->args[1]);
+        chdir(m->cpargs[1]);
 		if (errno)
 			return (1);
 		else

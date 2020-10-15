@@ -57,6 +57,7 @@ int     init_ptf(int (*pt_f[6])(t_mshl*))
     pt_f[2] = ft_unset;
     pt_f[3] = ft_cd;
     pt_f[4] = ft_export;
+    pt_f[5] = ft_pwd;
     //exit when working m->pt_f[5]
     return (0);
 }

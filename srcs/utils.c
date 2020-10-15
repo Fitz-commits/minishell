@@ -120,6 +120,8 @@ int n_command(t_mshl *m)
 		return (3);
 	else if (!ft_strcmp(m->cpargs[0], "unset"))
 		return (2);
+    else if (!ft_strcmp(m->cpargs[0], "pwd"))
+		return (5);
 	else
 		return (-1);
 }
