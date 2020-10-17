@@ -12,6 +12,20 @@
 
 #include "minishell.h"
 
+int		check_varname(char *var)
+{
+	int i;
+
+	i = 0;
+	while (var[i])
+	{
+		if (!ft_isalnum(var[i]) && var[i] != '_')
+			return (9);  //code erruer a modifier
+		i++;
+	}
+	return (0);
+}
+
 int		del_varenv(t_mshl *m, int j)
 {
 	char	**nenv;
@@ -48,17 +62,27 @@ int		ft_unset(t_mshl *m)
 	{
 		while (m->args[++i])
 		{
-			j = 0;
-			while (j >= 0 && m->cenv[j])
+			if (!check_varname(m->args[i]))
 			{
-				if (!ft_strncmp(m->cenv[j], m->args[i], until_dquotes(m->cenv[j]))
-					&& !ft_strncmp(m->cenv[j], m->args[i], ft_strlen(m->args[i])))
+				j = 0;
+				while (m->cenv[j])
 				{
-					del_varenv(m, j);
-					j = -2;
+					if (!ft_strncmp(m->cenv[j], m->args[i], until_dquotes(m->cenv[j]))
+						&& !ft_strncmp(m->cenv[j], m->args[i], ft_strlen(m->args[i])))
+					{
+						del_varenv(m, j);
+						j -= 1;
+					}
+					j++;
 				}
-				j++;
 			}
+			else
+			{
+				ft_putstr_fd("Minishell : ", m->tstdout);
+				ft_putstr_fd(m->args[i], m->tstdout);
+				ft_putstr_fd(" : not a valid identifier\n", m->tstdout);
+			}
+			
 		}
 	}
 	return (1);
