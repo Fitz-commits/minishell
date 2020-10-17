@@ -165,6 +165,7 @@ void	ft_init(t_mshl *m)  //initialise la structure might want to failproof it no
 	m->begin = 0;
 	m->error = 0;
 	m->err = 0;
+	m->errarg = -1;  // if -1 no args print in error nsg 
 	zeroing_pipes(m);
 	zeroing_process(m);
 }
@@ -227,7 +228,7 @@ int		main(int ac, char **av, char **envp)
 }
 */
 
-int		ft_error(t_mshl *m)
+/*int		ft_errors(t_mshl *m)
 {
 	if (m->error)
 	{
@@ -239,7 +240,8 @@ int		ft_error(t_mshl *m)
 	(m->err == 2) ? ft_putendl_fd("Parsing Error", 2) : 0;
 	(m->err == 3) ? ft_putendl_fd("Memory Error", 2) : 0;
 	return (m->err);
-}
+}*/
+
 void    free_and_null(t_mshl *m, int i)
 {
     

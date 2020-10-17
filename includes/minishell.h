@@ -40,6 +40,7 @@ typedef struct	s_mshl
 	int		redir;
 	int		error; 		//errno
 	int		err;   		//erreur perso
+	int		errarg;
 	int		rvalue; // return value $?
 	char	*crvalue; // malloc to free
 }				t_mshl;
@@ -107,5 +108,7 @@ int				reat_crval(t_mshl *m, int i);
 int             ft_pwd(t_mshl *m);
 int             complete_env(t_mshl *m);
 // perm
-int		check_dperm(t_mshl *m, char *path);
+int				check_dperm(t_mshl *m, char *path);
+//Error
+int				ft_error(t_mshl *m);
 #endif

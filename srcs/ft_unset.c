@@ -78,9 +78,9 @@ int		ft_unset(t_mshl *m)
 			}
 			else
 			{
-				ft_putstr_fd("Minishell : ", m->tstdout);
-				ft_putstr_fd(m->args[i], m->tstdout);
-				ft_putstr_fd(" : not a valid identifier\n", m->tstdout);
+				m->errarg = i;
+				m->err = 9;
+				ft_error(m);
 			}
 			
 		}
