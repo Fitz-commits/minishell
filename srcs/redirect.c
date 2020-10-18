@@ -135,12 +135,14 @@ int set_stdior(t_mshl *m)
         if (m->redir >= 0 && m->redir <= 6 && (!errno || m->redir == 5 || m->redir == 4))
             if (pt_fr[m->redir](m))
                 m->ierr = m->progr;
+        /*
         if (m->cp >= 0)
         {
             printf("--------------------------\n");
             printf("m->tpiped[%d][0] = %d\nm->tpiped[%d][1] = %d\n m->redir = %d\n", m->cp, m->tpiped[m->cp][0],m->cp, m->tpiped[m->cp][1], m->redir);
             printf("--------------------------\n");
         }
+        */
         if ((m->redir == 5 || m->redir == 0) && !m->err && !errno)
             choice_command(m);
         if (m->redir != 5 && m->redir != 4)

@@ -23,7 +23,7 @@ int		check_dperm(t_mshl *m, char *path)
 	struct stat buffer;
 	mode_t perm;
 	
-	if ((stat(path, &buffer) == -1))
+	if ((stat(path, &buffer) == -1)) // set erreur
 		return (m->ierr = m->begin);
 	perm = buffer.st_mode;
 	if (!S_ISDIR(buffer.st_mode))

@@ -22,7 +22,7 @@
 ** TODO alias dans le .h
 */
 
-int		first_parsing(char *str)
+int		first_parsing(t_mshl *m, char *str)
 {
 	int i;
 	int q;
@@ -36,13 +36,19 @@ int		first_parsing(char *str)
 		{
 			if (str[i] == '*' || !ft_strncmp(&str[i], "&&", 2) ||
 				!ft_strncmp(&str[i], "||", 2) || !ft_strncmp(&str[i], "<<", 2))
-				return (1); // not implemented
+                {
+                    m->cerr = str[i];
+				    return (1); // not implemented
+                }
 			if (str[i] == '&' || !ft_strncmp(&str[i], "<|", 2) ||
 				!ft_strncmp(&str[i], "|<", 2) || !ft_strncmp(&str[i], ">|", 2) ||
 				!ft_strncmp(&str[i], "|>", 2) || !ft_strncmp(&str[i], "><", 2) ||
 				!ft_strncmp(&str[i], "<>", 2) || !ft_strncmp(&str[i], ">>>", 3) ||
                 !ft_strncmp(&str[i], ";;", 2))
-				return (2); //Parsing error
+                {
+                    m->cerr = str[i];
+				    return (2); //Parsing error
+                }
 		}
 		i++;
 	}
@@ -84,10 +90,10 @@ int		get_args(t_mshl *m)
         free(m->reader);
         ft_exit(m, 0);
     }  //a faire : gérer si on a 0 de kill prog mais pas error?
-	if ((m->err = first_parsing(m->reader)))
+	if ((m->err = first_parsing(m, m->reader)))
 		return (free_str(&m->reader, m->err));
 	if (!(m->args = parse_cli(m->reader, m)))
-		return (free_str(&m->reader, 2));  //3 = memory error | faire les alias .h 
+		return (free_str(&m->reader, m->err));  //3 = memory error | faire les alias .h 
 	
 	//printf("\n-- Tests\n-------------\n");
 	//print_tab(m->args);
@@ -175,6 +181,8 @@ void	set_zpb(t_mshl *m)
 	m->progr = 0;
 	m->begin = 0;
 	m->error = 0;
+    m->err = 0;
+    m->errarg = -1;
 }
 
 
@@ -254,13 +262,13 @@ int		main_loop(t_mshl *m)
 	{
 		//display_prompt();
 		if ((m->err = get_args(m)))
-			return (ft_error(m));
+			return (main_error(m));
 		if (check_for_dc(m->args) >= 0)
         {
             if (m->args[check_for_dc(m->args) + 1])
             {
 			    if ((m->err = fill_buffer(m, check_for_dc(m->args))))
-				    return (ft_error(m)); //a voir pour num retour
+				    return (main_error(m)); //a voir pour num retour
             }
             else
             {
@@ -275,9 +283,9 @@ int		main_loop(t_mshl *m)
 	if (m->args)
 	{
         if ((check_for_exp(m)))
-		return (-1);
+		return (main_error(m));
 	    if (check_for_qr(m))
-		return (-1);
+		return (main_error(m));
         //print_tab(m->args);
 		if (set_stdior(m) == -1)
 			return (-1);

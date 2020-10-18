@@ -27,7 +27,44 @@ void    print_error(t_mshl *m)
         m->errarg = -1;
     }
 }
-
+// Neeed to refactor this
+int		main_error(t_mshl *m)
+{
+	if (m->err == 2)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd("parsing error near : ", 2);
+		write(2, &m->cerr, 1);
+		write(2, &"\n", 1);
+		reat_crval(m, 2);
+	}
+	if (m->err == 1)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd("not implemented near : ", 2);
+		write(2, &m->cerr, 1);
+		write(2, &"\n", 1);
+		reat_crval(m, 1);
+	}
+	if (m->err == 4)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd("unexpected end of file", 2);
+		write(2, &"\n", 1);
+		reat_crval(m, 2);
+	}
+	else
+		if (errno)
+			print_errno(NULL); //memory error
+	if (m->buf_cmd)
+		free(m->buf_cmd);
+	m->buf_cmd = NULL;
+	set_zpb(m);
+	clear_std(m);
+	close_pipes(m);
+	clean_args(m);
+	return (0);
+}
 int    ft_error(t_mshl *m)
 {
     int ret;

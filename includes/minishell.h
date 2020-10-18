@@ -26,6 +26,7 @@ typedef struct	s_mshl
 	char	**args;  // malloc to free 
 	char	**cenv; // malloc to free
 	char	**buf_cmd; // malloc to free sans ;
+    char    cerr;
 	int		nb_args;
 	int		nb_cpargs;
 	int		ierr;
@@ -111,4 +112,8 @@ int             complete_env(t_mshl *m);
 int				check_dperm(t_mshl *m, char *path);
 //Error
 int				ft_error(t_mshl *m);
+void    print_error(t_mshl *m);
+void    print_errno(char *str);
+void	set_zpb(t_mshl *m);
+int		main_error(t_mshl *m);
 #endif
