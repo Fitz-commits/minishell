@@ -22,7 +22,7 @@ int		check_varname(char *var)
 	while (var[i])
 	{
 		if (!ft_isalnum(var[i]) && var[i] != '_')
-			return (9);  //code erruer a modifier
+			return (9); //Not a valid identifier
 		i++;
 	}
 	return (0);
@@ -39,17 +39,19 @@ int		del_varenv(t_mshl *m, int j)
 	k = 0;
 	len = tablen(m->cenv);
 	if (!(nenv = (char **)malloc(sizeof(char *) * len)))
-		return (1); // ATTENTION ERROR CODE A MOFIDIER + FREE LES TRUCS ICI
-	while (m->cenv[i] && i < j)
-		nenv[k++] = m->cenv[i++];
-	if (m->cenv[j])
+		return (3); //Memory Error
+	while (m->cenv[i])
 	{
-		i = j + 1;
-		while (m->cenv[i])
-			nenv[k++] = m->cenv[i++];
+		if (i != j)
+		{
+			if (!(nenv[k] = ft_strdup(m->cenv[i])))
+				return (free_tab(nenv, 3, 1));
+			k++;
+		}
+		i++;
 	}
-	free_str(&m->cenv[j], 0);
-	free_tab(m->cenv, 0, 0);
+	nenv[k] = NULL;
+	free_tab(m->cenv, 0, 1);
 	m->cenv = nenv;
 	return (0);
 }
@@ -73,7 +75,7 @@ int		ft_unset(t_mshl *m)
 						&& !ft_strncmp(m->cenv[j], m->args[i], ft_strlen(m->args[i])))
 					{
 						del_varenv(m, j);
-						j -= 1;
+						break ;
 					}
 					j++;
 				}
