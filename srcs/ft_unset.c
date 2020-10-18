@@ -17,6 +17,8 @@ int		check_varname(char *var)
 	int i;
 
 	i = 0;
+	if (!ft_strlen(var))
+		return (9);
 	while (var[i])
 	{
 		if (!ft_isalnum(var[i]) && var[i] != '_')

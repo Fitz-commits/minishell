@@ -22,6 +22,7 @@ int is_redir(char *line)
 ** 4 is equal to pipe
 **      which means redirecting output of first command into input of next command
 */
+
 int     next_split(t_mshl *m)
 {
     int i;
@@ -37,6 +38,7 @@ int     next_split(t_mshl *m)
     }
     return(tablen(m->args));
 }
+
 /*
 ** cette fonction permet est la fonction qui progresse dans la liste
 ** d'argument et permet de voir quel type de redirection il s'agit
@@ -44,6 +46,7 @@ int     next_split(t_mshl *m)
 ** dès qu'il y a une redirection elle renvoie la valeur a la boucle
 ** principale qui gere au cas par cas
 */
+
 int		check_red(t_mshl *m)
 {
     int red;
@@ -77,6 +80,7 @@ int		check_red(t_mshl *m)
 ** TODO gerer les pipes
 ** TODO fractionner cette fonction
 */
+
 int set_progr_tabl(t_mshl *m)
 {
     int i;
@@ -98,44 +102,16 @@ int     init_ptfr(int (*pt_f[6])(t_mshl*))
     pt_f[5] = set_bpipes;
     return (0);
 }
-void print_errno(char *str)
-{
-    ft_putstr_fd("minishell : ", 2);
-    if (str)
-        {
-        ft_putstr_fd(str, 2);
-        ft_putstr_fd(" : ", 2);
-        }
-    ft_putendl_fd(strerror(errno), 2);
-}
 
-void print_error(t_mshl *m)
-{
-    if (errno && !m->err)
-    {
-        print_errno(m->args[m->ierr]);
-        reat_crval(m, 1);
-        errno = 0;
-    }
-    else if (m->err && m->err != 4)
-    {
-        reat_crval(m, m->err);
-        (m->err == 1) ? ft_putendl_fd("Not Implemented", 2) : 0;
-	    (m->err == 2) ? ft_putendl_fd("Parsing Error", 2) : 0;
-	    (m->err == 3) ? ft_putendl_fd("Memory Error", 2) : 0;
-        (m->err == 6) ? ft_putendl_fd("is not a directory", 2) : 0;
-        (m->err == 7) ? ft_putendl_fd("permission denied", 2) : 0;
-        (m->err == 127) ? ft_putendl_fd("Command not found", 2) : 0;
-        m->err = 0;
-    }
-    errno = 0;
-}
+
+
 /*
 ** Open to discussion we might want to check something else than errno
 ** In c programming looking at errno without safefailing fonction is 
 ** Not usual but since we program a shell we might need to make it as is
 **
 */
+
 int set_stdior(t_mshl *m)
 {
     int		(*pt_fr[6])(t_mshl*);
@@ -144,7 +120,7 @@ int set_stdior(t_mshl *m)
     while (m->nb_args > m->progr && m->args[m->progr])
     {
         if ((m->redir == 0 || m->redir == 4) && (errno || m->err))
-            print_error(m);
+            ft_error(m);
         else if (errno || m->err)
         {
             reat_crval(m, 0);
@@ -171,7 +147,7 @@ int set_stdior(t_mshl *m)
           waiter(m);
     }
     if (errno || m->err)
-            print_error(m);
+            ft_error(m);
         else
             reat_crval(m, 0);
     return (EXIT_SUCCESS);
