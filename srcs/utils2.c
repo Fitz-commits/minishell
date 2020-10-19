@@ -97,8 +97,11 @@ int clean_args(t_mshl *m)
     if (m->cpargs)
         free(m->cpargs);
     m->cpargs = NULL;
+    if (m->args)
+    {
     while (m->args[i])
         free(m->args[i++]);
+    }
     if (!m->buf_cmd)
     {
         free(m->args);

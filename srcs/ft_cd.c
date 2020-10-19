@@ -1,11 +1,11 @@
 # include "minishell.h"
 
-int	change_pwd(t_mshl *m)
+int			change_pwd(t_mshl *m)
 {
-	int i;
-	int j;
-	char buffer[PATH_MAX];
-    char *tempc;
+	int		i;
+	int		j;
+	char	buffer[PATH_MAX];
+    char 	*tempc;
 
 	i = find_env(m->cenv, "OLDPWD=");
 	j = find_env(m->cenv, "PWD=");
@@ -47,7 +47,7 @@ int	change_pwd(t_mshl *m)
 	return (0);
 }
 
-int go_home(t_mshl *m)
+int			go_home(t_mshl *m)
 {
     if (find_env(m->cenv, "HOME") != -1)
     {
@@ -57,12 +57,12 @@ int go_home(t_mshl *m)
         change_pwd(m);
         return (0);
     }
-    ft_putstr_fd("minishell: cd: HOME not set", m->tstdout);
+    ft_putstr_fd("minishell: cd: HOME not set\n", m->tstdout);
     return (1);
 }
 
 //might want to return other value for error
-int	ft_cd(t_mshl *m)
+int			ft_cd(t_mshl *m)
 {	
     if (!m->cpargs[1])
         return(go_home(m));

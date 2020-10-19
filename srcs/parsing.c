@@ -126,16 +126,20 @@ char		**parse_cli(char *line, t_mshl *m)
 	char **ret;
 
 	if (!(ret = malloc(sizeof(char*) * (count_arg(line) + 1))))
+    {
+        m->err = 3;
 		return (NULL);
+    }
 	flag = 0;
 	j = 0;
 	if ((triming(&line, &ret, &flag, &j) == EXIT_FAILURE))
 	{
+        m->err = 3;
 		free_tab(ret, 0, 1);
 		return (NULL);
 	}
 	ret[j] = 0;
-	if (flag != 0 && (m->err = 2))
+	if (flag != 0 && (m->err = 4))
 		return (free_tabs(ret)); // can catch " or ' isolation
 	return (ret);
 }
