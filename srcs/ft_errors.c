@@ -68,6 +68,7 @@ int		main_error(t_mshl *m)
 	clean_args(m);
 	return (0);
 }
+
 int    ft_error(t_mshl *m)
 {
 	int ret;
