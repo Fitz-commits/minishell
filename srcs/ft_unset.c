@@ -85,6 +85,7 @@ int		ft_unset(t_mshl *m)
 				m->errarg = i;
 				m->err = 9;
 				ft_error(m);
+				m->err = -10;
 			}
 			
 		}

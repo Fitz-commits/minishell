@@ -149,6 +149,7 @@ int		prep_rv(t_mshl *m)
 	reat_crval(m, 0);
 	return (0);
 }
+
 void	ft_init(t_mshl *m)  //initialise la structure might want to failproof it now that it malloc's
 {
 
@@ -248,6 +249,7 @@ void    free_and_null(t_mshl *m, int i)
     free(m->args[i]);
     m->args[i] = NULL;
 }
+
 int		main_loop(t_mshl *m)
 {
 	if (!m->buf_cmd)

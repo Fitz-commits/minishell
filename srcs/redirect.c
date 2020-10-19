@@ -147,9 +147,9 @@ int set_stdior(t_mshl *m)
           waiter(m);
     }
     if (errno || m->err)
-            ft_error(m);
-        else
-            reat_crval(m, 0);
+        ft_error(m);
+    else
+        reat_crval(m, 0);
     return (EXIT_SUCCESS);
 }
 
