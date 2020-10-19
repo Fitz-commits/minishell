@@ -69,6 +69,25 @@ char	*getvar(t_mshl *m, char *key)
 	else
 		return (&m->cenv[nline][until_dquotes(m->cenv[nline]) + 1]);
 }
+
+int		parse_args(char *str)
+{
+	int i;
+	int equ;
+
+	i = 0;
+	equ = 0;
+	if (!ft_strlen(str))
+		return (9); //Not a valid identifier
+	while (str[i])
+	{
+		if (!ft_isalnum(str[i]) && str[i] != '_' && str[i] != '=')
+			return (9);
+		i++;
+	}
+	return (0);
+}
+
 // export seems okay need testing
 // if no = seems not to esport anything need fixing
 int	ft_export(t_mshl *m)
@@ -80,20 +99,32 @@ int	ft_export(t_mshl *m)
 	i = 1;
 	while (m->args[i])
 	{
-		if (find_env(m->cenv, m->args[i]) == -1)
+		if (!parse_args(m->args[i]))
 		{
-			if (!(tempc = ft_strdup(m->args[i])))
-				return (EXIT_FAILURE);
-			m->cenv = ft_append(m, tempc); // append chelou add maloc prot
+			if (find_env(m->cenv, m->args[i]) == -1)
+			{
+				if (!(tempc = ft_strdup(m->args[i])))
+					return (EXIT_FAILURE);
+				m->cenv = ft_append(m, tempc); // append chelou add maloc prot
+			}
+			else
+			{	
+				temp = find_env(m->cenv, m->args[i]);
+				free(m->cenv[temp]);
+				if(!(m->cenv[temp] = ft_strdup(m->args[i])))
+					return (EXIT_FAILURE);
+			}
 		}
 		else
-		{	
-			temp = find_env(m->cenv, m->args[i]);
-			free(m->cenv[temp]);
-			if(!(m->cenv[temp] = ft_strdup(m->args[i])))
-				return (EXIT_FAILURE);
+		{
+			m->errarg = i;
+			m->err = 9;
+			ft_error(m);
+			m->err = -10;
 		}
+		
 		i++;
+		
 	}
 	return (EXIT_SUCCESS);
 }
