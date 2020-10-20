@@ -24,11 +24,19 @@ int		check_dperm(t_mshl *m, char *path)
 	mode_t perm;
 	
 	if ((stat(path, &buffer) == -1)) // set erreur
-		return (m->ierr = m->begin);
+    {
+        m->errarg = m->progr - 1;
+        return (EXIT_FAILURE);
+    }
 	perm = buffer.st_mode;
+    if ((!(perm & S_IRWXU)) && !(perm &  S_IXUSR))
+    {
+        m->err = 7;
+        m->ierr = m->begin;
+        m->errarg = m->progr - 1;
+		return (EXIT_FAILURE); //not authorized	]
+    }
 	if (!S_ISDIR(buffer.st_mode))
 		return ((m->err = 6) && (m->ierr = m->progr)); //is not a dir
-	if ((!(perm & S_IRWXU)) && !(perm &  S_IXUSR))
-		return ((m->err = 7) && (m->ierr = m->progr)); //not authorized	
 	return (EXIT_SUCCESS);
 }

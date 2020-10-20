@@ -1,5 +1,9 @@
 # include "minishell.h"
+/*char *rince_slashes(char *path)
+{
 
+}
+*/
 int			change_pwd(t_mshl *m)
 {
 	int		i;
@@ -28,7 +32,6 @@ int			change_pwd(t_mshl *m)
     }
 
     //HANDLE PWD ATTRIBUTION
-
     if (j != -1)
     {
 	    free(m->cenv[j]);
@@ -43,7 +46,6 @@ int			change_pwd(t_mshl *m)
         if (!(m->cenv = ft_append(m, tempc)))
             return (EXIT_FAILURE);
     }
-    
 	return (0);
 }
 

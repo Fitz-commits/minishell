@@ -113,7 +113,7 @@ int				check_dperm(t_mshl *m, char *path);
 //Error
 int				ft_error(t_mshl *m);
 void    print_error(t_mshl *m);
-void    print_errno(char *str);
+void    print_errno(t_mshl *m, char *str);
 void	set_zpb(t_mshl *m);
 int		main_error(t_mshl *m);
 #endif

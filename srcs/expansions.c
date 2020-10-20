@@ -40,10 +40,8 @@ char *insert_into_string(char *str, char *to_insert, int pos)
     m = ft_strlen(str) + ft_strlen(to_insert) + 1;
     if (!(ret = malloc(sizeof(char) * m)))
         return (NULL);
-    while (m >= 0)
-    {
-        ret[m--] = '\0';
-    }
+    
+    ft_bzero(ret, m);
     if (pos > 0)
         ret = ft_strncpy(ret, str, pos);
     ret = ft_strcat(ret, to_insert);

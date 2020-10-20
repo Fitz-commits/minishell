@@ -1,11 +1,16 @@
 #include "minishell.h"
 
-void    print_errno(char *str)
+void    print_errno(t_mshl *m, char *str)
 {
 	ft_putstr_fd("minishell: ", 2);
 	if (str)
 	{
 		ft_putstr_fd(str, 2);
+		ft_putstr_fd(": ", 2);
+	}
+	if (m->errarg > 0)
+	{
+		ft_putstr_fd(m->cpargs[m->errarg], 2);
 		ft_putstr_fd(": ", 2);
 	}
 	ft_putendl_fd(strerror(errno), 2);
@@ -20,10 +25,10 @@ void	print_error(t_mshl *m)
 		ft_putstr_fd(": ", 2);
 		if (m->errarg >= 0)
 		{
-			if (m->err != 6)
+			if (m->err == 9)
 				ft_putstr_fd("`", 2);
 			ft_putstr_fd(m->args[m->errarg], 2);
-			if (m->err != 6)
+			if (m->err == 9)
 				ft_putstr_fd("\'", 2);
 			ft_putstr_fd(": ", 2);
 			m->errarg = -1;
@@ -58,7 +63,7 @@ int		main_error(t_mshl *m)
 	}
 	else
 		if (errno)
-			print_errno(NULL); //memory error
+			print_errno(m, NULL); //memory error
 	if (m->buf_cmd)
 		free(m->buf_cmd);
 	m->buf_cmd = NULL;
@@ -78,7 +83,7 @@ int    ft_error(t_mshl *m)
 		ret = 1;
 	if (errno && !m->err)
 	{
-		print_errno(m->args[m->ierr]);
+		print_errno(m, m->cpargs[0]);
 		reat_crval(m, 1);
 		errno = 0;
 	}
@@ -95,7 +100,7 @@ int    ft_error(t_mshl *m)
 		if (m->err == 6)
 			ft_putstr_fd("No such file or directory\n", 2);
 		if (m->err == 7)
-			ft_putstr_fd("permission denied\n", 2);
+			ft_putstr_fd("Permission denied\n", 2);
 		if (m->err == 9)
 			ft_putstr_fd("not a valid identifier\n", 2);
 		if (m->err == 127)
