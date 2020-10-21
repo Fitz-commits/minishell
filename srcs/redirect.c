@@ -103,8 +103,6 @@ int     init_ptfr(int (*pt_f[6])(t_mshl*))
     return (0);
 }
 
-
-
 /*
 ** Open to discussion we might want to check something else than errno
 ** In c programming looking at errno without safefailing fonction is 

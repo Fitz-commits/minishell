@@ -67,7 +67,7 @@ char			*pair_value_key(char *value, char *key);
 char			*getvar(t_mshl *m, char *key);
 int 			ft_export(t_mshl *m);
 int				env(t_mshl *m);
-char                    **ft_getenv(char **env);
+char			**ft_getenv(char **env);
 //EXEC
 char			*path_join(char *path, char *arg);
 int				launch_exec(t_mshl *m, char *path);
@@ -78,6 +78,8 @@ char			**parse_cli(char *line, t_mshl *m);
 void			print_tab(char **tab);
 int				tablen(char **tab);
 void			display_prompt(void);
+char			**tabdup(char **tab);
+void			sort_tab(char **tab);
 //UNSET
 int				ft_unset(t_mshl *m);
 //SET STD
@@ -106,14 +108,14 @@ int				init_ptf(int (*pt_f[6])(t_mshl*));
 int				n_command(t_mshl *m);
 // $?
 int				reat_crval(t_mshl *m, int i);
-int             ft_pwd(t_mshl *m);
-int             complete_env(t_mshl *m);
+int				ft_pwd(t_mshl *m);
+int				complete_env(t_mshl *m);
 // perm
 int				check_dperm(t_mshl *m, char *path);
 //Error
 int				ft_error(t_mshl *m);
-void    print_error(t_mshl *m);
-void    print_errno(t_mshl *m, char *str);
+void			print_error(t_mshl *m);
+void			print_errno(t_mshl *m, char *str);
 void	set_zpb(t_mshl *m);
 int		main_error(t_mshl *m);
 #endif

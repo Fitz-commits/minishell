@@ -73,19 +73,52 @@ char	*getvar(t_mshl *m, char *key)
 int		parse_args(char *str)
 {
 	int i;
-	int equ;
 
 	i = 0;
-	equ = 0;
 	if (!ft_strlen(str))
 		return (9); //Not a valid identifier
-	while (str[i])
+	while (str[i] && str[i] != '=')
 	{
-		if (!ft_isalnum(str[i]) && str[i] != '_' && str[i] != '=')
+		if (!ft_isalnum(str[i]) && str[i] != '_')
 			return (9);
 		i++;
 	}
 	return (0);
+}
+
+int		printexp(t_mshl *m)
+{
+	char	**tab;
+	int		i;
+
+	i = 0;
+	if (!(tab = tabdup(m->cenv)))
+		return (3); // memory error;
+	sort_tab(tab);
+	while (tab[i])
+	{
+		ft_putstr_fd("declare -x ", m->tstdout);
+		ft_putendl_fd(tab[i], m->tstdout);
+		i++;
+	}
+	free_tab(tab, 0, 1);
+	return (0);
+}
+
+int		is_equ(char *str)  //bool, return 0 if we have a = or 1 if not
+{
+	int i;
+
+	if (str)
+	{
+		while (str[i])
+		{
+			if (str[i] == '=')
+				return (0);
+			i++;
+		}
+	}
+	return (1);
 }
 
 // export seems okay need testing
@@ -97,34 +130,44 @@ int	ft_export(t_mshl *m)
 	char *tempc;
 
 	i = 1;
-	while (m->args[i])
+	//printf("\nARGS |%d|\n", m->nb_args);
+	if (m->nb_args == 1)
 	{
-		if (!parse_args(m->args[i]))
+		if (printexp(m))
+			return (3); //memory error
+	}
+	else
+	{
+		while (m->args[i])
 		{
-			if (find_env(m->cenv, m->args[i]) == -1)
+			if (!parse_args(m->args[i]))
 			{
-				if (!(tempc = ft_strdup(m->args[i])))
-					return (EXIT_FAILURE);
-				m->cenv = ft_append(m, tempc); // append chelou add maloc prot
+				if (!is_equ(m->args[i]))
+				{
+					if (find_env(m->cenv, m->args[i]) == -1)
+					{
+						if (!(tempc = ft_strdup(m->args[i])))
+							return (EXIT_FAILURE);
+						m->cenv = ft_append(m, tempc); // append chelou add maloc prot
+					}
+					else
+					{	
+						temp = find_env(m->cenv, m->args[i]);
+						free(m->cenv[temp]);
+						if(!(m->cenv[temp] = ft_strdup(m->args[i])))
+							return (EXIT_FAILURE);
+					}
+				}
 			}
 			else
-			{	
-				temp = find_env(m->cenv, m->args[i]);
-				free(m->cenv[temp]);
-				if(!(m->cenv[temp] = ft_strdup(m->args[i])))
-					return (EXIT_FAILURE);
+			{
+				m->errarg = i;
+				m->err = 9;
+				ft_error(m);
+				m->err = -10;
 			}
+			i++;
 		}
-		else
-		{
-			m->errarg = i;
-			m->err = 9;
-			ft_error(m);
-			m->err = -10;
-		}
-		
-		i++;
-		
 	}
 	return (EXIT_SUCCESS);
 }
