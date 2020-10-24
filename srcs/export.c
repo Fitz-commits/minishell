@@ -70,19 +70,34 @@ char	*getvar(t_mshl *m, char *key)
 		return (&m->cenv[nline][until_dquotes(m->cenv[nline]) + 1]);
 }
 
-int		parse_args(char *str)
+int		parse_varname(char *str)
 {
-	int i;
+	int		i;
 
 	i = 0;
 	if (!ft_strlen(str))
 		return (9); //Not a valid identifier
+	if ((str[i] >= 48 && str[i] <= 57) || str[i] <= '=')
+		return (9);
 	while (str[i] && str[i] != '=')
 	{
 		if (!ft_isalnum(str[i]) && str[i] != '_')
 			return (9);
 		i++;
 	}
+	/*prarse_bs(str);
+	i = 0;
+	while (str[i] != '=' && str[i])
+		i++;
+	if (!str[i])
+		return (-1); // No = in the args, just pass
+	while (str[i + 1])
+	{
+		if (str[i] == '\\')
+		{
+
+		}
+	}*/
 	return (0);
 }
 
@@ -105,69 +120,101 @@ int		printexp(t_mshl *m)
 	return (0);
 }
 
-int		is_equ(char *str)  //bool, return 0 if we have a = or 1 if not
+char	*ft_cut(char *s, int end_s1, int start_s2)
 {
 	int i;
+	char *new;
 
-	if (str)
+	i = 0;
+	if (!(new = (char *)malloc(end_s1 + ft_strlen(&s[start_s2] + 1))))
+		return (NULL);
+	while (i < end_s1)
+		new[i++] = s[end_s1++];
+	while (s[start_s2])
+		new[i++] = s[start_s2++];
+	new[i] = '\0';
+	return (new);
+	
+}
+
+int		parse_args(t_mshl *m, int arg /*char *str*/)  //bool, return 0 if we have a = or 1 if not
+{
+	int		i;
+	char 	*tmp;
+
+	i = 0;
+	if (m->args[arg])
 	{
-		while (str[i])
+		while (m->args[arg][i] && m->args[arg][i] != '=')
+			i++;
+		if (!m->args[arg][i])
+			return (-1);
+		i = 0;
+		while (m->args[arg][i + 1])
 		{
-			if (str[i] == '=')
-				return (0);
+			if (m->args[arg][i] == '\\')
+			{
+				tmp = m->args[arg];
+				if (!(m->args[arg] = ft_cut(m->args[arg], i - 1, i + 1)))
+					return (3);
+				free_str(&tmp, 0);
+			}
 			i++;
 		}
+		if (m->args[arg][i] == '\\')
+			return (2);
 	}
-	return (1);
+	return (0);
 }
 
 // export seems okay need testing
 // if no = seems not to esport anything need fixing
 int	ft_export(t_mshl *m)
 {
-	int temp;
-	int i;
-	char *tempc;
-
+	int		temp;
+	int		i;
+	char	*tempc;
+	int		ret;	
+	
 	i = 1;
 	//printf("\nARGS |%d|\n", m->nb_args);
 	if (m->nb_args == 1)
-	{
+	{	
 		if (printexp(m))
 			return (3); //memory error
+		return (EXIT_SUCCESS);
 	}
-	else
+	while (m->args[i])
 	{
-		while (m->args[i])
+		if (!parse_varname(m->args[i]))
 		{
-			if (!parse_args(m->args[i]))
+			if (!(ret = parse_args(m, i)))
 			{
-				if (!is_equ(m->args[i]))
+				if (find_env(m->cenv, m->args[i]) == -1)
 				{
-					if (find_env(m->cenv, m->args[i]) == -1)
-					{
-						if (!(tempc = ft_strdup(m->args[i])))
-							return (EXIT_FAILURE);
-						m->cenv = ft_append(m, tempc); // append chelou add maloc prot
-					}
-					else
-					{	
-						temp = find_env(m->cenv, m->args[i]);
-						free(m->cenv[temp]);
-						if(!(m->cenv[temp] = ft_strdup(m->args[i])))
-							return (EXIT_FAILURE);
-					}
+					if (!(tempc = ft_strdup(m->args[i])))
+						return (3);
+					m->cenv = ft_append(m, tempc); // append chelou add maloc prot
+				}
+				else
+				{	
+					temp = find_env(m->cenv, m->args[i]);
+					free(m->cenv[temp]);
+					if(!(m->cenv[temp] = ft_strdup(m->args[i])))
+						return (3);
 				}
 			}
-			else
-			{
-				m->errarg = i;
-				m->err = 9;
-				ft_error(m);
-				m->err = -10;
-			}
-			i++;
+			else if (ret > 0)
+				return (2);
 		}
+		else
+		{
+			m->errarg = i;
+			m->err = 9;
+			ft_error(m);
+			m->err = -10;
+		}
+		i++;
 	}
 	return (EXIT_SUCCESS);
 }
