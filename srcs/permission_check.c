@@ -23,20 +23,24 @@ int		check_dperm(t_mshl *m, char *path)
 	struct stat buffer;
 	mode_t perm;
 	
-	if ((stat(path, &buffer) == -1)) // set erreur
+	if (((stat(path, &buffer)) == -1)) // set erreur
     {
         m->errarg = m->progr - 1;
         return (EXIT_FAILURE);
     }
 	perm = buffer.st_mode;
-    if ((!(perm & S_IRWXU)) && !(perm &  S_IXUSR))
+    if ((!(perm & S_IRWXU)) || !(perm &  S_IXUSR))
     {
         m->err = 7;
         m->ierr = m->begin;
-        m->errarg = m->progr - 1;
-		return (EXIT_FAILURE); //not authorized	]
+        m->errarg = 1;
+		return (EXIT_FAILURE); //not authorized	
     }
-	if (!S_ISDIR(buffer.st_mode))
-		return ((m->err = 6) && (m->ierr = m->progr)); //is not a dir
+	if (!(S_ISDIR(buffer.st_mode)))
+    {
+        m->err = 6;
+        m->ierr = m->progr;
+		return (EXIT_FAILURE); //is not a dir
+    }
 	return (EXIT_SUCCESS);
 }

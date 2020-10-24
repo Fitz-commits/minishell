@@ -1,11 +1,12 @@
 #include "minishell.h"
 
-int set_pwd(t_mshl *m)
+int set_bpwd(t_mshl *m)
 {
     char buffer[PATH_MAX];
     char *tempc;
 
-    getcwd(buffer, PATH_MAX);
+    if (!(getcwd(buffer, PATH_MAX)))
+        return (EXIT_SUCCESS);
     if (!(tempc = pair_value_key(buffer , "PWD")))
         return (EXIT_FAILURE);
     if (!(m->cenv = ft_append(m, tempc)))
@@ -19,7 +20,7 @@ int complete_env(t_mshl *m)
 
     i = find_env(m->cenv, "PWD");
     if (i == -1)
-        if (!(set_pwd(m)))
+        if (!(set_bpwd(m)))
             return (EXIT_FAILURE);
     return (EXIT_SUCCESS);
 }

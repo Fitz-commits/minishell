@@ -12,22 +12,25 @@
 
 #include "minishell.h"
 
-int		ft_exit(t_mshl *m, int ret)
+int		ft_exit(t_mshl *m, int error)
 {
-	ft_putendl_fd("-- Free struct --", m->tstdout);
-	ft_putendl_fd("free args", 1);
+	int ret;
+
+	ret = 0;
+	if (m->cpargs[1])
+		ret = ft_atoi(m->cpargs[1]);
     free(m->crvalue);
 	if (m->args)
         free_tab(m->args, 1, 1);
-    ft_putendl_fd("free cpargs", 1);
 	if (m->cpargs) 
         free(m->cpargs);
-	ft_putendl_fd("free cenv", 1);
 	free_tab(m->cenv, 1, 1);
-	ft_putendl_fd("free prompt", 1);
 	//free_str(&m->prompt, 1);
 	//ft_putendl_fd("free struct pointer", 1);
 	//free(m);
+	if (error)
+		exit(error);
     exit(ret);
 	return (ret);
 }
+

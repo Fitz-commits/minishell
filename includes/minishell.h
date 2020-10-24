@@ -118,4 +118,5 @@ void			print_error(t_mshl *m);
 void			print_errno(t_mshl *m, char *str);
 void	set_zpb(t_mshl *m);
 int		main_error(t_mshl *m);
+int		del_varenv(t_mshl *m, int j);
 #endif

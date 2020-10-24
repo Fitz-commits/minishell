@@ -158,7 +158,6 @@ int		prep_rv(t_mshl *m)
 
 void	ft_init(t_mshl *m)  //initialise la structure might want to failproof it now that it malloc's
 {
-
 	m->args = NULL;
 	m->cpargs = NULL;
 	m->nb_args = 0;
