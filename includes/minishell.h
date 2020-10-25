@@ -44,6 +44,7 @@ typedef struct	s_mshl
 	int		errarg;
 	int		rvalue; // return value $?
 	char	*crvalue; // malloc to free
+	int		pos;
 }				t_mshl;
 
 char			**free_tabs(char **tab);
@@ -119,4 +120,5 @@ void			print_errno(t_mshl *m, char *str);
 void	set_zpb(t_mshl *m);
 int		main_error(t_mshl *m);
 int		del_varenv(t_mshl *m, int j);
+int		is_space(char c);
 #endif
