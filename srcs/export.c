@@ -105,6 +105,7 @@ int		printexp(t_mshl *m)
 {
 	char	**tab;
 	int		i;
+	int		equ;
 
 	i = 0;
 	if (!(tab = tabdup(m->cenv)))
@@ -112,8 +113,16 @@ int		printexp(t_mshl *m)
 	sort_tab(tab);
 	while (tab[i])
 	{
+		equ = 0;
 		ft_putstr_fd("declare -x ", m->tstdout);
-		ft_putendl_fd(tab[i], m->tstdout);
+		while (tab[i][equ] != '=' && tab[i][equ])
+			equ++;
+		equ++;
+		write(m->tstdout, tab[i], equ);
+		ft_putchar_fd('\"', m->tstdout);
+		ft_putstr_fd(&tab[i][equ], m->tstdout);
+		ft_putchar_fd('\"', m->tstdout);
+		ft_putchar_fd('\n', m->tstdout);
 		i++;
 	}
 	free_tab(tab, 0, 1);
