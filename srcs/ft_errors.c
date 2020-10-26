@@ -99,7 +99,7 @@ int    ft_error(t_mshl *m)
 			ft_putstr_fd("Memory Error\n", 2);
 		if (m->err == 6)
 			ft_putstr_fd("No such file or directory\n", 2);
-		if (m->err == 7)
+		if (m->err == 7 || m->err == 126)
 			ft_putstr_fd("Permission denied\n", 2);
 		if (m->err == 9)
 			ft_putstr_fd("not a valid identifier\n", 2);

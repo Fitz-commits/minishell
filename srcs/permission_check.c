@@ -23,9 +23,9 @@ int		check_fperm(t_mshl *m, char *path)
         return (EXIT_FAILURE);
     }
 	perm = buffer.st_mode;
-    if ((!(perm & S_IRWXU)) || !(perm &  S_IXUSR))
+    if (!((perm & S_IEXEC)))
     {
-        m->err = 7;
+        m->err = 126;
         m->ierr = m->begin;
 		return (EXIT_FAILURE); //not authorized	
     }
