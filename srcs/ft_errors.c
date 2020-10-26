@@ -79,7 +79,7 @@ int    ft_error(t_mshl *m)
 	int ret;
 
 	ret = m->err;
-	if (m->err == 9 || m->err == 6 || m->err == -10)
+	if (m->err == 9 || m->err == 6 || m->err == -10 || m->err == 11)
 		ret = 1;
 	if (errno && !m->err)
 	{
@@ -103,8 +103,12 @@ int    ft_error(t_mshl *m)
 			ft_putstr_fd("Permission denied\n", 2);
 		if (m->err == 9)
 			ft_putstr_fd("not a valid identifier\n", 2);
+		if (m->err == 11)
+			ft_putstr_fd("too many arguments\n", 2);
 		if (m->err == 127)
 			ft_putstr_fd("command not found\n", 2);
+		if (m->err == 255)
+			ft_putstr_fd("numeric argument required\n", 2);
 		m->err = 0;
 		reat_crval(m, ret);
 	}
