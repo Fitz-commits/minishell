@@ -35,7 +35,7 @@ char	*path_join(char *path, char *arg)
 **
 ** might want to add after errno = 0 mechanism for std -1
 */
-int	ft_exec(t_mshl *m, char *path)
+int	ft_exec(t_mshl *m, char *path, int i)
 {
 	// need to close unused end
 	errno = 0;
@@ -55,7 +55,8 @@ int	ft_exec(t_mshl *m, char *path)
 	}
 	close_rp(m);
 	m->proc.curpro++;
-	free(path);
+	if (i)
+		free(path);
 	return (0);
 }
 /*
@@ -74,9 +75,10 @@ int	launch_exec(t_mshl *m, char *path)
 	i = 0;
 	if (ft_strchr(m->cpargs[0], '/'))
 	{
-		stat(m->cpargs[0], &buffer);
-		if (S_ISREG(buffer.st_mode))
-			return (ft_exec(m, m->cpargs[0]));
+		if (!check_fperm(m, m->cpargs[0]))
+			return (ft_exec(m, m->cpargs[0], 0));
+		else
+			return(EXIT_FAILURE);
 	}
 	if (!(pathtab = ft_split(path, ':')))
 		return (m->err = 3); // Memory error
@@ -87,7 +89,7 @@ int	launch_exec(t_mshl *m, char *path)
 		if (S_ISREG(buffer.st_mode))
         {
             free_tab(pathtab, 1, 1);
-			return (ft_exec(m, temp));
+			return (ft_exec(m, temp, 1));
         }
 		free(temp);
 		i++;

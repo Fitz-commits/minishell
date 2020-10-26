@@ -113,6 +113,7 @@ int				ft_pwd(t_mshl *m);
 int				complete_env(t_mshl *m);
 // perm
 int				check_dperm(t_mshl *m, char *path);
+int				check_fperm(t_mshl *m, char *path);
 //Error
 int				ft_error(t_mshl *m);
 void			print_error(t_mshl *m);

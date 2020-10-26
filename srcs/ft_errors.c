@@ -105,6 +105,8 @@ int    ft_error(t_mshl *m)
 			ft_putstr_fd("not a valid identifier\n", 2);
 		if (m->err == 11)
 			ft_putstr_fd("too many arguments\n", 2);
+		if (m->err == 12)
+			ft_putstr_fd("is a directory\n", 2);
 		if (m->err == 127)
 			ft_putstr_fd("command not found\n", 2);
 		if (m->err == 255)
