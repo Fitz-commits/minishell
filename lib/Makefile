@@ -26,7 +26,8 @@ STR = STR/ft_find.c STR/ft_ilen.c STR/ft_split.c STR/ft_strchr.c \
 	STR/ft_strcmp.c STR/ft_strdup.c STR/ft_strjoin.c STR/ft_strlcat.c \
 	STR/ft_strlcpy.c STR/ft_strlen.c STR/ft_strmapi.c STR/ft_strncmp.c \
 	STR/ft_strncpy.c STR/ft_strndup.c STR/ft_strnstr.c STR/ft_strrchr.c \
-	STR/ft_strtrim.c STR/ft_substr.c STR/ft_strnjoin.c STR/ft_strcat.c 
+	STR/ft_strtrim.c STR/ft_substr.c STR/ft_strnjoin.c STR/ft_strcat.c \
+	STR/ft_strcpy.c
 
 OBJS = $(CHAR:.c=.o) $(CONV:.c=.o) $(GNL:.c=.o) $(MEM:.c=.o) $(PUT:.c=.o) \
 	$(STR:.c=.o)

@@ -59,7 +59,7 @@ int				ft_isdigit(int c);
 int				ft_isalpha(int c);
 size_t			ft_strlen(const char *s);
 int				ft_ilen(char const *str);
-
+char			*ft_strcpy(char *dest, const char *src);
 /*
 ** MEM
 */

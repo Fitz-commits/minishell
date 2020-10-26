@@ -14,10 +14,15 @@ char *rince_slashes(char *path)
 int set_oldpwd(t_mshl *m, int i, int j)
 {
 	char *tempc;
+	char buffer[PATH_MAX];
+
+	ft_bzero(buffer, PATH_MAX);
+
+	ft_strcpy(buffer, getvar(m, "PWD"));
 	if (i != -1 && j != -1)
     	{
 	    	free(m->cenv[i]);
-	   		if (!(m->cenv[i] = pair_value_key(getvar(m, "PWD"), "OLDPWD")))
+	   		if (!(m->cenv[i] = pair_value_key(buffer, "OLDPWD")))
 		    return (EXIT_FAILURE);
     	}
     	else if (i == -1 && j != -1)
@@ -70,8 +75,8 @@ int			change_pwd(t_mshl *m)
 	int		j;
 	char	buffer[PATH_MAX];
 
-	i = find_env(m->cenv, "OLDPWD=");
-	j = find_env(m->cenv, "PWD=");
+	i = find_env(m->cenv, "OLDPWD");
+	j = find_env(m->cenv, "PWD");
     ft_bzero(buffer, PATH_MAX);
     if (!(getcwd(buffer, PATH_MAX)))
 	{

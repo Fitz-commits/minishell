@@ -21,11 +21,11 @@ int	find_env(char **env, char *key)
 	int dq;
 	int j;
 	char buffer[512];
-	
+
 	i = 0;
 	ft_bzero(buffer, 512);
 	while(env[i])
-	{
+	{	
 		j = -1;
 		dq = until_dquotes(env[i]);
 		while(++j < dq)

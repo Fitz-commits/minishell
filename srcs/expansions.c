@@ -10,19 +10,6 @@
 **  With remove in char i just need to shift every char to size on the left from pos
 **
 */
-char		*ft_strcpy(char *dest, const char *src)
-{
-	int i;
-
-	i = 0;
-	while (src[i] != 0)
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = 0;
-	return (dest);
-}
 
 char *remove_in_str(char *str, int pos, int size, int *l)
 {
@@ -112,7 +99,7 @@ char	*catch_key(char *str, int *to_erase)
 			*to_erase += 1;
 		else
 			break;
-		if (str[*to_erase] == '}' || str[*to_erase] == '_' || str[*to_erase] == '?' || !(ft_isalpha(str[*to_erase]) || *to_erase == 1))
+		if (str[*to_erase] == '}' || str[*to_erase] == '?' || (ft_isdigit(str[*to_erase]) && *to_erase == 1))
 			break;
 	}
 	if (l == 2)
