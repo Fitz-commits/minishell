@@ -108,11 +108,11 @@ char	*catch_key(char *str, int *to_erase)
 		if (str[*to_erase] == '{'|| str[*to_erase] == '}')
 			l += 1;
 		if (str[*to_erase] && str[*to_erase] != '$' && (ft_isalnum(str[*to_erase]) || str[*to_erase] == '{'||
-		str[*to_erase] == '}'))
+		str[*to_erase] == '}'|| str[*to_erase] == '?'|| str[*to_erase] == '_'))
 			*to_erase += 1;
 		else
 			break;
-		if (str[*to_erase] == '}')
+		if (str[*to_erase] == '}' || str[*to_erase] == '_' || str[*to_erase] == '?' || !(ft_isalpha(str[*to_erase]) || *to_erase == 1))
 			break;
 	}
 	if (l == 2)

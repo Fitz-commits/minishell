@@ -19,12 +19,19 @@ int	find_env(char **env, char *key)
 {
 	int i;
 	int dq;
+	int j;
+	char buffer[512];
+	
 	i = 0;
-
+	ft_bzero(buffer, 512);
 	while(env[i])
 	{
+		j = -1;
 		dq = until_dquotes(env[i]);
-		if (!ft_strncmp(key, env[i], dq))
+		while(++j < dq)
+			buffer[j] = env[i][j];
+		buffer[j] = 0;
+		if (!ft_strcmp(key, buffer))
 			return (i);
 		i++;
 	}
