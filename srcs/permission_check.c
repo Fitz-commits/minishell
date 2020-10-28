@@ -12,30 +12,32 @@
 **
 */
 
-int		check_fperm(t_mshl *m, char *path)
+int		check_fperm(t_mshl *m, char *path, struct stat *test)
 {
 	struct stat buffer;
     mode_t perm;
 
-    if (((stat(path, &buffer)) == -1)) // set erreur
+    if (test)
+        buffer = *test;
+    if (!(test) && ((stat(path, &buffer)) == -1)) // set erreur
     {
         m->errarg = m->progr - 1;
         return (EXIT_FAILURE);
     }
 	perm = buffer.st_mode;
-    if (!((perm & S_IEXEC)))
-    {
-        m->err = 126;
-        m->ierr = m->begin;
-		return (EXIT_FAILURE); //not authorized	
-    }
-	if ((S_ISDIR(buffer.st_mode)))
+    if ((S_ISDIR(perm)))
     {
         m->err = 12;
         m->ierr = m->progr;
 		return (EXIT_FAILURE); //is not a dir
     }
-	return (EXIT_SUCCESS);
+    if ((S_IXUSR & perm) && test)
+		return (EXIT_SUCCESS); //not authorized	
+    else if ((0444 & perm) && !test && (S_IXUSR & perm))
+        return (EXIT_SUCCESS);
+    m->err = 126;
+    m->ierr = m->begin;
+	return (EXIT_FAILURE);
 }
 
 int		check_dperm(t_mshl *m, char *path)

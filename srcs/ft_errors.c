@@ -79,12 +79,17 @@ int    ft_error(t_mshl *m)
 	int ret;
 
 	ret = m->err;
+	if (m->err == 12)
+		ret = 126;
 	if (m->err == 9 || m->err == 6 || m->err == -10 || m->err == 11)
 		ret = 1;
 	if (errno && !m->err)
 	{
 		print_errno(m, m->cpargs[0]);
-		reat_crval(m, 1);
+		if (errno == ENOENT)
+			reat_crval(m, 127);
+		else
+			reat_crval(m, 1);
 		errno = 0;
 	}
 	else if (m->err && m->err != 4)

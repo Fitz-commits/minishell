@@ -78,7 +78,7 @@ int waiter(t_mshl *m)
         m->err = 4;
     }
     m->proc.child_pid[m->proc.curpro] = 0;
-    while (--m->proc.curpro)
+    while (--m->proc.curpro != -1)
     {
         kill(m->proc.child_pid[m->proc.curpro], 0);
         m->proc.child_pid[m->proc.curpro] = 0;

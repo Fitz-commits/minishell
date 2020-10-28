@@ -113,13 +113,13 @@ int				ft_pwd(t_mshl *m);
 int				complete_env(t_mshl *m);
 // perm
 int				check_dperm(t_mshl *m, char *path);
-int				check_fperm(t_mshl *m, char *path);
+int				check_fperm(t_mshl *m, char *path, struct stat *test);
 //Error
 int				ft_error(t_mshl *m);
 void			print_error(t_mshl *m);
 void			print_errno(t_mshl *m, char *str);
-void	set_zpb(t_mshl *m);
-int		main_error(t_mshl *m);
-int		del_varenv(t_mshl *m, int j);
-int		is_space(char c);
+void			set_zpb(t_mshl *m);
+int				main_error(t_mshl *m);
+int				del_varenv(t_mshl *m, int j);
+int				is_space(char c);
 #endif

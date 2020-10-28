@@ -35,7 +35,7 @@ char	*path_join(char *path, char *arg)
 **
 ** might want to add after errno = 0 mechanism for std -1
 */
-int	ft_exec(t_mshl *m, char *path, int i)
+int	ft_exec(t_mshl *m, char *path)
 {
 	// need to close unused end
 	errno = 0;
@@ -51,13 +51,27 @@ int	ft_exec(t_mshl *m, char *path, int i)
 			dup2(m->tstdin, STDIN_FILENO);
 		if (m->tstdout != 1)
 			dup2(m->tstdout, STDOUT_FILENO);
-		execve(path, m->cpargs, m->cenv);
+		if ((execve(path, m->cpargs, m->cenv)))
+			exit(0);
 	}
 	close_rp(m);
 	m->proc.curpro++;
-	if (i)
-		free(path);
 	return (0);
+}
+int change_margs(t_mshl *m, char *path)
+{
+	int i;
+
+	i = -1;
+
+	while (m->args[++i])
+		if (m->args[i] == m->cpargs[0])
+			{
+				free(m->args[i]);
+				m->args[i] = path;
+				m->cpargs[0] = path;
+			}
+	return (EXIT_SUCCESS);
 }
 /*
 **
@@ -75,8 +89,8 @@ int	launch_exec(t_mshl *m, char *path)
 	i = 0;
 	if (ft_strchr(m->cpargs[0], '/'))
 	{
-		if (!check_fperm(m, m->cpargs[0]))
-			return (ft_exec(m, m->cpargs[0], 0));
+		if (!check_fperm(m, m->cpargs[0], NULL))
+			return (ft_exec(m, m->cpargs[0]));
 		else
 			return(EXIT_FAILURE);
 	}
@@ -84,17 +98,22 @@ int	launch_exec(t_mshl *m, char *path)
 		return (m->err = 3); // Memory error
 	while (pathtab[i])
 	{
-		temp = path_join(pathtab[i], m->cpargs[0]);
+		if (!(temp = path_join(pathtab[i], m->cpargs[0])))
+			return (EXIT_FAILURE);
 		stat(temp, &buffer);
 		if (S_ISREG(buffer.st_mode))
-        {
-            free_tab(pathtab, 1, 1);
-			return (ft_exec(m, temp, 1));
+        {	
+			free_tab(pathtab, 1, 1);
+			change_margs(m, temp);
+			if (!(check_fperm(m, m->cpargs[0], &buffer)))
+				return (ft_exec(m, m->cpargs[0]));
+			else
+				return(EXIT_FAILURE);
         }
 		free(temp);
 		i++;
 	}
-    free(pathtab);
+    free_tab(pathtab, 1, 1);
 	errno = 0;
 	return (m->err = 127); // not command not found 127
 }
