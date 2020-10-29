@@ -109,7 +109,7 @@ char	*catch_key(char *str, int *to_erase)
 	return (ret);
 }
 
-int assemble_string(t_mshl *m, int l, char *buffer, int to_erase)
+int assemble_string(t_mshl *m, char *buffer, int to_erase)
 {
 	char *ret;
 	int total_len;
@@ -118,24 +118,24 @@ int assemble_string(t_mshl *m, int l, char *buffer, int to_erase)
 
 	j = 0;
 	i = -1;
-	total_len = ft_strlen(m->args[l]) + ft_strlen(getvar(m, buffer)) - to_erase;
+	total_len = ft_strlen(m->reader) + ft_strlen(getvar(m, buffer)) - to_erase;
 	if (!(ret = malloc(sizeof(char) * (total_len + 2))))
 		return (EXIT_FAILURE);
 	while (++i < m->pos)
-		ret[i] = m->args[l][i];
+		ret[i] = m->reader[i];
 	ft_strcpy(&ret[i], getvar(m,buffer));
 	i += ft_strlen(getvar(m, buffer));
-	while(i < total_len &&  m->args[l][m->pos + to_erase])
+	while(i < total_len &&  m->reader[m->pos + to_erase])
 	{
-		ret[i++] = m->args[l][m->pos + to_erase++];
+		ret[i++] = m->reader[m->pos + to_erase++];
 	}
 	ret[i] = 0;
-	free(m->args[l]);
-	m->args[l] = ret;
+	free(m->reader);
+	m->reader = ret;
 	return (EXIT_SUCCESS);
 }
 
-int		env_expension(t_mshl *m, int l)
+int		env_expension(t_mshl *m)
 {
 	int i;
 	int flag;
@@ -144,23 +144,24 @@ int		env_expension(t_mshl *m, int l)
 
 	flag = 0;
 	i = 0;
-	while(m->args[l][i])
-	{	m->pos = 0;
-		if ((m->args[l][i] == '$' && (flag == 0 || flag == 2)))
+	while(m->reader)
+	{	
+		m->pos = 0;
+		if ((m->reader[i] == '$' && (flag == 0 || flag == 2)))
 		{
-            if(!(buffer = catch_key(&m->args[l][i], &to_erase)))
+            if(!(buffer = catch_key(&m->reader[i], &to_erase)))
 				return (EXIT_FAILURE);
 			m->pos = i;
-			if (assemble_string(m, l, buffer, to_erase))
+			if (assemble_string(m, buffer, to_erase))
 				return (free_str(&buffer, EXIT_FAILURE));
 			i += ft_strlen(getvar(m, buffer));
 			free(buffer);
 		}
 		else
 			i++;
-		if (!m->args[l][i])
+		if (!m->reader[i])
 			break;
-		flag = set_quotes(flag, m->args[l][i]);
+		flag = set_quotes(flag, m->reader[i]);
 	}
 	return (EXIT_SUCCESS);
 }
@@ -188,9 +189,8 @@ int check_for_exp(t_mshl *m)
 
     j = 0;
     i = -1;
-    while(m->args[++i])
-        if (check_lee(m->args[i]))
-            if ((env_expension(m,i)))
+        if (check_lee(m->reader))
+            if ((env_expension(m)))
 				return (EXIT_FAILURE);
     return (EXIT_SUCCESS);
 }

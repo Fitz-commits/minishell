@@ -29,8 +29,11 @@ int		first_parsing(t_mshl *m, char *str)
 
 	i = 0;
 	q = 0;
+	if (str[0] == ';' || str[0] == '|')
+		return (2);
 	while (str[i])
 	{
+		
 		q = set_quotes(q, str[i]);
 		if (!q)
 		{
@@ -92,14 +95,13 @@ int		get_args(t_mshl *m)
     }  //a faire : gérer si on a 0 de kill prog mais pas error?
 	if ((m->err = first_parsing(m, m->reader)))
 		return (free_str(&m->reader, m->err));
-	if (!(m->args = parse_cli(m->reader, m)))
-		return (free_str(&m->reader, m->err));  //3 = memory error | faire les alias .h 
+	 //3 = memory error | faire les alias .h 
 	
 	//printf("\n-- Tests\n-------------\n");
 	//print_tab(m->args);
 	//printf("-------------\n");
-	m->nb_args = tablen(m->args);
-	return (free_str(&m->reader, 0));
+	// ======> important to make after m->nb_args = tablen(m->args);
+	return (EXIT_SUCCESS);
 }
 
 
@@ -166,7 +168,7 @@ void	ft_init(t_mshl *m)  //initialise la structure might want to failproof it no
 	//m->tstderr = 2;
 	m->redir = 0;
 	m->rvalue = 0;
-	m->buf_cmd = NULL;
+	m->buff_cmd = NULL;
 	m->progr = 0;
 	m->begin = 0;
 	m->error = 0;
@@ -259,34 +261,29 @@ void    free_and_null(t_mshl *m, int i)
 
 int		main_loop(t_mshl *m)
 {
-	if (!m->buf_cmd)
+	if (!m->buff_cmd)
 	{
 		//display_prompt();
 		if ((m->err = get_args(m)))
 			return (main_error(m));
-		if (check_for_dc(m->args) >= 0)
-        {
-            if (m->args[check_for_dc(m->args) + 1])
-            {
-			    if ((m->err = fill_buffer(m, check_for_dc(m->args))))
-				    return (main_error(m)); //a voir pour num retour
-            }
-            else
-            {
-                free_and_null(m, check_for_dc(m->args));
-            }
-        }
+		if ((find_dq(m->reader) >= 0))
+			if ((alloc_bufcmd(m)))
+				return (main_error(m));
 	}
 	else
 	{
-		buffer_to_args(m);
+		if ((buf_cmd_to_args(m)))
+			return (main_error(m));
 	}
-	if (m->args)
+	if (m->reader)
 	{
         if ((check_for_exp(m)))
-		return (main_error(m));
+			return (main_error(m));
+		if (!(m->args = parse_cli(m->reader, m)))
+			return (main_error(m));
+		m->nb_args = tablen(m->args);
 	    if (check_for_qr(m))
-		return (main_error(m));
+			return (main_error(m));
         //print_tab(m->args);
 		if (set_stdior(m) == -1)
 			return (-1);
@@ -328,7 +325,7 @@ int		main(int ac, char **av, char **envp)
 	{
 		if ((ret = main_loop(&m) < 0))
 			return (ft_exit(&m, ret)); //code erreur -1 en cas d'erreur ?
-        if (ac == 3 && !m.buf_cmd)
+        if (ac == 3 && !m.buff_cmd)
             exit(m.rvalue);
 	}
 	return (0);

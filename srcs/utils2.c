@@ -94,6 +94,7 @@ int clean_args(t_mshl *m)
     int i;
 
     i = 0;
+
     if (m->cpargs)
         free(m->cpargs);
     m->cpargs = NULL;
@@ -102,10 +103,13 @@ int clean_args(t_mshl *m)
     while (m->args[i])
         free(m->args[i++]);
     }
-    if (!m->buf_cmd)
-    {
-        free(m->args);
-        m->args = NULL;
-    }
+    free(m->args);
+    m->args = NULL;
+    if (!m->buff_cmd)
+        if (m->reader)
+        {
+            free(m->reader);
+            m->reader = NULL;
+        }
     return (0);
 }

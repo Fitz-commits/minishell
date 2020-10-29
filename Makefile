@@ -19,7 +19,7 @@ SRCS = srcs/main.c srcs/ft_free.c srcs/utils.c srcs/ft_exit.c srcs/ft_echo.c \
 	srcs/env.c srcs/export.c srcs/launch_exec.c srcs/ft_cd.c srcs/parsing.c \
 	srcs/ft_unset.c srcs/expansions.c srcs/quote_removal.c  srcs/redirect.c \
 	srcs/signal.c srcs/pipes.c srcs/utils2.c srcs/set_std.c srcs/ft_pwd.c \
-	srcs/permission_check.c srcs/ft_errors.c
+	srcs/permission_check.c srcs/ft_errors.c srcs/buf_cmd.c
 OBJS = $(SRCS:.c=.o)
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -fsanitize=address

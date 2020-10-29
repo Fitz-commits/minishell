@@ -64,9 +64,6 @@ int		main_error(t_mshl *m)
 	else
 		if (errno)
 			print_errno(m, NULL); //memory error
-	if (m->buf_cmd)
-		free(m->buf_cmd);
-	m->buf_cmd = NULL;
 	set_zpb(m);
 	clear_std(m);
 	close_pipes(m);
@@ -79,6 +76,8 @@ int    ft_error(t_mshl *m)
 	int ret;
 
 	ret = m->err;
+	if (m->err == 13)
+		ret = 2;
 	if (m->err == 12)
 		ret = 126;
 	if (m->err == 9 || m->err == 6 || m->err == -10 || m->err == 11)
@@ -102,6 +101,8 @@ int    ft_error(t_mshl *m)
 			ft_putstr_fd("Parsing Error\n", 2);
 		if (m->err == 3)
 			ft_putstr_fd("Memory Error\n", 2);
+		if (m->err == 13)
+			ft_putstr_fd("unexpected end of file", 2);
 		if (m->err == 6)
 			ft_putstr_fd("No such file or directory\n", 2);
 		if (m->err == 7 || m->err == 126)

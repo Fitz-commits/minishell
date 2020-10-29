@@ -26,6 +26,7 @@ typedef struct	s_mshl
 	char	**args;  // malloc to free 
 	char	**cenv; // malloc to free
 	char	**buf_cmd; // malloc to free sans ;
+	char	*buff_cmd;
     char    cerr;
 	int		nb_args;
 	int		nb_cpargs;
@@ -122,4 +123,9 @@ void			set_zpb(t_mshl *m);
 int				main_error(t_mshl *m);
 int				del_varenv(t_mshl *m, int j);
 int				is_space(char c);
+//new buff cmd
+int				find_dq(char *str);
+char			*copy_until_next_dq(char *src);
+int				alloc_bufcmd(t_mshl *m);
+int				buf_cmd_to_args(t_mshl *m);
 #endif
