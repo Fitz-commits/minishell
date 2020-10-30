@@ -7,8 +7,9 @@ void	free_all(t_mshl *m)
         free_tab(m->args, 1, 1);
 	if (m->cpargs) 
         free(m->cpargs);
+	if (m->reader)
+		free(m->reader);
 	free_tab(m->cenv, 1, 1);
-	free(m);
 }
 
 int	free_str(char **str, int ret)
