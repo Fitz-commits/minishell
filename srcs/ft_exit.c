@@ -64,18 +64,6 @@ int			parse_exit_code(char *str)
 	return (0);
 }
 
-int			free_all(t_mshl *m)
-{
-	free(m->crvalue);
-	if (m->args)
-        free_tab(m->args, 1, 1);
-	if (m->cpargs) 
-        free(m->cpargs);
-	free_tab(m->cenv, 1, 1);
-	free(m);
-	return (0);
-}
-
 int			ft_exit(t_mshl *m, int error)
 {
 	if (m->nb_cpargs > 1)
