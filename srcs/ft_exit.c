@@ -72,14 +72,12 @@ int			free_all(t_mshl *m)
 	if (m->cpargs) 
         free(m->cpargs);
 	free_tab(m->cenv, 1, 1);
+	free(m);
 	return (0);
 }
 
 int			ft_exit(t_mshl *m, int error)
 {
-	int ret;
-
-	ret = 0;
 	if (m->nb_cpargs > 1)
 	{
 		if (parse_exit_code(m->cpargs[1]))
@@ -87,21 +85,19 @@ int			ft_exit(t_mshl *m, int error)
 			m->err = 255;
 			m->errarg = 1;
 			ft_error(m);
-			ret = 255;
 		}
 		else if (m->nb_cpargs > 2)
 		{
 			m->err = 11;
 			ft_error(m);
-			ret = 1;
 		}
 		else
-			ret = ft_atoi(m->cpargs[1]);
+			m->rvalue = ft_atoi(m->cpargs[1]);
 	}
     free_all(m);
 	if (error)
 		exit(error);
-    exit(ret);
-	return (ret);
+    exit(m->rvalue);
+	return (m->rvalue);
 }
 
