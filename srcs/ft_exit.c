@@ -16,8 +16,10 @@ int			only_z(char *str)
 {
 	int					i;
 	int					sign;
+	long long			nb;
 
 	i = 0;
+	nb = 0;
 	sign = 1;
 	while (str[i] && (str[i] == '\t' || str[i] == '\n' || str[i] == '\r'
 		|| str[i] == '\v' || str[i] == '\f' || str[i] == ' '))
@@ -27,12 +29,18 @@ int			only_z(char *str)
 	if (!str[i])
 		return (1);
 	while (str[i] && ft_isdigit(str[i]))
+	{
+		nb = nb * 10 + str[i] - '0';
+		if ((long)nb < 0)
+			return (1);
 		i++;
-	while (str[i] && (str[i] == '\t' || str[i] == '\n' || str[i] == '\r'
-		|| str[i] == '\v' || str[i] == '\f' || str[i] == ' '))
+	}
+	
+	while (str[i] && (str[i] == '\t' || str[i] == ' '))
 		i++;
 	if (str[i])
 		return (1);
+	
 	return (0);
 }
 
