@@ -48,10 +48,13 @@ typedef struct	s_mshl
 	int		pos;
 }				t_mshl;
 
+//FREE
 char			**free_tabs(char **tab);
 int				free_str(char **str, int ret);
 int				free_tab(char **tab, int ret, char code);
+void			free_all(t_mshl *m);
 int				ft_exit(t_mshl *m, int ret);
+//ECHO
 int				ft_echo(t_mshl *m);
 char			**ft_append(t_mshl *m, char *str);
 int				clean_args(t_mshl *m);
