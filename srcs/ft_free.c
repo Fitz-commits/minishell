@@ -9,6 +9,8 @@ void	free_all(t_mshl *m)
         free(m->cpargs);
 	if (m->reader)
 		free(m->reader);
+	if (m->buff_cmd)
+		free(m->buff_cmd);
 	free_tab(m->cenv, 1, 1);
 }
 
