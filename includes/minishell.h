@@ -73,6 +73,7 @@ char			*getvar(t_mshl *m, char *key);
 int 			ft_export(t_mshl *m);
 int				env(t_mshl *m);
 char			**ft_getenv(char **env);
+int				env_init(t_mshl *m, char **env);
 //EXEC
 char			*path_join(char *path, char *arg);
 int				launch_exec(t_mshl *m, char *path);

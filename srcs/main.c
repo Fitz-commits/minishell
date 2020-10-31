@@ -312,7 +312,9 @@ int		main(int ac, char **av, char **envp)
 	if (prep_rv(&m))
 		return (1);
 	ft_init(&m);
-	m.cenv = ft_getenv(envp);
+	if (env_init(&m, envp))
+		exit(3); //modifier retour
+	//m.cenv = ft_getenv(envp);
     complete_env(&m);
     if (ac == 3)
     {
