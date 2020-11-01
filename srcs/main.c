@@ -281,6 +281,7 @@ int		main_loop(t_mshl *m)
 			return (main_error(m));
 		if (!(m->args = parse_cli(m->reader, m)))
 			return (main_error(m));
+		//print_tab(m->args);
 		m->nb_args = tablen(m->args);
 	    if (check_for_qr(m))
 			return (main_error(m));
