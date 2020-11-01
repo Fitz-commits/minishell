@@ -84,7 +84,7 @@ int		parse_varname(char *str)
 	i = 0;
 	if (!ft_strlen(str))
 		return (9); //Not a valid identifier
-	if ((str[i] >= 48 && str[i] <= 57) || str[i] <= '=')
+	if ((str[i] >= 48 && str[i] <= 57) || str[i] == '=')
 		return (9);
 	while (str[i] && str[i] != '=')
 	{
@@ -159,25 +159,27 @@ int		parse_args(t_mshl *m, int arg /*char *str*/)  //bool, return 0 if we have a
 	char 	*tmp;
 
 	i = 0;
-	if (m->args[arg])
+	if (m->cpargs[arg])
 	{
-		while (m->args[arg][i] && m->args[arg][i] != '=')
+		while (m->cpargs[arg][i] && m->cpargs[arg][i] != '=')
 			i++;
-		if (!m->args[arg][i])
+		if (!m->cpargs[arg][i])
 			return (-1);
-		i = 0;
-		while (m->args[arg][i + 1])
+		i++;
+		//i = 0;
+		//if (ft_strlen(m->cpargs[arg][i]) == 2) && m->cpargs[arg][i + 1] == '\"')
+		while (m->cpargs[arg][i])
 		{
-			if (m->args[arg][i] == '\\')
+			if (m->cpargs[arg][i] == '\\')
 			{
-				tmp = m->args[arg];
-				if (!(m->args[arg] = ft_cut(m->args[arg], i - 1, i + 1)))
+				tmp = m->cpargs[arg];
+				if (!(m->cpargs[arg] = ft_cut(m->cpargs[arg], i, i + 1)))
 					return (3);
 				free_str(&tmp, 0);
 			}
 			i++;
 		}
-		if (m->args[arg][i] == '\\')
+		if (m->cpargs[arg][i] == '\\')
 			return (2);
 	}
 	return (0);
@@ -194,29 +196,29 @@ int	ft_export(t_mshl *m)
 	
 	i = 1;
 	//printf("\nARGS |%d|\n", m->nb_args);
-	if (m->nb_args == 1)
+	if (m->nb_cpargs == 1)
 	{	
 		if (printexp(m))
 			return (3); //memory error
 		return (EXIT_SUCCESS);
 	}
-	while (m->args[i])
+	while (m->cpargs[i])
 	{
-		if (!parse_varname(m->args[i]))
+		if (!parse_varname(m->cpargs[i]))
 		{
 			if (!(ret = parse_args(m, i)))
 			{
-				if (find_env(m->cenv, m->args[i]) == -1)
+				if (find_env(m->cenv, m->cpargs[i]) == -1)
 				{
-					if (!(tempc = ft_strdup(m->args[i])))
+					if (!(tempc = ft_strdup(m->cpargs[i])))
 						return (3);
 					m->cenv = ft_append(m, tempc); // append chelou add maloc prot
 				}
 				else
 				{	
-					temp = find_env(m->cenv, m->args[i]);
+					temp = find_env(m->cenv, m->cpargs[i]);
 					free(m->cenv[temp]);
-					if(!(m->cenv[temp] = ft_strdup(m->args[i])))
+					if(!(m->cenv[temp] = ft_strdup(m->cpargs[i])))
 						return (3);
 				}
 			}
