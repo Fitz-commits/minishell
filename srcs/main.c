@@ -117,7 +117,7 @@ int		get_args(t_mshl *m)
 ** TODO leaks sur le free cpargs
 ** close_rp to add
 */
-int		prep_cpargs(t_mshl *m)
+int		prep_cpargs(t_mshl *m) //prend sa retraite
 {
 	if (m->cpargs)
 		free(m->cpargs); //Redondant ?
@@ -135,8 +135,8 @@ int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige ver
 	int		n;
 
 	init_ptf(pt_f);
-	if (prep_cpargs(m))
-		return (EXIT_FAILURE);
+	m->cpargs[m->curs] = 0;
+	m->nb_cpargs = tablen(m->cpargs);
 	n = n_command(m);
 	//print_tab(m->cpargs); // debugging only
 	if (!m->cpargs)
@@ -254,7 +254,7 @@ int		main(int ac, char **av, char **envp)
 	return (m->err);
 }*/
 
-void    free_and_null(t_mshl *m, int i)
+void    free_and_null(t_mshl *m, int i) //prend sa retraite
 {
     
     free(m->args[i]);

@@ -57,7 +57,7 @@ int		check_dperm(t_mshl *m, char *path)
 	
 	if (((stat(path, &buffer)) == -1)) // set erreur
     {
-        m->errarg = m->progr - 1;
+        m->errarg = m->curs - 1;
         return (EXIT_FAILURE);
     }
 	perm = buffer.st_mode;

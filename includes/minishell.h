@@ -27,6 +27,7 @@ typedef struct	s_mshl
 	char	**cenv; // malloc to free
 	char	**buf_cmd; // malloc to free sans ;
 	char	*buff_cmd;
+	int		curs;
     char    cerr;
 	int		nb_args;
 	int		nb_cpargs;
@@ -95,6 +96,8 @@ int				set_stdin(t_mshl *m);
 int				set_apipes(t_mshl *m);
 int				set_bpipes(t_mshl *m);
 //REDIRECTION
+int				err_redir(t_mshl *m);
+int				qr_line(t_mshl *m);
 int 			is_redir(char *line);
 int				clear_std(t_mshl *m);
 char			**cpy_args(char **args, int beg, int end);
@@ -134,6 +137,7 @@ char			*copy_until_next_dq(char *src);
 int				alloc_bufcmd(t_mshl *m);
 int				buf_cmd_to_args(t_mshl *m);
 //quote_reduction
-char *remove_quotes(char *line, int j);
-int     check_quotes(char *line);
+char 			*remove_quotes(char *line, int j);
+int				check_quotes(char *line);
+int				reset_cpargs(t_mshl *m);
 #endif
