@@ -12,6 +12,16 @@
 **
 */
 
+// int		check_rperm(t_mshl *m, char *path)
+// {
+// 	return (EXIT_SUCCESS);
+// }
+
+// int		check_wperm(t_mshl *m, char *path)
+// {
+// 	return (EXIT_SUCCESS);
+// }
+
 int		check_fperm(t_mshl *m, char *path, struct stat *test)
 {
 	struct stat buffer;

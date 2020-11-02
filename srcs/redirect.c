@@ -50,13 +50,29 @@ int     next_split(t_mshl *m)
 int		check_red(t_mshl *m)
 {
     int red;
+    char *temp;
 
     red = 0;
     if (m->redir == 5)
         return (4);
     while (m->args[m->progr] && !red)
     {
-        red = is_redir(m->args[m->progr]); // qr here
+        red = is_redir(m->args[m->progr]);
+        if (check_quotes(m->args[m->progr]))
+        {
+            if (!(temp = remove_quotes(m->args[m->progr], 0)))
+                return (EXIT_FAILURE);
+            else
+                m->args[m->progr] = temp;
+             // qr here
+        }
+        //here we should check if m->progr + 1 = > to check and ! redir otherwise send error code
+        if (red && (!m->args[m->progr + 1] || (is_redir(m->progr + 1) && ft_strcmp(m->args[m->progr], ">"))))
+        {
+            m->err = 2;
+            return (-1);
+        }
+        
         m->progr++;
     }
     if (red == 2 && m->args[m->progr] && !ft_strcmp(m->args[m->progr], ">"))
@@ -126,10 +142,8 @@ int set_stdior(t_mshl *m)
         }
         else
             reat_crval(m, 0);
-        m->redir = check_red(m);  // quote reduction here
-
-        if ((m->progr == 1  && m->redir) || (m->progr == 2 && m->redir == 3))
-          m->err = 2; // parse error might want to do this upper
+        if ((m->redir = check_red(m)) == -1)
+            break;  // quote reduction here
         if (m->redir >= 0 && m->redir <= 6 && (!errno || m->redir == 5 || m->redir == 4))
             if (pt_fr[m->redir](m))
                 m->ierr = m->progr;

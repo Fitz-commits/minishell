@@ -30,11 +30,12 @@ int		first_parsing(t_mshl *m, char *str)
 	i = 0;
 	q = 0;
 	if (str[0] == ';' || str[0] == '|')
+	{
+		m->cerr = str[0];
 		return (2);
+	}
 	while (str[i])
 	{
-		
-		q = set_quotes(q, str[i]);
 		if (!q)
 		{
 			if (str[i] == '*' || !ft_strncmp(&str[i], "&&", 2) ||
@@ -53,6 +54,7 @@ int		first_parsing(t_mshl *m, char *str)
 				    return (2); //Parsing error
                 }
 		}
+		q = set_quotes(q, str[i]);
 		i++;
 	}
 	return (0);
@@ -283,8 +285,6 @@ int		main_loop(t_mshl *m)
 			return (main_error(m));
 		//print_tab(m->args);
 		m->nb_args = tablen(m->args);
-	    if (check_for_qr(m))
-			return (main_error(m));
         //print_tab(m->args);
 		if (set_stdior(m) == -1)
 			return (-1);
