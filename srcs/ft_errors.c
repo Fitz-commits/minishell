@@ -84,8 +84,11 @@ int    ft_error(t_mshl *m)
 		ret = 1;
 	if (errno && !m->err)
 	{
-		print_errno(m, m->args[0]);
-		if (errno == ENOENT)
+		if (m->ierr == -1)
+			print_errno(m, m->args[0]);
+		else
+			print_errno(m, m->args[m->ierr]);
+		if (errno == ENOENT && m->ierr == -1)
 			reat_crval(m, 127);
 		else
 			reat_crval(m, 1);

@@ -140,4 +140,10 @@ int				buf_cmd_to_args(t_mshl *m);
 char 			*remove_quotes(char *line, int j);
 int				check_quotes(char *line);
 int				reset_cpargs(t_mshl *m);
+// first parsing
+int				check_chev_o(t_mshl *m, char *str, int i);
+int				check_pipe(t_mshl *m, char *str, int i);
+int				check_dq(t_mshl *m, char *str, int i);
+int				check_chev_f(t_mshl *m, char *str, int i);
+int				check_pni_errors(t_mshl *m, char *str, int i);
 #endif

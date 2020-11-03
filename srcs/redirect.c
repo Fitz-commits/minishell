@@ -137,7 +137,7 @@ int set_stdior(t_mshl *m)
             break;
         if (m->redir >= 0 && m->redir <= 6 && (!errno || m->redir == 5 || m->redir == 4))
             if (pt_fr[m->redir](m))
-                m->ierr = m->progr;
+                break;
         if ((m->redir == 5 || m->redir == 0) && !m->err && !errno)
         {
             choice_command(m);

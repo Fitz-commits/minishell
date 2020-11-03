@@ -20,6 +20,7 @@
 ** TODO pour la fin pas oublier de retirer / modifier les printf + virer splitq2
 ** TODO virer le err += 1 dans redirect.c mis pour la compilation
 ** TODO alias dans le .h
+** piped double quote
 */
 int check_for_pdq(t_mshl *m, char *str)
 {
@@ -46,6 +47,7 @@ int		first_parsing(t_mshl *m, char *str)
 {
 	int i;
 	int q;
+	int err;
 
 	i = 0;
 	q = 0;
@@ -55,24 +57,9 @@ int		first_parsing(t_mshl *m, char *str)
 	{
 		if (!q)
 		{
-			if (str[i] == '*' || !ft_strncmp(&str[i], "&&", 2) ||
-				!ft_strncmp(&str[i], "||", 2) || !ft_strncmp(&str[i], "<<", 2))
-                {
-                    m->cerr = str[i];
-				    return (1); // not implemented
-                }
-			if (str[i] == '&' || !ft_strncmp(&str[i], "<|", 2) ||
-				!ft_strncmp(&str[i], "|<", 2) || !ft_strncmp(&str[i], ">|", 2) ||
-				!ft_strncmp(&str[i], "|>", 2) || !ft_strncmp(&str[i], "><", 2) ||
-				!ft_strncmp(&str[i], "<>", 2) || !ft_strncmp(&str[i], ">>>", 3) ||
-                !ft_strncmp(&str[i], ";;", 2) || !ft_strncmp(&str[i], "> >", 3) ||
-				!ft_strncmp(&str[i], "; ;", 3) || !ft_strncmp(&str[i], "| ;", 3)
-				|| !ft_strncmp(&str[i], "< <", 3) || !ft_strncmp(&str[i], "> ;", 3)
-				|| !ft_strncmp(&str[i], "< ;", 3))
-                {
-                    m->cerr = str[i];
-				    return (2); //Parsing error
-                }
+			err = check_pni_errors(m, str, i);
+			if (err != 0)
+				return (2);
 		}
 		q = set_quotes(q, str[i]);
 		i++;
@@ -206,6 +193,7 @@ void	set_zpb(t_mshl *m)
 	m->begin = 0;
 	m->error = 0;
     m->err = 0;
+	m->ierr = -1;
     m->errarg = -1;
 }
 

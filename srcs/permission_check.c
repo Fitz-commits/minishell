@@ -31,7 +31,7 @@ int		check_fperm(t_mshl *m, char *path, struct stat *test)
         buffer = *test;
     if (!(test) && ((stat(path, &buffer)) == -1)) // set erreur
     {
-        m->errarg = m->progr - 1;
+        m->ierr = m->progr - 1;
         return (EXIT_FAILURE);
     }
 	perm = buffer.st_mode;
@@ -39,7 +39,7 @@ int		check_fperm(t_mshl *m, char *path, struct stat *test)
     {
         m->err = 12;
         m->ierr = m->progr;
-		return (EXIT_FAILURE); //is not a dir
+		return (EXIT_FAILURE); //is a dir
     }
     if ((S_IXUSR & perm) && test)
 		return (EXIT_SUCCESS); //not authorized	
