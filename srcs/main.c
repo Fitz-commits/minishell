@@ -21,7 +21,27 @@
 ** TODO virer le err += 1 dans redirect.c mis pour la compilation
 ** TODO alias dans le .h
 */
+int check_for_pdq(t_mshl *m, char *str)
+{
+	int i;
 
+	i = 0;
+	if (str[0] == '|' || str[0] == ';')
+	{
+		m->cerr = str[0];
+		return (EXIT_FAILURE);
+	}
+	while (str[i] && is_space(str[i]))
+	{
+		i++;
+		if (str[i] && (str[i] == ';' || str[i] == '|'))
+		{
+			m->cerr = str[i];
+			return (EXIT_FAILURE);
+		}
+	}
+	return (EXIT_SUCCESS);
+}
 int		first_parsing(t_mshl *m, char *str)
 {
 	int i;
@@ -29,12 +49,10 @@ int		first_parsing(t_mshl *m, char *str)
 
 	i = 0;
 	q = 0;
-	if (str[0] == ';' || str[0] == '|')
+	if (check_for_pdq(m, str))
 		return (2);
 	while (str[i])
 	{
-		
-		q = set_quotes(q, str[i]);
 		if (!q)
 		{
 			if (str[i] == '*' || !ft_strncmp(&str[i], "&&", 2) ||
@@ -47,12 +65,16 @@ int		first_parsing(t_mshl *m, char *str)
 				!ft_strncmp(&str[i], "|<", 2) || !ft_strncmp(&str[i], ">|", 2) ||
 				!ft_strncmp(&str[i], "|>", 2) || !ft_strncmp(&str[i], "><", 2) ||
 				!ft_strncmp(&str[i], "<>", 2) || !ft_strncmp(&str[i], ">>>", 3) ||
-                !ft_strncmp(&str[i], ";;", 2))
+                !ft_strncmp(&str[i], ";;", 2) || !ft_strncmp(&str[i], "> >", 3) ||
+				!ft_strncmp(&str[i], "; ;", 3) || !ft_strncmp(&str[i], "| ;", 3)
+				|| !ft_strncmp(&str[i], "< <", 3) || !ft_strncmp(&str[i], "> ;", 3)
+				|| !ft_strncmp(&str[i], "< ;", 3))
                 {
                     m->cerr = str[i];
 				    return (2); //Parsing error
                 }
 		}
+		q = set_quotes(q, str[i]);
 		i++;
 	}
 	return (0);
@@ -115,7 +137,7 @@ int		get_args(t_mshl *m)
 ** TODO leaks sur le free cpargs
 ** close_rp to add
 */
-int		prep_cpargs(t_mshl *m)
+int		prep_cpargs(t_mshl *m) //prend sa retraite
 {
 	if (m->cpargs)
 		free(m->cpargs); //Redondant ?
@@ -133,8 +155,8 @@ int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige ver
 	int		n;
 
 	init_ptf(pt_f);
-	if (prep_cpargs(m))
-		return (EXIT_FAILURE);
+	m->cpargs[m->curs] = 0;
+	m->nb_cpargs = tablen(m->cpargs);
 	n = n_command(m);
 	//print_tab(m->cpargs); // debugging only
 	if (!m->cpargs)
@@ -252,7 +274,7 @@ int		main(int ac, char **av, char **envp)
 	return (m->err);
 }*/
 
-void    free_and_null(t_mshl *m, int i)
+void    free_and_null(t_mshl *m, int i) //prend sa retraite
 {
     
     free(m->args[i]);
@@ -283,8 +305,6 @@ int		main_loop(t_mshl *m)
 			return (main_error(m));
 		//print_tab(m->args);
 		m->nb_args = tablen(m->args);
-	    if (check_for_qr(m))
-			return (main_error(m));
         //print_tab(m->args);
 		if (set_stdior(m) == -1)
 			return (-1);

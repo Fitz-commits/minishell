@@ -47,20 +47,27 @@ int     next_split(t_mshl *m)
 ** principale qui gere au cas par cas
 */
 
-int		check_red(t_mshl *m)
+int		check_red(t_mshl *m, int red)
 {
-    int red;
-
-    red = 0;
     if (m->redir == 5)
         return (4);
     while (m->args[m->progr] && !red)
     {
-        red = is_redir(m->args[m->progr]); // qr here
+        red = is_redir(m->args[m->progr]);
+        if (qr_line(m))
+            return (-1);
+        if (red && (!m->args[m->progr + 1] || (m->progr == 0 && 
+        !ft_strcmp(m->args[m->progr], "|")) || (is_redir(m->args[m->progr + 1]) 
+        && ft_strcmp(m->args[m->progr + 1], ">"))))
+            return (err_redir(m));
+        if (!red)
+            m->cpargs[m->curs++] = m->args[m->progr];
         m->progr++;
     }
     if (red == 2 && m->args[m->progr] && !ft_strcmp(m->args[m->progr], ">"))
     {
+        if (!(m->args[m->progr + 1]) || is_redir(m->args[m->progr + 1]))
+            return (err_redir(m));
         red = 3;
         m->progr++;
     }
@@ -115,34 +122,27 @@ int set_stdior(t_mshl *m)
     int		(*pt_fr[6])(t_mshl*);
 
     init_ptfr(pt_fr);
-    while (m->nb_args > m->progr && m->args[m->progr])
+    if (!(m->cpargs = malloc(sizeof(char*) * (m->nb_args + 1))))
+        m->nb_args = 0;
+    reset_cpargs(m);
+    while ((m->nb_args > m->progr && m->args[m->progr]) || m->cpargs[0])
     {
         if ((m->redir == 0 || m->redir == 4) && (errno || m->err))
-            ft_error(m);
+                ft_error(m);
         else if (errno || m->err)
-        {
             reat_crval(m, 0);
-            m->begin = m->progr;
-        }
         else
             reat_crval(m, 0);
-        m->redir = check_red(m);  // quote reduction here
-
-        if ((m->progr == 1  && m->redir) || (m->progr == 2 && m->redir == 3))
-          m->err = 2; // parse error might want to do this upper
+        if ((m->redir = check_red(m, 0)) == -1)
+            break;
         if (m->redir >= 0 && m->redir <= 6 && (!errno || m->redir == 5 || m->redir == 4))
             if (pt_fr[m->redir](m))
                 m->ierr = m->progr;
-        /*
-        if (m->cp >= 0)
-        {
-            printf("--------------------------\n");
-            printf("m->tpiped[%d][0] = %d\nm->tpiped[%d][1] = %d\n m->redir = %d\n", m->cp, m->tpiped[m->cp][0],m->cp, m->tpiped[m->cp][1], m->redir);
-            printf("--------------------------\n");
-        }
-        */
         if ((m->redir == 5 || m->redir == 0) && !m->err && !errno)
+        {
             choice_command(m);
+            reset_cpargs(m);
+        }
         if (m->redir != 5 && m->redir != 4)
           waiter(m);
     }

@@ -10,7 +10,7 @@ void    print_errno(t_mshl *m, char *str)
 	}
 	if (m->errarg > 0)
 	{
-		ft_putstr_fd(m->cpargs[m->errarg], 2);
+		ft_putstr_fd(m->args[m->errarg], 2);
 		ft_putstr_fd(": ", 2);
 	}
 	ft_putendl_fd(strerror(errno), 2);
@@ -84,7 +84,7 @@ int    ft_error(t_mshl *m)
 		ret = 1;
 	if (errno && !m->err)
 	{
-		print_errno(m, m->cpargs[0]);
+		print_errno(m, m->args[0]);
 		if (errno == ENOENT)
 			reat_crval(m, 127);
 		else

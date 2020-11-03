@@ -87,7 +87,7 @@ int	launch_exec(t_mshl *m, char *path)
 	struct stat buffer;
 
 	i = 0;
-	if (ft_strchr(m->cpargs[0], '/'))
+	if (ft_strchr(m->cpargs[0], '/') || !getvar(m, "PATH")[0])
 	{
 		if (!check_fperm(m, m->cpargs[0], NULL))
 			return (ft_exec(m, m->cpargs[0]));

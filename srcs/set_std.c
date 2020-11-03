@@ -13,17 +13,19 @@
 int set_stdouta(t_mshl *m)
 {
     int fd;
+
     if (m->tstdout > 1 && (m->cp < 0 || m->tstdout != m->tpiped[m->cp][1]))
     {
         close(m->tstdout);
         m->tstdout = 1;
     }
-    if (!m->args[m->progr])
+    if (qr_line(m))
         return (EXIT_FAILURE);
     if (((fd = open(m->args[m->progr], O_CREAT | O_WRONLY | O_APPEND, 0666)) == -1))
         return (EXIT_FAILURE);
     else
         m->tstdout = fd;
+    m->progr++;
     return (EXIT_SUCCESS);
 
 }
@@ -37,12 +39,13 @@ int set_stdout(t_mshl *m)
         close(m->tstdout);
         m->tstdout = 1;
     }
-    if (!m->args[m->progr])
-        return ((m->err = 2)); // parse error
+    if (qr_line(m))
+        return (EXIT_FAILURE);
     if (((fd = open(m->args[m->progr], O_WRONLY | O_CREAT
 		| O_TRUNC , 0666)) < 0))
         return (EXIT_FAILURE);
     m->tstdout = fd;
+    m->progr++;
     return (EXIT_SUCCESS);
 }
 
@@ -55,11 +58,12 @@ int set_stdin(t_mshl *m)
         m->tstdin = close(m->tstdin);
         m->tstdin = 0;
     }
-    if (!m->args[m->progr])
-        return ((m->err = 2)); // parse error
+    if (qr_line(m))
+        return (EXIT_FAILURE);
     if ((fd = open(m->args[m->progr], O_RDONLY)) == -1)
         return (EXIT_FAILURE);
     m->tstdin = fd;
+    m->progr++;
     return (EXIT_SUCCESS);
 }
 
@@ -69,6 +73,8 @@ int set_apipes(t_mshl *m)
         close(m->tstdin);
     m->tstdin = m->tpiped[m->cp][0];
     m->tstdout = 1;
+    ft_bzero(m->cpargs, sizeof(char*) * (m->nb_args + 1));
+    m->curs = 0;
     return(0);
 }
 
