@@ -161,14 +161,16 @@ int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige ver
 
 int		prep_rv(t_mshl *m)
 {
+	
 	if (!(m->crvalue = malloc(sizeof(char) * 10)))
-		return (1);
+			return (EXIT_FAILURE);
 	reat_crval(m, 0);
 	return (0);
 }
 
 void	ft_init(t_mshl *m)  //initialise la structure might want to failproof it now that it malloc's
 {
+	ft_bzero(m->err_to_print, PATH_MAX + 1);
 	m->args = NULL;
 	m->cpargs = NULL;
 	m->nb_args = 0;
@@ -325,6 +327,7 @@ int		main(int ac, char **av, char **envp)
 		exit(3); //modifier retour
 	//m.cenv = ft_getenv(envp);
     complete_env(&m);
+	set_err(&m, 2, 1,"Parsing error near", "c");
     if (ac == 3)
     {
         if (!ft_strcmp(av[1], "-c"))

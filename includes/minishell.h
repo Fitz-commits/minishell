@@ -3,6 +3,7 @@
 
 # include "../lib/includes/libft.h"
 # include "../lib/includes/get_next_line.h"
+# include <stdarg.h>
 # include <fcntl.h>
 # include <errno.h>
 # include <sys/types.h>
@@ -47,6 +48,7 @@ typedef struct	s_mshl
 	int		rvalue; // return value $?
 	char	*crvalue; // malloc to free
 	int		pos;
+	char	err_to_print[PATH_MAX + 1];
 }				t_mshl;
 
 //FREE
@@ -146,4 +148,6 @@ int				check_pipe(t_mshl *m, char *str, int i);
 int				check_dq(t_mshl *m, char *str, int i);
 int				check_chev_f(t_mshl *m, char *str, int i);
 int				check_pni_errors(t_mshl *m, char *str, int i);
+//error
+int				set_err(t_mshl *m, int ret, int opt, ...);
 #endif
