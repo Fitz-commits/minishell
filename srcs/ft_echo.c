@@ -25,6 +25,21 @@
 ** TODO echo blabla > directory lancer une erreur
 */
 
+int		is_n(char *str)
+{
+	int i;
+
+	i = 0;
+	if (str[i] != '-')
+		return (1);
+	i++;
+	while (str[i] == 'n')
+		i++;
+	if (!str[i])
+		return (0);
+	return (1);
+}
+
 int		ft_echo(t_mshl *m)
 {
 	int		i;
@@ -34,9 +49,10 @@ int		ft_echo(t_mshl *m)
 	flag = 0;
 	if (m->nb_cpargs > 1 && m->cpargs[1]) 
 	{
-		while (m->cpargs[i] && !ft_strcmp(m->cpargs[i], "-n"))
+		while (m->cpargs[i] && !is_n(m->cpargs[i]))
 			i++;
-		flag = (i > 1) ? 1 : 0;
+		if (i > 1)
+			flag = 1;
 		while (m->cpargs[i])
 		{
 			ft_putstr_fd(m->cpargs[i], m->tstdout);
