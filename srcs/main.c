@@ -21,7 +21,27 @@
 ** TODO virer le err += 1 dans redirect.c mis pour la compilation
 ** TODO alias dans le .h
 */
+int check_for_pdq(t_mshl *m, char *str)
+{
+	int i;
 
+	i = 0;
+	if (str[0] == '|' || str[0] == ';')
+	{
+		m->cerr = str[0];
+		return (EXIT_FAILURE);
+	}
+	while (str[i] && is_space(str[i]))
+	{
+		i++;
+		if (str[i] && (str[i] == ';' || str[i] == '|'))
+		{
+			m->cerr = str[i];
+			return (EXIT_FAILURE);
+		}
+	}
+	return (EXIT_SUCCESS);
+}
 int		first_parsing(t_mshl *m, char *str)
 {
 	int i;
@@ -29,11 +49,8 @@ int		first_parsing(t_mshl *m, char *str)
 
 	i = 0;
 	q = 0;
-	if (str[0] == ';' || str[0] == '|')
-	{
-		m->cerr = str[0];
+	if (check_for_pdq(m, str))
 		return (2);
-	}
 	while (str[i])
 	{
 		if (!q)
@@ -48,7 +65,10 @@ int		first_parsing(t_mshl *m, char *str)
 				!ft_strncmp(&str[i], "|<", 2) || !ft_strncmp(&str[i], ">|", 2) ||
 				!ft_strncmp(&str[i], "|>", 2) || !ft_strncmp(&str[i], "><", 2) ||
 				!ft_strncmp(&str[i], "<>", 2) || !ft_strncmp(&str[i], ">>>", 3) ||
-                !ft_strncmp(&str[i], ";;", 2))
+                !ft_strncmp(&str[i], ";;", 2) || !ft_strncmp(&str[i], "> >", 3) ||
+				!ft_strncmp(&str[i], "; ;", 3) || !ft_strncmp(&str[i], "| ;", 3)
+				|| !ft_strncmp(&str[i], "< <", 3) || !ft_strncmp(&str[i], "> ;", 3)
+				|| !ft_strncmp(&str[i], "< ;", 3))
                 {
                     m->cerr = str[i];
 				    return (2); //Parsing error

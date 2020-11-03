@@ -25,7 +25,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror -fsanitize=address
 RM = rm -rf
 
-# all: libft_make $(NAME)
+all: libft_make $(NAME)
 all: $(NAME)
 
 $(NAME):	$(OBJS)

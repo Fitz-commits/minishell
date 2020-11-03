@@ -66,7 +66,7 @@ int		check_red(t_mshl *m, int red)
     }
     if (red == 2 && m->args[m->progr] && !ft_strcmp(m->args[m->progr], ">"))
     {
-        if (!(m->args[m->progr + 1]))
+        if (!(m->args[m->progr + 1]) || is_redir(m->args[m->progr + 1]))
             return (err_redir(m));
         red = 3;
         m->progr++;
