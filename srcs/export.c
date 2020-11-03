@@ -141,14 +141,15 @@ char	*ft_cut(char *s, int end_s1, int start_s2)
 	int i;
 	char *new;
 
-	i = 0;
-	if (!(new = (char *)malloc(end_s1 + ft_strlen(&s[start_s2] + 1))))
+	i = -1;
+	if (!(new = (char *)malloc(end_s1 + ft_strlen(&s[start_s2]) + 1)))
 		return (NULL);
-	while (i < end_s1)
-		new[i++] = s[end_s1++];
+	while (++i < end_s1)
+		new[i] = s[i];
 	while (s[start_s2])
-		new[i++] = s[start_s2++];
+		new[++i] = s[start_s2++];
 	new[i] = '\0';
+	printf("\ntest\n");
 	return (new);
 	
 }
