@@ -83,11 +83,9 @@ char *env_expansion(char **line, t_mshl *m, int j, int l)
 
 char	*catch_key(char *str, int *to_erase)
 {
-	int i;
 	int l;
 	char *ret;
 
-	i = 0;
 	l = 0;
 	*to_erase = 1;
 	while(str[*to_erase])
@@ -114,9 +112,7 @@ int assemble_string(t_mshl *m, char *buffer, int to_erase)
 	char *ret;
 	int total_len;
 	int i;
-	int j;
 
-	j = 0;
 	i = -1;
 	total_len = ft_strlen(m->reader) + ft_strlen(getvar(m, buffer)) - to_erase;
 	if (!(ret = malloc(sizeof(char) * (total_len + 2))))
@@ -184,13 +180,8 @@ int check_lee(char *line)
 
 int check_for_exp(t_mshl *m)
 {
-    int i;
-    int j;
-
-    j = 0;
-    i = -1;
-        if (check_lee(m->reader))
-            if ((env_expension(m)))
-				return (set_err(m, 1, 0, strerror(ENOMEM)));
+    if (check_lee(m->reader))
+        if ((env_expension(m)))
+            return (set_err(m, 1, 0, strerror(ENOMEM)));
     return (EXIT_SUCCESS);
 }

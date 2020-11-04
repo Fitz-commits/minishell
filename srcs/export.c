@@ -37,6 +37,25 @@ int	find_env(char **env, char *key)
 	}
 	return (-1);
 }
+
+int		find_env_arg(char **env, char *arg)
+{
+	int	len_arg;
+	int i;
+
+	i = 0;
+	len_arg = 0;
+	while (arg[len_arg] != '=')
+		len_arg++;
+	while (env[i])
+	{
+		if (!ft_strncmp(arg, env[i], len_arg))
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
 // format the key and the value to put in cenv
 
 char	*pair_value_key(char *value, char *key)
@@ -92,19 +111,8 @@ int		parse_varname(char *str)
 			return (9);
 		i++;
 	}
-	/*prarse_bs(str);
-	i = 0;
-	while (str[i] != '=' && str[i])
-		i++;
 	if (!str[i])
-		return (-1); // No = in the args, just pass
-	while (str[i + 1])
-	{
-		if (str[i] == '\\')
-		{
-
-		}
-	}*/
+		return (-1);
 	return (0);
 }
 
@@ -127,6 +135,8 @@ int		printexp(t_mshl *m)
 		equ++;
 		write(m->tstdout, tab[i], equ);
 		ft_putchar_fd('\"', m->tstdout);
+		if (!strcmp(&tab[i][equ], "\""))
+			ft_putstr_fd("\\", m->tstdout);
 		ft_putstr_fd(&tab[i][equ], m->tstdout);
 		ft_putchar_fd('\"', m->tstdout);
 		ft_putchar_fd('\n', m->tstdout);
@@ -136,59 +146,9 @@ int		printexp(t_mshl *m)
 	return (0);
 }
 
-char	*ft_cut(char *s, int end_s1, int start_s2)
-{
-	int i;
-	char *new;
-
-	i = -1;
-	if (!(new = (char *)malloc(end_s1 + ft_strlen(&s[start_s2]) + 1)))
-		return (NULL);
-	while (++i < end_s1)
-		new[i] = s[i];
-	while (s[start_s2])
-		new[++i] = s[start_s2++];
-	new[i] = '\0';
-	printf("\ntest\n");
-	return (new);
-	
-}
-
-int		parse_args(t_mshl *m, int arg /*char *str*/)  //bool, return 0 if we have a = or 1 if not
-{
-	int		i;
-	char 	*tmp;
-
-	i = 0;
-	if (m->cpargs[arg])
-	{
-		while (m->cpargs[arg][i] && m->cpargs[arg][i] != '=')
-			i++;
-		if (!m->cpargs[arg][i])
-			return (-1);
-		i++;
-		//i = 0;
-		//if (ft_strlen(m->cpargs[arg][i]) == 2) && m->cpargs[arg][i + 1] == '\"')
-		while (m->cpargs[arg][i])
-		{
-			if (m->cpargs[arg][i] == '\\')
-			{
-				tmp = m->cpargs[arg];
-				if (!(m->cpargs[arg] = ft_cut(m->cpargs[arg], i, i + 1)))
-					return (set_err(m, 1, 0, strerror(ENOMEM)));
-				free_str(&tmp, 0);
-			}
-			i++;
-		}
-		if (m->cpargs[arg][i] == '\\')
-			return (2);
-	}
-	return (0);
-}
-
 // export seems okay need testing
 // if no = seems not to esport anything need fixing
-int	ft_export(t_mshl *m)
+/*int	ft_export(t_mshl *m)
 {
 	int		temp;
 	int		i;
@@ -231,6 +191,49 @@ int	ft_export(t_mshl *m)
 			set_err(m, 1, 3, "export", m->cpargs[i], "not a valid identifier");
 			ft_putendl_fd(m->err_to_print, 2);
 			m->err = -10;
+		}
+		i++;
+	}
+	return (EXIT_SUCCESS);
+}*/
+
+int	ft_export(t_mshl *m)
+{
+	int		temp;
+	int		i;
+	char	*tempc;
+	int		ret;	
+	
+	i = 1;
+	if (m->nb_cpargs == 1)
+	{	
+		if (printexp(m))
+			return (3); //memory error
+		return (EXIT_SUCCESS);
+	}
+	while (m->cpargs[i])
+	{
+		if ((ret = parse_varname(m->cpargs[i])) > 0)
+		{
+			set_err(m, 1, 3, "export", m->cpargs[i], "not a valid identifier");
+			ft_putendl_fd(m->err_to_print, 2);
+			m->err = -10;
+		}
+		else if (!ret)
+		{
+			if ((temp = find_env_arg(m->cenv, m->cpargs[i])) == -1)
+			{
+				if (!(tempc = ft_strdup(m->cpargs[i])))
+					return (3);
+				if (!(m->cenv = ft_append(m, tempc)))
+					return (3);
+			}
+			else
+			{
+				free(m->cenv[temp]);
+				if(!(m->cenv[temp] = ft_strdup(m->cpargs[i])))
+					return (3);
+			}
 		}
 		i++;
 	}
