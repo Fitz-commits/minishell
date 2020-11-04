@@ -11,7 +11,7 @@ int		print_warning(t_mshl *m, int nb)
 
 	ft_putstr_fd("minishell: warning: shell level (", m->tstdout);
 	if (!(strnb = ft_itoa(nb)))
-		return (3);
+		return (set_err(m, 1, 0, strerror(ENOMEM)));
 	ft_putstr_fd(strnb, m->tstdout);
 	free_str(&strnb, 0);
 	ft_putstr_fd(") too high, resetting to 1\n", m->tstdout);
@@ -26,7 +26,7 @@ int		add_var(t_mshl *m)
 
 	len = tablen(m->cenv);
 	if (!(new = (char **)malloc(sizeof(char *) * (len + 2))))
-		return (3);
+		return (EXIT_FAILURE);
 	i = 0;
 	while (i < len)
 	{
@@ -80,7 +80,7 @@ int		init_shlvl(t_mshl *m)
 		i++;
 	}
 	if (add_var(m))
-		return (3);
+		return (set_err(m, 1, 0, strerror(ENOMEM)));
 	return (0);
 }
 
@@ -108,9 +108,9 @@ char	**ft_getenv(char **env)
 int		env_init(t_mshl *m, char **env)
 {
 	if (!(m->cenv = ft_getenv(env)))
-		return (3); //memory error
+		return (set_err(m, 1, 0, strerror(ENOMEM))); //memory error
 	if (init_shlvl(m))
-		return (3);
+		return (set_err(m, 1, 0, strerror(ENOMEM)));
 	return (0);
 	
 }

@@ -30,24 +30,15 @@ int		check_fperm(t_mshl *m, char *path, struct stat *test)
     if (test)
         buffer = *test;
     if (!(test) && ((stat(path, &buffer)) == -1)) // set erreur
-    {
-        m->ierr = m->progr - 1;
-        return (EXIT_FAILURE);
-    }
+        return (set_err(m, 127, 1, path, strerror(ENOENT)));
 	perm = buffer.st_mode;
     if ((S_ISDIR(perm)))
-    {
-        m->err = 12;
-        m->ierr = m->progr;
-		return (EXIT_FAILURE); //is a dir
-    }
+		return (set_err(m, 126, 1, path, "is a directory")); //isa dir
     if ((S_IXUSR & perm) && test)
 		return (EXIT_SUCCESS); //not authorized	
     else if ((0444 & perm) && !test && (S_IXUSR & perm))
         return (EXIT_SUCCESS);
-    m->err = 126;
-    m->ierr = m->begin;
-	return (EXIT_FAILURE);
+	return (set_err(m, 126, 1, path, strerror(EACCES)));
 }
 
 int		check_dperm(t_mshl *m, char *path)
@@ -56,23 +47,11 @@ int		check_dperm(t_mshl *m, char *path)
 	mode_t perm;
 	
 	if (((stat(path, &buffer)) == -1)) // set erreur
-    {
-        m->errarg = m->curs - 1;
-        return (EXIT_FAILURE);
-    }
+        set_err(m, 127, 1, path, strerror(ENOENT));
 	perm = buffer.st_mode;
     if ((!(perm & S_IRWXU)) || !(perm &  S_IXUSR))
-    {
-        m->err = 7;
-        m->ierr = m->begin;
-        m->errarg = 1;
-		return (EXIT_FAILURE); //not authorized	
-    }
+        (set_err(m, 126, 1, path, strerror(EACCES)));
 	if (!(S_ISDIR(buffer.st_mode)))
-    {
-        m->err = 6;
-        m->ierr = m->progr;
-		return (EXIT_FAILURE); //is not a dir
-    }
+        (set_err(m, 1, 1, path, strerror(EISDIR)));
 	return (EXIT_SUCCESS);
 }

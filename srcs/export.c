@@ -116,7 +116,7 @@ int		printexp(t_mshl *m)
 
 	i = 0;
 	if (!(tab = tabdup(m->cenv)))
-		return (3); // memory error;
+		return (set_err(m, 1, 0, strerror(ENOMEM))); // memory error;
 	sort_tab(tab);
 	while (tab[i])
 	{
@@ -175,7 +175,7 @@ int		parse_args(t_mshl *m, int arg /*char *str*/)  //bool, return 0 if we have a
 			{
 				tmp = m->cpargs[arg];
 				if (!(m->cpargs[arg] = ft_cut(m->cpargs[arg], i, i + 1)))
-					return (3);
+					return (set_err(m, 1, 0, strerror(ENOMEM)));
 				free_str(&tmp, 0);
 			}
 			i++;
@@ -212,7 +212,7 @@ int	ft_export(t_mshl *m)
 				if (find_env(m->cenv, m->cpargs[i]) == -1)
 				{
 					if (!(tempc = ft_strdup(m->cpargs[i])))
-						return (3);
+						return (set_err(m, 1, 0, strerror(ENOMEM)));
 					m->cenv = ft_append(m, tempc); // append chelou add maloc prot
 				}
 				else
@@ -220,7 +220,7 @@ int	ft_export(t_mshl *m)
 					temp = find_env(m->cenv, m->cpargs[i]);
 					free(m->cenv[temp]);
 					if(!(m->cenv[temp] = ft_strdup(m->cpargs[i])))
-						return (3);
+						return (set_err(m, 1, 0, strerror(ENOMEM)));
 				}
 			}
 			else if (ret > 0)
@@ -228,9 +228,8 @@ int	ft_export(t_mshl *m)
 		}
 		else
 		{
-			m->errarg = i;
-			m->err = 9;
-			ft_error(m);
+			set_err(m, 1, 3, "export", m->cpargs[i], "not a valid identifier");
+			ft_putendl_fd(m->err_to_print, 2);
 			m->err = -10;
 		}
 		i++;

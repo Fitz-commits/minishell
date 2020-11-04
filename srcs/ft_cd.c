@@ -23,14 +23,14 @@ int set_oldpwd(t_mshl *m, int i, int j)
     	{
 	    	free(m->cenv[i]);
 	   		if (!(m->cenv[i] = pair_value_key(buffer, "OLDPWD")))
-		    return (EXIT_FAILURE);
+		    return (set_err(m, 1, 0, strerror(ENOMEM)));
     	}
     	else if (i == -1 && j != -1)
     	{
       	  if (!(tempc = pair_value_key(getvar(m, "PWD"), "OLDPWD")))
-          	  return (EXIT_FAILURE);
+          	  return (set_err(m, 1, 0, strerror(ENOMEM)));
      	   if (!(m->cenv = ft_append(m, tempc)))
-        	   return (EXIT_FAILURE);
+        	   return (set_err(m, 1, 0, strerror(ENOMEM)));
    		}
 	return (EXIT_SUCCESS);
 }
@@ -43,24 +43,25 @@ int		set_pwd(t_mshl *m, char buffer[1024], int j)
     {
 	    free(m->cenv[j]);
 	    if (!(m->cenv[j] = pair_value_key(buffer, "PWD")))
-		    return (EXIT_FAILURE);
+		    return (set_err(m, 1, 0, strerror(ENOMEM)));
     }
     else
     {
         if (!(tempc = pair_value_key(buffer , "PWD")))
-            return (EXIT_FAILURE);
+            return (set_err(m, 1, 0, strerror(ENOMEM)));
         if (!(m->cenv = ft_append(m, tempc)))
-            return (EXIT_FAILURE);
+            return (set_err(m, 1, 0, strerror(ENOMEM)));
     }
 	return (EXIT_SUCCESS);
 }
+
 int			set_del_pwd(t_mshl *m, int i, int j)
 {
 	if (j == -1)
 	{
 		if (i != -1)
 			if(del_varenv(m, i))
-				return (EXIT_FAILURE);
+				return (set_err(m, 1, 0, strerror(ENOMEM)));
 	}
 	else 
 	{
@@ -69,6 +70,7 @@ int			set_del_pwd(t_mshl *m, int i, int j)
 	}
 	return (EXIT_SUCCESS);
 }
+
 int			change_pwd(t_mshl *m)
 {
 	int		i;
@@ -98,12 +100,11 @@ int			go_home(t_mshl *m)
     {
         chdir(getvar(m, "HOME"));
         if (errno)
-            return (EXIT_FAILURE);
+            return (set_err(m, 1, 2, "cd", getvar(m, "HOME"), strerror(errno)));
         change_pwd(m);
         return (EXIT_SUCCESS);
     }
-    ft_putstr_fd("minishell: cd: HOME not set\n", m->tstdout);
-    return (EXIT_FAILURE);
+    return (set_err(m, 1, 1, "cd", "HOME not set"));
 }
 
 //might want to return other value for error
@@ -119,7 +120,7 @@ int			ft_cd(t_mshl *m)
     if (check_dperm(m, m->cpargs[1]))
         return (EXIT_FAILURE);
     if ((chdir(m->cpargs[1])) == -1)
-        return (EXIT_FAILURE);
+        return (set_err(m, 1, 2, "cd", m->cpargs[1], strerror(errno)));
 	return (change_pwd(m)); //protect malloc
 }
 

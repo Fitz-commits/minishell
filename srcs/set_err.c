@@ -13,19 +13,24 @@ int set_err(t_mshl *m, int ret, int opt, ...)
 
     va_start(ap, opt);
     ft_bzero(m->err_to_print, PATH_MAX + 1);
-    ft_strcpy(m->err_to_print, "minishell : ");
+    ft_strcpy(m->err_to_print, "minishell: ");
     if (opt >= 1)
     {
         ft_strcat(m->err_to_print, va_arg(ap, char*));
         ft_strcat(m->err_to_print, ": ");
     }
+    if (opt == 3)
+        ft_strcat(m->err_to_print, "`");
     if (opt >= 2)
     {
         ft_strcat(m->err_to_print, va_arg(ap, char*));
+        if (opt == 3)
+            ft_strcat(m->err_to_print, "'");
         ft_strcat(m->err_to_print, ": ");
     }
     ft_strcat(m->err_to_print, va_arg(ap, char*));
     m->err = ret;
+    reat_crval(m, ret);
     va_end(ap);
     return (ret);
 }

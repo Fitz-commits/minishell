@@ -128,7 +128,12 @@ int set_stdior(t_mshl *m)
     while ((m->nb_args > m->progr && m->args[m->progr]) || m->cpargs[0])
     {
         if ((m->redir == 0 || m->redir == 4) && (errno || m->err))
-                ft_error(m);
+        {
+            if (m->err != -10 || m->err == 4)
+                ft_putendl_fd(m->err_to_print, 2);
+            m->err = 0;
+            errno = 0;
+        }
         else if (errno || m->err)
             reat_crval(m, 0);
         else
@@ -147,7 +152,12 @@ int set_stdior(t_mshl *m)
           waiter(m);
     }
     if (errno || m->err)
-        ft_error(m);
+        {
+            if (m->err != -10 && m->err != 4)
+                ft_putendl_fd(m->err_to_print, 2);
+            m->err = 0;
+            errno = 0;
+        }
     else
         reat_crval(m, 0);
     return (EXIT_SUCCESS);

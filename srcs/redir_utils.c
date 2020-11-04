@@ -15,7 +15,7 @@ int     qr_line(t_mshl *m)
 
 int err_redir(t_mshl *m)
 {
-    m->err = 2;
+    set_err(m, 2, 0, "Parsing error");
     return (-1);
 }
 

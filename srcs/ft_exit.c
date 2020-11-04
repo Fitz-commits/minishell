@@ -70,14 +70,13 @@ int			ft_exit(t_mshl *m, int error)
 	{
 		if (parse_exit_code(m->cpargs[1]))
 		{
-			m->err = 255;
-			m->errarg = 1;
-			ft_error(m);
+			set_err(m, 255, 2, "exit", m->cpargs[1], "numeric argument required");
+			ft_putendl_fd(m->err_to_print, 2);
 		}
 		else if (m->nb_cpargs > 2)
 		{
-			m->err = 11;
-			ft_error(m);
+			set_err(m, 1, 1, "exit", "too many arguments");
+			ft_putendl_fd(m->err_to_print, 2);
 		}
 		else
 			m->rvalue = ft_atoi(m->cpargs[1]);

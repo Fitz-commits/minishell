@@ -53,7 +53,7 @@ int alloc_bufcmd(t_mshl *m)
 		return (EXIT_SUCCESS);
 	}
 	if (!(m->buff_cmd = ft_strdup(&m->reader[dq + 1])))
-		return (EXIT_FAILURE);
+		return (set_err(m, 1, 0, strerror(ENOMEM)));
 	m->reader[dq] = 0;
 	return (EXIT_SUCCESS);
 }
@@ -77,7 +77,7 @@ int buf_cmd_to_args(t_mshl *m)
 	if (m->reader)
 		free(m->reader);
 	if (!(m->reader = copy_until_next_dq(m->buff_cmd)))
-		return (EXIT_FAILURE);
+		return (set_err(m, 1, 0, strerror(ENOMEM)));
 	i = -1;
 	while (m->buff_cmd[++i + dq + 1])
 		m->buff_cmd[i] = m->buff_cmd[i + dq + 1];

@@ -76,6 +76,7 @@ int waiter(t_mshl *m)
         if (reat_crval(m, WEXITSTATUS(o)))
             return (1);
         m->err = 4;
+        ft_bzero(m->err_to_print, PATH_MAX + 1);
     }
     m->proc.child_pid[m->proc.curpro] = 0;
     while (--m->proc.curpro != -1)

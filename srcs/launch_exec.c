@@ -15,7 +15,7 @@ char	*path_join(char *path, char *arg)
 
 	len = ft_strlen(path) + ft_strlen(arg) + 2;
 	if (!(ret = malloc(sizeof(char) * len)))
-		return NULL;
+		return (NULL);
 	i = 0;
 	while (path[i])
 	{
@@ -99,7 +99,7 @@ int	launch_exec(t_mshl *m, char *path)
 	while (pathtab[i])
 	{
 		if (!(temp = path_join(pathtab[i], m->cpargs[0])))
-			return (EXIT_FAILURE);
+			return (set_err(m, 1, 0, strerror(ENOMEM)));
 		stat(temp, &buffer);
 		if (S_ISREG(buffer.st_mode))
         {	
@@ -115,5 +115,5 @@ int	launch_exec(t_mshl *m, char *path)
 	}
     free_tab(pathtab, 1, 1);
 	errno = 0;
-	return (m->err = 127); // not command not found 127
+	return (set_err(m, 127, 1, m->cpargs[0], "command not found")); // not command not found 127
 }

@@ -120,7 +120,7 @@ int assemble_string(t_mshl *m, char *buffer, int to_erase)
 	i = -1;
 	total_len = ft_strlen(m->reader) + ft_strlen(getvar(m, buffer)) - to_erase;
 	if (!(ret = malloc(sizeof(char) * (total_len + 2))))
-		return (EXIT_FAILURE);
+		return (set_err(m, 1, 0, strerror(ENOMEM)));
 	while (++i < m->pos)
 		ret[i] = m->reader[i];
 	ft_strcpy(&ret[i], getvar(m,buffer));
@@ -150,7 +150,7 @@ int		env_expension(t_mshl *m)
 		if ((m->reader[i] == '$' && (flag == 0 || flag == 2)))
 		{
             if(!(buffer = catch_key(&m->reader[i], &to_erase)))
-				return (EXIT_FAILURE);
+				return (set_err(m, 1, 0, strerror(ENOMEM)));
 			m->pos = i;
 			if (assemble_string(m, buffer, to_erase))
 				return (free_str(&buffer, EXIT_FAILURE));
@@ -191,6 +191,6 @@ int check_for_exp(t_mshl *m)
     i = -1;
         if (check_lee(m->reader))
             if ((env_expension(m)))
-				return (EXIT_FAILURE);
+				return (set_err(m, 1, 0, strerror(ENOMEM)));
     return (EXIT_SUCCESS);
 }

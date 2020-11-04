@@ -22,7 +22,7 @@ int set_stdouta(t_mshl *m)
     if (qr_line(m))
         return (EXIT_FAILURE);
     if (((fd = open(m->args[m->progr], O_CREAT | O_WRONLY | O_APPEND, 0666)) == -1))
-        return (m->ierr = m->progr);
+        return (set_err(m, 1, 1, m->args[m->progr], strerror(errno)));
     else
         m->tstdout = fd;
     m->progr++;
@@ -44,7 +44,7 @@ int set_stdout(t_mshl *m)
 
     if (((fd = open(m->args[m->progr], O_WRONLY | O_CREAT
 		| O_TRUNC , 0666)) < 0))
-        return (m->ierr = m->progr);
+        return (set_err(m, 1, 1, m->args[m->progr], strerror(errno)));
     m->tstdout = fd;
     m->progr++;
     return (EXIT_SUCCESS);
@@ -62,7 +62,7 @@ int set_stdin(t_mshl *m)
     if (qr_line(m))
         return (EXIT_FAILURE);
     if ((fd = open(m->args[m->progr], O_RDONLY)) == -1)
-        return (m->ierr = m->progr);
+        return (set_err(m, 1, 1, m->args[m->progr], strerror(errno)));
     m->tstdin = fd;
     m->progr++;
     return (EXIT_SUCCESS);

@@ -327,7 +327,6 @@ int		main(int ac, char **av, char **envp)
 		exit(3); //modifier retour
 	//m.cenv = ft_getenv(envp);
     complete_env(&m);
-	set_err(&m, 2, 1,"Parsing error near", "c");
     if (ac == 3)
     {
         if (!ft_strcmp(av[1], "-c"))

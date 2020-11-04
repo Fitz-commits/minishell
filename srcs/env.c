@@ -8,7 +8,7 @@ int set_bpwd(t_mshl *m)
     if (!(getcwd(buffer, PATH_MAX)))
         return (EXIT_SUCCESS);
     if (!(tempc = pair_value_key(buffer , "PWD")))
-        return (EXIT_FAILURE);
+        return (set_err(m, 1, 0, strerror(ENOMEM)));
     if (!(m->cenv = ft_append(m, tempc)))
         return (EXIT_FAILURE);
     return (EXIT_SUCCESS);

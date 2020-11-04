@@ -82,9 +82,8 @@ int		ft_unset(t_mshl *m)
 			}
 			else
 			{
-				m->errarg = i;
-				m->err = 9;
-				ft_error(m);
+				set_err(m, 1, 3, "unset", m->args[i], "not a valid identifier");
+				ft_putendl_fd(m->err_to_print, 2);
 				m->err = -10;
 			}
 			
