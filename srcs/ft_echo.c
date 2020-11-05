@@ -12,19 +12,6 @@
 
 #include "minishell.h"
 
-/*
-**	Skip all the first "-n"
-**	if we have -n turn the flag at 1
-**  putstr all the args
-**  if the flag isn't 1 write \n
-*/
-
-/*
-** TODO verifier que nb args = nb args du cpargs
-** TODO echo >  doit renvoyer une error  -bash: syntax error near unexpected token `newline'
-** TODO echo blabla > directory lancer une erreur
-*/
-
 int		is_n(char *str)
 {
 	int i;

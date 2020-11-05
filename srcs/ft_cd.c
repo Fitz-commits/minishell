@@ -1,15 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_cd.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/11/05 23:34:32 by marvin            #+#    #+#             */
+/*   Updated: 2020/11/05 23:38:57 by marvin           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 # include "minishell.h"
-/*
-int		count_lws(char* )
-{
-	int i;
-
-
-}
-char *rince_slashes(char *path)
-{
-
-}*/
 
 int set_oldpwd(t_mshl *m, int i, int j)
 {
@@ -17,21 +18,20 @@ int set_oldpwd(t_mshl *m, int i, int j)
 	char buffer[PATH_MAX];
 
 	ft_bzero(buffer, PATH_MAX);
-
 	ft_strcpy(buffer, getvar(m, "PWD"));
 	if (i != -1 && j != -1)
-    	{
-	    	free(m->cenv[i]);
-	   		if (!(m->cenv[i] = pair_value_key(buffer, "OLDPWD")))
-		    return (set_err(m, 1, 0, strerror(ENOMEM)));
-    	}
-    	else if (i == -1 && j != -1)
-    	{
-      	  if (!(tempc = pair_value_key(getvar(m, "PWD"), "OLDPWD")))
-          	  return (set_err(m, 1, 0, strerror(ENOMEM)));
-     	   if (!(m->cenv = ft_append(m, tempc)))
-        	   return (set_err(m, 1, 0, strerror(ENOMEM)));
-   		}
+	{
+		free(m->cenv[i]);
+		if (!(m->cenv[i] = pair_value_key(buffer, "OLDPWD")))
+		return (set_err(m, 1, 0, strerror(ENOMEM)));
+	}
+	else if (i == -1 && j != -1)
+	{
+		if (!(tempc = pair_value_key(getvar(m, "PWD"), "OLDPWD")))
+			return (set_err(m, 1, 0, strerror(ENOMEM)));
+		if (!(m->cenv = ft_append(m, tempc)))
+			return (set_err(m, 1, 0, strerror(ENOMEM)));
+	}
 	return (EXIT_SUCCESS);
 }
 
@@ -94,20 +94,6 @@ int			change_pwd(t_mshl *m)
 	return (EXIT_SUCCESS);
 }
 
-int			go_home(t_mshl *m)
-{
-    if (find_env(m->cenv, "HOME") != -1)
-    {
-        chdir(getvar(m, "HOME"));
-        if (errno)
-            return (set_err(m, 1, 2, "cd", getvar(m, "HOME"), strerror(errno)));
-        change_pwd(m);
-        return (EXIT_SUCCESS);
-    }
-    return (set_err(m, 1, 1, "cd", "HOME not set"));
-}
-
-//might want to return other value for error
 int			ft_cd(t_mshl *m)
 {	
     if (!m->cpargs[1])
@@ -121,6 +107,5 @@ int			ft_cd(t_mshl *m)
         return (EXIT_FAILURE);
     if ((chdir(m->cpargs[1])) == -1)
         return (set_err(m, 1, 2, "cd", m->cpargs[1], strerror(errno)));
-	return (change_pwd(m)); //protect malloc
+	return (change_pwd(m));
 }
-

@@ -87,4 +87,3 @@ int			ft_exit(t_mshl *m, int error)
     exit(m->rvalue);
 	return (m->rvalue);
 }
-
