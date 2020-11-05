@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/03/26 16:49:37 by marvin            #+#    #+#             */
+/*   Updated: 2020/03/26 16:49:37 by marvin           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int		find_dq(char *str)
+int			find_dq(char *str)
 {
-	int i;
-	int flag;
+	int		i;
+	int		flag;
 
 	flag = 0;
 	i = -1;
@@ -18,21 +30,20 @@ int		find_dq(char *str)
 	return (-1);
 }
 
-char *copy_until_next_dq(char *src)
+char		*copy_until_next_dq(char *src)
 {
-	char *dest;
-	int i;
-	int flag;
+	char	*dest;
+	int		i;
+	int		flag;
 
 	i = 0;
 	flag = 0;
 	if (!(dest = malloc(find_dq(src) + 1)))
 		return (NULL);
-	// printf("src = %s\ndest = %s\n", src, dest);
 	while (src[i])
 	{
 		if (src[i] == ';' && !flag)
-			break;
+			break ;
 		else
 			dest[i] = src[i];
 		i++;
@@ -64,10 +75,9 @@ int buf_cmd_to_args(t_mshl *m)
 	int i;
 
 	i = 0;
-	while(m->buff_cmd[i] && (dq = find_dq(&m->buff_cmd[i])) == 0)
+	while (m->buff_cmd[i] && (dq = find_dq(&m->buff_cmd[i])) == 0)
 		i++;
-	 //not freeing here 
-	if(dq == -1 || !m->buff_cmd[0])
+	if (dq == -1 || !m->buff_cmd[0])
 	{
 		free(m->reader);
 		m->reader = m->buff_cmd;
