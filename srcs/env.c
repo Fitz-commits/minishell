@@ -1,4 +1,57 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/11/05 23:17:45 by marvin            #+#    #+#             */
+/*   Updated: 2020/11/05 23:18:18 by marvin           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
+
+int	until_dquotes(char *line)
+{
+	int i;
+
+	i = 0;
+	while(line[i])
+	{
+		if (line[i] == '=')
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+/*
+** return the line corresponding to the $variable
+*/
+
+int	find_env(char **env, char *key)
+{
+	int i;
+	int dq;
+	int j;
+	char buffer[512];
+
+	i = 0;
+	ft_bzero(buffer, 512);
+	while(env[i])
+	{	
+		j = -1;
+		dq = until_dquotes(env[i]);
+		while(++j < dq)
+			buffer[j] = env[i][j];
+		buffer[j] = 0;
+		if (!ft_strcmp(key, buffer))
+			return (i);
+		i++;
+	}
+	return (-1);
+}
 
 int		set_bpwd(t_mshl *m)
 {
