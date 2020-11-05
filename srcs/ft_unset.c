@@ -12,17 +12,17 @@
 
 #include "minishell.h"
 
-int		check_varname(char *var)
+static int		check_varname(char *var)
 {
 	int i;
 
 	i = 0;
 	if (!ft_strlen(var))
-		return (9);
+		return (NOT_VALID_ID);
 	while (var[i])
 	{
 		if (!ft_isalnum(var[i]) && var[i] != '_')
-			return (9); //Not a valid identifier
+			return (NOT_VALID_ID);
 		i++;
 	}
 	return (0);
@@ -39,13 +39,13 @@ int		del_varenv(t_mshl *m, int j)
 	k = 0;
 	len = tablen(m->cenv);
 	if (!(nenv = (char **)malloc(sizeof(char *) * len)))
-		return (3); //Memory Error
+		return (ENOMEM);
 	while (m->cenv[i])
 	{
 		if (i != j)
 		{
 			if (!(nenv[k] = ft_strdup(m->cenv[i])))
-				return (free_tab(nenv, 3, 1));
+				return (free_tab(nenv, ENOMEM, 1));
 			k++;
 		}
 		i++;
@@ -56,38 +56,41 @@ int		del_varenv(t_mshl *m, int j)
 	return (0);
 }
 
-int		ft_unset(t_mshl *m)
+static void		unset_loop(t_mshl *m, int i)
 {
-	int i;
 	int j;
 
-	i = 0;
-	if (m->nb_args > 1)
+	j = 0;
+	while (m->cenv[j])
 	{
-		while (m->args[++i])
+		if (!ft_strncmp(m->cenv[j], m->cpargs[i], until_dquotes(m->cenv[j]))
+			&& !ft_strncmp(m->cenv[j], m->cpargs[i], ft_strlen(m->cpargs[i])))
 		{
-			if (!check_varname(m->args[i]))
-			{
-				j = 0;
-				while (m->cenv[j])
-				{
-					if (!ft_strncmp(m->cenv[j], m->args[i], until_dquotes(m->cenv[j]))
-						&& !ft_strncmp(m->cenv[j], m->args[i], ft_strlen(m->args[i])))
-					{
-						del_varenv(m, j);
-						break ;
-					}
-					j++;
-				}
-			}
+			del_varenv(m, j);
+			break ;
+		}
+		j++;
+	}
+}	
+
+int				ft_unset(t_mshl *m)
+{
+	int i;
+
+	i = 0;
+	if (m->nb_cpargs > 1)
+	{
+		while (m->cpargs[++i])
+		{
+			if (!check_varname(m->cpargs[i]))
+				unset_loop(m, i);
 			else
 			{
-				set_err(m, 1, 3, "unset", m->args[i], "not a valid identifier");
+				set_err(m, 1, 3, "unset", m->cpargs[i], "not a valid identifier");
 				ft_putendl_fd(m->err_to_print, 2);
 				m->err = -10;
 			}
-			
 		}
 	}
-	return (1);
+	return (EXIT_SUCCESS);
 }

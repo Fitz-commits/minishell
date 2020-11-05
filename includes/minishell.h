@@ -13,6 +13,9 @@
 # include <signal.h>
 # include <dirent.h>
 
+# define NOT_VALID_ID 9
+# define SUCCESS 0
+
 typedef struct	s_proc
 {
 	pid_t	child_pid[512];
@@ -33,7 +36,7 @@ typedef struct	s_mshl
 	int		nb_args;
 	int		nb_cpargs;
 	int		ierr;
-	char	**cpargs; // malloc to free < > | 
+	char	**cpargs; // malloc to free < > |
 	int		cp; // current pipe to see on which pipe we are working currently and to close up to it after
 	int		tpiped[512][2]; // we can open up to 1024 file descriptor
 	int		begin; 

@@ -1,5 +1,5 @@
 #include "minishell.h"
-//finds the : in env
+
 int	until_dquotes(char *line)
 {
 	int i;
@@ -11,9 +11,12 @@ int	until_dquotes(char *line)
 			return (i);
 		i++;
 	}
-	return (-1); // strerror env baddly config tbh
+	return (-1);
 }
-// return the line corresponding to the $variable 
+
+/*
+** return the line corresponding to the $variable
+*/
 
 int	find_env(char **env, char *key)
 {
@@ -56,7 +59,9 @@ int		find_env_arg(char **env, char *arg)
 	return (-1);
 }
 
-// format the key and the value to put in cenv
+/*
+** format the key and the value to put in cenv
+*/
 
 char	*pair_value_key(char *value, char *key)
 {
@@ -79,12 +84,15 @@ char	*pair_value_key(char *value, char *key)
 	ret[j] = 0;
 	return (ret);
 }
-// get the value associated with "$key" variable
+
+/*
+** get the value associated with "$key" variable
+*/
 
 char	*getvar(t_mshl *m, char *key)
 {
 	int nline;
-	
+
 	signal(SIGINT, var_handler);
     signal(SIGQUIT, var_handler);
 	if (key[0] == '?')
@@ -96,37 +104,37 @@ char	*getvar(t_mshl *m, char *key)
 		return (&m->cenv[nline][until_dquotes(m->cenv[nline]) + 1]);
 }
 
-int		parse_varname(char *str)
+int			parse_varname(char *str)
 {
 	int		i;
 
 	i = 0;
 	if (!ft_strlen(str))
-		return (9); //Not a valid identifier
+		return (NOT_VALID_ID);
 	if ((str[i] >= 48 && str[i] <= 57) || str[i] == '=')
-		return (9);
+		return (NOT_VALID_ID);
 	while (str[i] && str[i] != '=')
 	{
 		if (!ft_isalnum(str[i]) && str[i] != '_')
-			return (9);
+			return (NOT_VALID_ID);
 		i++;
 	}
 	if (!str[i])
 		return (-1);
-	return (0);
+	return (EXIT_SUCCESS);
 }
 
-int		printexp(t_mshl *m)
+static int	printexp(t_mshl *m)
 {
 	char	**tab;
 	int		i;
 	int		equ;
 
-	i = 0;
+	i = -1;
 	if (!(tab = tabdup(m->cenv)))
-		return (set_err(m, 1, 0, strerror(ENOMEM))); // memory error;
+		return (set_err(m, 1, 0, strerror(ENOMEM)));
 	sort_tab(tab);
-	while (tab[i])
+	while (tab[++i])
 	{
 		equ = 0;
 		ft_putstr_fd("declare -x ", m->tstdout);
@@ -140,75 +148,42 @@ int		printexp(t_mshl *m)
 		ft_putstr_fd(&tab[i][equ], m->tstdout);
 		ft_putchar_fd('\"', m->tstdout);
 		ft_putchar_fd('\n', m->tstdout);
-		i++;
 	}
 	free_tab(tab, 0, 1);
-	return (0);
+	return (EXIT_SUCCESS);
 }
 
-// export seems okay need testing
-// if no = seems not to esport anything need fixing
-/*int	ft_export(t_mshl *m)
+static int	export_append(t_mshl *m, int i)
 {
 	int		temp;
-	int		i;
 	char	*tempc;
-	int		ret;	
-	
-	i = 1;
-	//printf("\nARGS |%d|\n", m->nb_args);
-	if (m->nb_cpargs == 1)
-	{	
-		if (printexp(m))
-			return (3); //memory error
-		return (EXIT_SUCCESS);
-	}
-	while (m->cpargs[i])
+
+	if ((temp = find_env_arg(m->cenv, m->cpargs[i])) == -1)
 	{
-		if (!parse_varname(m->cpargs[i]))
-		{
-			if (!(ret = parse_args(m, i)))
-			{
-				if (find_env(m->cenv, m->cpargs[i]) == -1)
-				{
-					if (!(tempc = ft_strdup(m->cpargs[i])))
-						return (set_err(m, 1, 0, strerror(ENOMEM)));
-					m->cenv = ft_append(m, tempc); // append chelou add maloc prot
-				}
-				else
-				{	
-					temp = find_env(m->cenv, m->cpargs[i]);
-					free(m->cenv[temp]);
-					if(!(m->cenv[temp] = ft_strdup(m->cpargs[i])))
-						return (set_err(m, 1, 0, strerror(ENOMEM)));
-				}
-			}
-			else if (ret > 0)
-				return (2);
-		}
-		else
-		{
-			set_err(m, 1, 3, "export", m->cpargs[i], "not a valid identifier");
-			ft_putendl_fd(m->err_to_print, 2);
-			m->err = -10;
-		}
-		i++;
+		if (!(tempc = ft_strdup(m->cpargs[i])))
+			return (ENOMEM);
+		if (!(m->cenv = ft_append(m, tempc)))
+			return (ENOMEM);
+	}
+	else
+	{
+		free(m->cenv[temp]);
+		if(!(m->cenv[temp] = ft_strdup(m->cpargs[i])))
+			return (ENOMEM);
 	}
 	return (EXIT_SUCCESS);
-}*/
+}
 
-int	ft_export(t_mshl *m)
+int			ft_export(t_mshl *m)
 {
-	int		temp;
-	int		i;
-	char	*tempc;
-	int		ret;	
-	
+	int	i;
+	int	ret;
+
 	i = 1;
 	if (m->nb_cpargs == 1)
 	{	
 		if (printexp(m))
-			return (3); //memory error
+			return (ENOMEM);
 		return (EXIT_SUCCESS);
 	}
 	while (m->cpargs[i])
@@ -221,22 +196,10 @@ int	ft_export(t_mshl *m)
 		}
 		else if (!ret)
 		{
-			if ((temp = find_env_arg(m->cenv, m->cpargs[i])) == -1)
-			{
-				if (!(tempc = ft_strdup(m->cpargs[i])))
-					return (3);
-				if (!(m->cenv = ft_append(m, tempc)))
-					return (3);
-			}
-			else
-			{
-				free(m->cenv[temp]);
-				if(!(m->cenv[temp] = ft_strdup(m->cpargs[i])))
-					return (3);
-			}
+			if (export_append(m, i))
+				return (ENOMEM);
 		}
 		i++;
 	}
 	return (EXIT_SUCCESS);
 }
-
