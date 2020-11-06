@@ -127,8 +127,6 @@ int				complete_env(t_mshl *m);
 int				check_dperm(t_mshl *m, char *path);
 int				check_fperm(t_mshl *m, char *path, struct stat *test);
 //Error
-int				ft_error(t_mshl *m);
-void			print_error(t_mshl *m);
 void			print_errno(t_mshl *m, char *str);
 void			set_zpb(t_mshl *m);
 int				main_error(t_mshl *m);
@@ -158,4 +156,9 @@ int				add_var(t_mshl *m);
 int				print_warning(t_mshl *m, int nb);
 int				go_home(t_mshl *m);
 int				handle_error(t_mshl *m);
+int				prep_rv(t_mshl *m);
+void			ft_init(t_mshl *m);
+int				first_parsing(t_mshl *m, char *str);
+int				is_delim(char c);
+int				reset_struct(t_mshl *m);
 #endif

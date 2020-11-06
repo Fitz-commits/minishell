@@ -37,7 +37,7 @@ int		reat_crval(t_mshl *m, int i)
 
 int		find_equ(char *str)
 {
-	int i;
+	int		i;
 
 	i = 0;
 	if (!str)
@@ -74,10 +74,10 @@ char	**tabdup(char **tab)
 
 void	sort_tab(char **tab)
 {
-	int i;
-	int len;
-	int loop;
-	char *tmp;
+	int		i;
+	int		len;
+	int		loop;
+	char	*tmp;
 
 	loop = 1;
 	len = tablen(tab);

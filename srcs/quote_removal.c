@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quote_removal.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/11/06 21:32:41 by chris             #+#    #+#             */
+/*   Updated: 2020/11/06 22:33:04 by chris            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int     check_quotes(char *line)
@@ -32,7 +44,8 @@ int     count_aqr(char *line)
             continue;
         if ((flag == 1 || flag == 0) && line[i] == '\'')
             continue;
-        if (((flag == 0 || flag == 2)) && line[i] == '\\' && (line[i + 1] != ' '))
+        if (((flag == 0 || flag == 2)) && (line[i] == '\\' &&
+            (line[i + 1] != ' ')))
             continue;
         j++;
     }
@@ -58,7 +71,6 @@ char *remove_quotes(char *line, int j)
         pass = (pass || ((flag == 1 || flag == 0) && line[i] == '\'')) ? 1 : 0;
         pass = (pass || (((flag == 0 || flag == 2)) && (line[i] == '\\') &&
          (line[i + 1] != ' ' || flag == 0))) ? 1 : 0;
-        //pass = (pass || ((flag == 3) && line[i+1] && line[i + 1] == ' ')) ? 1: 0;
         flag = set_quotes(flag, line[i]);
         if (!pass)
             ret[j++] = line[i];
@@ -66,24 +78,4 @@ char *remove_quotes(char *line, int j)
     free(line);
     ret[j] = 0;
     return (ret);
-}
-
-int check_for_qr(t_mshl *m)
-{
-    int i;
-    int j;
-
-    i = -1;
-    j =0;
-    while (m->args[++i])
-        if (check_quotes(m->args[i]))
-            if (!(m->args[i] = remove_quotes(m->args[i], 0)))
-            {
-                while (m->args[j] || i == j)
-                    free(m->args[i]);
-                free(m->args);
-                m->args = NULL;
-                return (EXIT_FAILURE);
-            }
-    return (EXIT_SUCCESS);
 }

@@ -1,22 +1,25 @@
-#include "minishell.h"
-int			is_space(char c)
-{
-	if (c == ' ' || c == '\t' || c == '\r' || c == '\n' || c == '\v' || c == '\f')
-		return 1;
-	return 0;
-}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/11/06 22:33:39 by chris             #+#    #+#             */
+/*   Updated: 2020/11/06 22:35:51 by chris            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int			is_delim(char c)
-{
-	if (c == ';' || c == '>' || c == '<' || c == '|' || is_space(c))
-		return (1);
-	return (0);
-}
+#include "minishell.h"
+
 /*
 ** flag == 1 -> '
 ** flag == 2 -> "
 ** flag == 0 -> unquoted
+** flag == 3 -> after slash
+** flag == 5 after slash in quotes
 */
+
 int			set_quotes(int flag, char c)
 {
 	if (flag == 2 && c == '\\')
@@ -67,6 +70,7 @@ int			count_arg(char *line)
 	}
 	return (j);
 }
+
 /*
 **	need to differiencate between a delimiter and a space because the intaraction are not the same
 **	we need to split on an unquoted unescaped space and not keep it 
@@ -80,11 +84,12 @@ int			count_arg(char *line)
 **
 **
 */
+
 char *alloc_sep(char c, int *i)
 {
 	char *ret;
 	if (!(ret = malloc(sizeof(char) * 2)))
-		return NULL;
+		return (NULL);
 	ret[0] = c;
 	ret[1] = 0;
 	(*i) += 1;
@@ -127,19 +132,22 @@ char		**parse_cli(char *line, t_mshl *m)
 
 	if (!(ret = malloc(sizeof(char*) * (count_arg(line) + 1))))
     {
-        m->err = 3;
+        set_err(m, 1, 0, strerror(ENOMEM));
 		return (NULL);
     }
 	flag = 0;
 	j = 0;
 	if ((triming(&line, &ret, &flag, &j) == EXIT_FAILURE))
 	{
-        m->err = 3;
+        set_err(m, 1, 0, strerror(ENOMEM));
 		free_tab(ret, 0, 1);
 		return (NULL);
 	}
 	ret[j] = 0;
-	if (flag != 0 && (m->err = 4))
-		return (free_tabs(ret)); // can catch " or ' isolation
+	if (flag != 0)
+		{
+			set_err(m, 2, 0, "unexpected end of file");
+			return (free_tabs(ret)); 
+		}
 	return (ret);
 }

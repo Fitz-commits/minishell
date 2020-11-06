@@ -1,19 +1,5 @@
 #include "minishell.h"
 
-int is_redir(char *line)
-{
-    if (!ft_strcmp(line, "<"))
-        return (1);
-    else if (!ft_strcmp(line, ">"))
-        return (2);
-    else if (!ft_strcmp(line, "|"))
-        return (5);
-    else if (!ft_strcmp(line, ";"))
-        return (5);
-    else
-        return(0);
-}
-
 /*
 ** This function looks for redirection
 ** 1 is equal to input redirection
@@ -100,6 +86,7 @@ int     init_ptfr(int (*pt_f[6])(t_mshl*))
 ** Not usual but since we program a shell we might need to make it as is
 **
 */
+
 int handle_cpargs(t_mshl *m, int (*pt_fr[6])(t_mshl *m))
 {
     while ((m->nb_args > m->progr && m->args[m->progr]) || m->cpargs[0])
@@ -142,12 +129,3 @@ int set_stdior(t_mshl *m)
         reat_crval(m, 0);
     return (EXIT_SUCCESS);
 }
-
-/*
-** 
-** There is a problem with this the command :
-**  ls > lol lol
-**  send lol as a parameter to ls might need to check after file 
-**  specification to see if there is a valid thing to add to the
-**  command as a parameter
-*/

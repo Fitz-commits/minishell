@@ -1,11 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   set_err.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/11/06 21:36:13 by chris             #+#    #+#             */
+/*   Updated: 2020/11/06 21:36:14 by chris            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 /*
 **
 **  So ret is the value for $?
 **  Option is if you need one or two or three things nothed
-**  
-** 
-**
 */
 int set_err(t_mshl *m, int ret, int opt, ...)
 {

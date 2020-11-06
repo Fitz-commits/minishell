@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_export.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/11/06 22:37:41 by chris             #+#    #+#             */
+/*   Updated: 2020/11/06 22:37:42 by chris            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int		find_env_arg(char **env, char *arg)
+int			find_env_arg(char **env, char *arg)
 {
 	int	len_arg;
 	int i;
@@ -22,12 +34,12 @@ int		find_env_arg(char **env, char *arg)
 ** format the key and the value to put in cenv
 */
 
-char	*pair_value_key(char *value, char *key)
+char		*pair_value_key(char *value, char *key)
 {
-	int i;
-	int j;
-	int size;
-	char *ret;
+	int		i;
+	int		j;
+	int		size;
+	char	*ret;
 
 	i = 0;
 	j = 0;
@@ -56,6 +68,8 @@ char	*getvar(t_mshl *m, char *key)
     signal(SIGQUIT, var_handler);
 	if (key[0] == '?')
 		return (m->crvalue);
+	if (!key[0])
+		return ("$");
 	nline = find_env(m->cenv, key);
 	if (nline == -1)
 		return "";

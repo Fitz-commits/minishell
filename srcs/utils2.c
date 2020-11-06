@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/26 16:49:37 by marvin            #+#    #+#             */
-/*   Updated: 2020/03/26 16:49:37 by marvin           ###   ########.fr       */
+/*   Updated: 2020/11/06 22:30:37 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,43 @@ int			clean_args(t_mshl *m)
 			m->reader = NULL;
 		}
 	return (0);
+}
+
+void		set_zpb(t_mshl *m)
+{
+	m->progr = 0;
+	m->begin = 0;
+	m->error = 0;
+    m->err = 0;
+	m->ierr = -1;
+    m->errarg = -1;
+}
+
+int			prep_rv(t_mshl *m)
+{
+	if (!(m->crvalue = malloc(sizeof(char) * 10)))
+			return (EXIT_FAILURE);
+	reat_crval(m, 0);
+	return (0);
+}
+
+void	ft_init(t_mshl *m)
+{
+	ft_bzero(m->err_to_print, PATH_MAX + 1);
+	m->args = NULL;
+	m->cpargs = NULL;
+	m->nb_args = 0;
+	m->tstdin = 0;
+	m->tstdout = 1;
+	m->reader = NULL;
+	m->redir = 0;
+	m->rvalue = 0;
+	m->buff_cmd = NULL;
+	m->progr = 0;
+	m->begin = 0;
+	m->error = 0;
+	m->err = 0;
+	m->errarg = -1;
+	zeroing_pipes(m);
+	zeroing_process(m);
 }

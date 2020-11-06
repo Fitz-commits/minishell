@@ -1,21 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   permission_check.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/11/06 22:33:34 by chris             #+#    #+#             */
+/*   Updated: 2020/11/06 22:33:34 by chris            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-/*
- **	I need a function that deals with file
- **		file is for path and redirection
- **
- **	I need another one that deals with directory
- **	directory is for cd 
- **
- **
- **
- **
- */
-
-int		check_fperm(t_mshl *m, char *path, struct stat *test)
+int			check_fperm(t_mshl *m, char *path, struct stat *test)
 {
-	struct stat buffer;
-	mode_t perm;
+	struct stat			buffer;
+	mode_t				perm;
 
 	if (test)
 		buffer = *test;
@@ -31,10 +31,10 @@ int		check_fperm(t_mshl *m, char *path, struct stat *test)
 	return (set_err(m, 126, 1, path, strerror(EACCES)));
 }
 
-int		check_dperm(t_mshl *m, char *path)
+int			check_dperm(t_mshl *m, char *path)
 {
-	struct stat buffer;
-	mode_t perm;
+	struct stat		buffer;
+	mode_t			perm;
 
 	if (((stat(path, &buffer)) == -1)) // set erreur
 		set_err(m, 127, 1, path, strerror(ENOENT));
