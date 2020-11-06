@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   buf_cmd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/26 16:49:37 by marvin            #+#    #+#             */
-/*   Updated: 2020/03/26 16:49:37 by marvin           ###   ########.fr       */
+/*   Updated: 2020/11/07 00:18:21 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char		*copy_until_next_dq(char *src)
 	return (dest);
 }
 
-int 		alloc_bufcmd(t_mshl *m)
+int			alloc_bufcmd(t_mshl *m)
 {
 	int 	dq;
 
@@ -69,7 +69,7 @@ int 		alloc_bufcmd(t_mshl *m)
 	return (EXIT_SUCCESS);
 }
 
-int 		buf_cmd_to_args(t_mshl *m)
+int			buf_cmd_to_args(t_mshl *m)
 {
 	int 	dq;
 	int 	i;
