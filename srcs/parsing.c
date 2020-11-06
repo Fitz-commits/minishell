@@ -65,7 +65,7 @@ int			count_arg(char *line)
 			j ++;
 		i += k;
 	}
-	return(j);
+	return (j);
 }
 /*
 **	need to differiencate between a delimiter and a space because the intaraction are not the same
@@ -88,7 +88,7 @@ char *alloc_sep(char c, int *i)
 	ret[0] = c;
 	ret[1] = 0;
 	(*i) += 1;
-	return ret;
+	return (ret);
 }
 
 int		triming(char **line, char ***ret, int *flag, int *j)

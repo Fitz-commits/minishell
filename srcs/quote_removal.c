@@ -15,6 +15,7 @@ int     check_quotes(char *line)
     }
     return (0);
 }
+
 int     count_aqr(char *line)
 {
     int i;
@@ -31,12 +32,13 @@ int     count_aqr(char *line)
             continue;
         if ((flag == 1 || flag == 0) && line[i] == '\'')
             continue;
-        if (((flag == 0 || flag == 2)) && line[i] == '\\')
+        if (((flag == 0 || flag == 2)) && line[i] == '\\' && (line[i + 1] != ' '))
             continue;
         j++;
     }
     return (j);
 }
+
 char *remove_quotes(char *line, int j)
 {
     int i;
@@ -54,7 +56,9 @@ char *remove_quotes(char *line, int j)
         pass = 0;
         pass = (pass || ((flag == 2 || flag == 0) && line[i] == '"')) ? 1 : 0;
         pass = (pass || ((flag == 1 || flag == 0) && line[i] == '\'')) ? 1 : 0;
-        pass = (pass || (((flag == 0 || flag == 2)) && line[i] == '\\')) ? 1 : 0;
+        pass = (pass || (((flag == 0 || flag == 2)) && (line[i] == '\\') &&
+         (line[i + 1] != ' ' || flag == 0))) ? 1 : 0;
+        //pass = (pass || ((flag == 3) && line[i+1] && line[i + 1] == ' ')) ? 1: 0;
         flag = set_quotes(flag, line[i]);
         if (!pass)
             ret[j++] = line[i];

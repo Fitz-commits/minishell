@@ -39,6 +39,7 @@ int close_pipes(t_mshl *m)
     m->cp = -1;
     return (0);
 }
+
 int zeroing_process(t_mshl *m)
 {
     int i;
@@ -58,7 +59,6 @@ int     init_ptf(int (*pt_f[6])(t_mshl*))
     pt_f[3] = ft_cd;
     pt_f[4] = ft_export;
     pt_f[5] = ft_pwd;
-    //exit when working m->pt_f[5]
     return (0);
 }
 
@@ -69,7 +69,6 @@ int waiter(t_mshl *m)
 
     if (!m->proc.curpro)
         return (0);
-    //printf("m->proc.curpro = %d\n", m->proc.curpro);
     waitpid(m->proc.child_pid[m->proc.curpro], &o, 0);
     if (m->rvalue != WEXITSTATUS(o))
     {

@@ -127,3 +127,12 @@ int    ft_error(t_mshl *m)
 	errno = 0;
 	return (ret);
 }
+
+int		handle_error(t_mshl *m)
+{
+	if (m->err != -10 && m->err != 4)
+        ft_putendl_fd(m->err_to_print, 2);
+    m->err = 0;
+    errno = 0;
+	return (EXIT_SUCCESS);
+}

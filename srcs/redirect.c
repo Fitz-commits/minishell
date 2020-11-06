@@ -23,22 +23,6 @@ int is_redir(char *line)
 **      which means redirecting output of first command into input of next command
 */
 
-int     next_split(t_mshl *m)
-{
-    int i;
-
-    i = m->begin;
-    if (i >= m->nb_args)
-        return (0);
-    while(m->args[i])
-    {
-        if (is_redir(m->args[i]) || !ft_strcmp(m->args[i], ";"))
-            return (i);
-        i++;
-    }
-    return(tablen(m->args));
-}
-
 /*
 ** cette fonction permet est la fonction qui progresse dans la liste
 ** d'argument et permet de voir quel type de redirection il s'agit
@@ -116,6 +100,32 @@ int     init_ptfr(int (*pt_f[6])(t_mshl*))
 ** Not usual but since we program a shell we might need to make it as is
 **
 */
+int handle_cpargs(t_mshl *m, int (*pt_fr[6])(t_mshl *m))
+{
+    while ((m->nb_args > m->progr && m->args[m->progr]) || m->cpargs[0])
+    {
+        if ((m->redir == 0 || m->redir == 4) && (errno || m->err))
+            handle_error(m);
+        else if (errno || m->err)
+            reat_crval(m, 0);
+        else
+            reat_crval(m, 0);
+        if ((m->redir = check_red(m, 0)) == -1)
+            break ;
+        if (m->redir >= 0 && m->redir <= 6 && (!errno ||
+        m->redir == 5 || m->redir == 4))
+            if (pt_fr[m->redir](m))
+                break ;
+        if ((m->redir == 5 || m->redir == 0) && !m->err && !errno)
+        {
+            choice_command(m);
+            reset_cpargs(m);
+        }
+        if (m->redir != 5 && m->redir != 4)
+          waiter(m);
+    }
+    return (EXIT_SUCCESS);
+}
 
 int set_stdior(t_mshl *m)
 {
@@ -125,39 +135,9 @@ int set_stdior(t_mshl *m)
     if (!(m->cpargs = malloc(sizeof(char*) * (m->nb_args + 1))))
         m->nb_args = 0;
     reset_cpargs(m);
-    while ((m->nb_args > m->progr && m->args[m->progr]) || m->cpargs[0])
-    {
-        if ((m->redir == 0 || m->redir == 4) && (errno || m->err))
-        {
-            if (m->err != -10 || m->err == 4)
-                ft_putendl_fd(m->err_to_print, 2);
-            m->err = 0;
-            errno = 0;
-        }
-        else if (errno || m->err)
-            reat_crval(m, 0);
-        else
-            reat_crval(m, 0);
-        if ((m->redir = check_red(m, 0)) == -1)
-            break;
-        if (m->redir >= 0 && m->redir <= 6 && (!errno || m->redir == 5 || m->redir == 4))
-            if (pt_fr[m->redir](m))
-                break;
-        if ((m->redir == 5 || m->redir == 0) && !m->err && !errno)
-        {
-            choice_command(m);
-            reset_cpargs(m);
-        }
-        if (m->redir != 5 && m->redir != 4)
-          waiter(m);
-    }
+    handle_cpargs(m, pt_fr);
     if (errno || m->err)
-        {
-            if (m->err != -10 && m->err != 4)
-                ft_putendl_fd(m->err_to_print, 2);
-            m->err = 0;
-            errno = 0;
-        }
+        handle_error(m);
     else
         reat_crval(m, 0);
     return (EXIT_SUCCESS);

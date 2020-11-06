@@ -43,9 +43,11 @@ int	ft_exec(t_mshl *m, char *path)
 	m->proc.child_pid[m->proc.curpro] = fork();
 	if (m->proc.child_pid[m->proc.curpro] == 0)
 	{	
-		if (m->cp >= 0 && m->tstdout == m->tpiped[m->cp][1] && m->tpiped[m->cp][0])
+		if (m->cp >= 0 && m->tstdout == 
+		m->tpiped[m->cp][1] && m->tpiped[m->cp][0])
 			close(m->tpiped[m->cp][0]);
-		if (m->cp >= 0 && m->tstdin && m->tstdin == m->tpiped[m->cp][0] && m->tpiped[m->cp][1])
+		if (m->cp >= 0 && m->tstdin && m->tstdin == 
+		m->tpiped[m->cp][0] && m->tpiped[m->cp][1])
 			close(m->tpiped[m->cp][1]);
 		if (m->tstdin != 0)
 			dup2(m->tstdin, STDIN_FILENO);
@@ -58,6 +60,7 @@ int	ft_exec(t_mshl *m, char *path)
 	m->proc.curpro++;
 	return (0);
 }
+
 int change_margs(t_mshl *m, char *path)
 {
 	int i;
@@ -79,12 +82,40 @@ int change_margs(t_mshl *m, char *path)
 **puis l'execute
 **puis cherche dans tout les path si un ficher avec le nom existe et l'execute
 */
+
+int search_exec(t_mshl *m, char ***pathtab)
+{
+	int i;
+	char *tempc;
+	char **path;
+	struct stat buffer;
+
+	i = 0;
+	path = *pathtab;
+	while (path[i])
+	{
+		if (!(tempc = path_join(path[i], m->cpargs[0])))
+			return (set_err(m, 1, 0, strerror(ENOMEM)));
+		stat(tempc, &buffer);
+		if (S_ISREG(buffer.st_mode))
+        {	
+			free_tab(path, 1, 1);
+			change_margs(m, tempc);
+			if (!(check_fperm(m, m->cpargs[0], &buffer)))
+				return (ft_exec(m, m->cpargs[0]));
+			return (EXIT_FAILURE);
+        }
+		i++;
+	}
+	free_tab(path, 1, 1);
+	errno = 0;
+	return (set_err(m, 127, 1, m->cpargs[0], "command not found"));
+}
+
 int	launch_exec(t_mshl *m, char *path)
 {
 	int i;
 	char **pathtab;
-	char *temp;
-	struct stat buffer;
 
 	i = 0;
 	if (ft_strchr(m->cpargs[0], '/') || !getvar(m, "PATH")[0])
@@ -92,28 +123,9 @@ int	launch_exec(t_mshl *m, char *path)
 		if (!check_fperm(m, m->cpargs[0], NULL))
 			return (ft_exec(m, m->cpargs[0]));
 		else
-			return(EXIT_FAILURE);
+			return (EXIT_FAILURE);
 	}
 	if (!(pathtab = ft_split(path, ':')))
-		return (m->err = 3); // Memory error
-	while (pathtab[i])
-	{
-		if (!(temp = path_join(pathtab[i], m->cpargs[0])))
-			return (set_err(m, 1, 0, strerror(ENOMEM)));
-		stat(temp, &buffer);
-		if (S_ISREG(buffer.st_mode))
-        {	
-			free_tab(pathtab, 1, 1);
-			change_margs(m, temp);
-			if (!(check_fperm(m, m->cpargs[0], &buffer)))
-				return (ft_exec(m, m->cpargs[0]));
-			else
-				return(EXIT_FAILURE);
-        }
-		free(temp);
-		i++;
-	}
-    free_tab(pathtab, 1, 1);
-	errno = 0;
-	return (set_err(m, 127, 1, m->cpargs[0], "command not found")); // not command not found 127
+		return (set_err(m, 1, 0, strerror(ENOMEM))); // Memory error
+	return (search_exec(m, &pathtab));
 }

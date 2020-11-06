@@ -85,5 +85,4 @@ int		env_init(t_mshl *m, char **env)
 	if (init_shlvl(m))
 		return (set_err(m, 1, 0, strerror(ENOMEM)));
 	return (0);
-	
 }

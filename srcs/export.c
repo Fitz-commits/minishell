@@ -95,6 +95,8 @@ char	*getvar(t_mshl *m, char *key)
 
 	signal(SIGINT, var_handler);
     signal(SIGQUIT, var_handler);
+	if (!key[0])
+		return "$";
 	if (key[0] == '?')
 		return (m->crvalue);
 	nline = find_env(m->cenv, key);

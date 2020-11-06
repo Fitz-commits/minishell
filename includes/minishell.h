@@ -105,10 +105,8 @@ int				err_redir(t_mshl *m);
 int				qr_line(t_mshl *m);
 int 			is_redir(char *line);
 int				clear_std(t_mshl *m);
-char			**cpy_args(char **args, int beg, int end);
 int				set_stdior(t_mshl *m);
 int				choice_command(t_mshl *m);
-int     		next_split(t_mshl *m);
 int				close_reset(int fd, int nb);
 //PIPES
 int				zeroing_pipes(t_mshl *m);
@@ -153,4 +151,11 @@ int				check_chev_f(t_mshl *m, char *str, int i);
 int				check_pni_errors(t_mshl *m, char *str, int i);
 //error
 int				set_err(t_mshl *m, int ret, int opt, ...);
+int				size(int a);
+int				init_shlvl(t_mshl *m);
+int				change_pwd(t_mshl *m);
+int				add_var(t_mshl *m);
+int				print_warning(t_mshl *m, int nb);
+int				go_home(t_mshl *m);
+int				handle_error(t_mshl *m);
 #endif

@@ -53,9 +53,9 @@ char		*copy_until_next_dq(char *src)
 	return (dest);
 }
 
-int alloc_bufcmd(t_mshl *m)
+int 		alloc_bufcmd(t_mshl *m)
 {
-	int dq;
+	int 	dq;
 
 	dq = find_dq(m->reader);
 	if (!(m->reader[dq + 1]))
@@ -69,10 +69,10 @@ int alloc_bufcmd(t_mshl *m)
 	return (EXIT_SUCCESS);
 }
 
-int buf_cmd_to_args(t_mshl *m)
+int 		buf_cmd_to_args(t_mshl *m)
 {
-	int dq;
-	int i;
+	int 	dq;
+	int 	i;
 
 	i = 0;
 	while (m->buff_cmd[i] && (dq = find_dq(&m->buff_cmd[i])) == 0)

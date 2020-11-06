@@ -43,6 +43,7 @@ int check_for_pdq(t_mshl *m, char *str)
 	}
 	return (EXIT_SUCCESS);
 }
+
 int		first_parsing(t_mshl *m, char *str)
 {
 	int i;
@@ -98,10 +99,8 @@ int		get_args(t_mshl *m)
 	if (ret == -1)
         return (-1);
     if (ret == 0)
-    {
-        free(m->reader);
-        ft_exit(m, 0);
-    }  //a faire : gérer si on a 0 de kill prog mais pas error?
+        ft_exit(m, 0); 
+	//a faire : gérer si on a 0 de kill prog mais pas error?
 	if ((m->err = first_parsing(m, m->reader)))
 		return (free_str(&m->reader, m->err));
 	 //3 = memory error | faire les alias .h 
@@ -124,17 +123,6 @@ int		get_args(t_mshl *m)
 ** TODO leaks sur le free cpargs
 ** close_rp to add
 */
-int		prep_cpargs(t_mshl *m) //prend sa retraite
-{
-	if (m->cpargs)
-		free(m->cpargs); //Redondant ?
-	m->cpargs = NULL;
-	if (!(m->cpargs = cpy_args(m->args, m->begin, next_split(m))))
-		return (EXIT_FAILURE);
-	m->nb_cpargs = tablen(m->cpargs);
-	m->begin = m->progr;
-	return (0);
-}
 
 int		choice_command(t_mshl *m) //Check quelle commande est recue et redirige vers la fonction adequate
 {
@@ -176,6 +164,7 @@ void	ft_init(t_mshl *m)  //initialise la structure might want to failproof it no
 	m->nb_args = 0;
 	m->tstdin = 0;
 	m->tstdout = 1;
+	m->reader = NULL;
 	//m->tstderr = 2;
 	m->redir = 0;
 	m->rvalue = 0;
@@ -293,7 +282,6 @@ int		main_loop(t_mshl *m)
 			return (main_error(m));
 		if (!(m->args = parse_cli(m->reader, m)))
 			return (main_error(m));
-		//print_tab(m->args);
 		m->nb_args = tablen(m->args);
         //print_tab(m->args);
 		if (set_stdior(m) == -1)

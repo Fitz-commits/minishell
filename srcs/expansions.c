@@ -37,15 +37,18 @@ char *insert_into_string(char *str, char *to_insert, int pos)
     char    *ret;
     int     m;
 
-    m = ft_strlen(str) + ft_strlen(to_insert) + 1;
+    m = ft_strlen(str) + ft_strlen(to_insert) + 3;
     if (!(ret = malloc(sizeof(char) * m)))
         return (NULL);
     
     ft_bzero(ret, m);
     if (pos > 0)
         ret = ft_strncpy(ret, str, pos);
+    ret = ft_strcat(ret, "'");
     ret = ft_strcat(ret, to_insert);
+    ret = ft_strcat(ret, "'");
     ret = ft_strcat(ret, &str[pos]);
+    printf("ret = %s\n", ret);
     free(str);
     return (ret);
 }
@@ -76,7 +79,7 @@ char *env_expansion(char **line, t_mshl *m, int j, int l)
         if (!(ret = insert_into_string(ret, getvar(m, buf), pos)))
             return (ret); // might want to do better than that
         printf("%s\n", ret);
-        i = i - j + ft_strlen(getvar(m, buf)) - 1;
+        i = i - j + ft_strlen(getvar(m, buf)) + 1;
     }
     return (ret);
 }

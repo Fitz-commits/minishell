@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/03/26 16:49:37 by marvin            #+#    #+#             */
+/*   Updated: 2020/03/26 16:49:37 by marvin           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 /*
 ** ces trois fonction gerent les differentes redirection au cas par
@@ -21,13 +33,13 @@ int set_stdouta(t_mshl *m)
     }
     if (qr_line(m))
         return (EXIT_FAILURE);
-    if (((fd = open(m->args[m->progr], O_CREAT | O_WRONLY | O_APPEND, 0666)) == -1))
+    if (((fd = open(m->args[m->progr],
+    O_CREAT | O_WRONLY | O_APPEND, 0666)) == -1))
         return (set_err(m, 1, 1, m->args[m->progr], strerror(errno)));
     else
         m->tstdout = fd;
     m->progr++;
     return (EXIT_SUCCESS);
-
 }
 
 int set_stdout(t_mshl *m)
@@ -41,7 +53,6 @@ int set_stdout(t_mshl *m)
     }
     if (qr_line(m))
         return (EXIT_FAILURE);
-
     if (((fd = open(m->args[m->progr], O_WRONLY | O_CREAT
 		| O_TRUNC , 0666)) < 0))
         return (set_err(m, 1, 1, m->args[m->progr], strerror(errno)));
@@ -88,5 +99,4 @@ int set_bpipes(t_mshl *m)
     if (m->tstdout == 1 || (m->cp > 0 && m->tstdout == m->tpiped[m->cp - 1][1]))
         m->tstdout = m->tpiped[m->cp][1];
     return (err);
-
 }
