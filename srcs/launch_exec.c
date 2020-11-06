@@ -69,16 +69,16 @@ int change_margs(t_mshl *m, char **path)
 
 	while (m->args[++i])
 	{
-		if (m->args[i] == m->cpargs[0])
+		if (!ft_strcmp(m->args[i],m->cpargs[0]))
 			{
 				free(m->args[i]);
 				m->args[i] = *path;
 				m->cpargs[0] = *path;
+				return (EXIT_SUCCESS);
 			}
-		else
-			free(*path);
 	}
-	return (EXIT_SUCCESS);
+	free(*path);
+	return (EXIT_FAILURE);
 }
 /*
 **
