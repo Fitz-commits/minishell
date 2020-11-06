@@ -61,19 +61,23 @@ int	ft_exec(t_mshl *m, char *path)
 	return (0);
 }
 
-int change_margs(t_mshl *m, char *path)
+int change_margs(t_mshl *m, char **path)
 {
 	int i;
 
 	i = -1;
 
 	while (m->args[++i])
+	{
 		if (m->args[i] == m->cpargs[0])
 			{
 				free(m->args[i]);
-				m->args[i] = path;
-				m->cpargs[0] = path;
+				m->args[i] = *path;
+				m->cpargs[0] = *path;
 			}
+		else
+			free(*path);
+	}
 	return (EXIT_SUCCESS);
 }
 /*
@@ -100,11 +104,12 @@ int search_exec(t_mshl *m, char ***pathtab)
 		if (S_ISREG(buffer.st_mode))
         {	
 			free_tab(path, 1, 1);
-			change_margs(m, tempc);
+			change_margs(m, &tempc);
 			if (!(check_fperm(m, m->cpargs[0], &buffer)))
 				return (ft_exec(m, m->cpargs[0]));
 			return (EXIT_FAILURE);
         }
+		free(tempc);
 		i++;
 	}
 	free_tab(path, 1, 1);
