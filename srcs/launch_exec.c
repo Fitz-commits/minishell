@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 11:41:19 by chris             #+#    #+#             */
-/*   Updated: 2020/11/07 11:47:11 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/07 17:13:43 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,10 +110,8 @@ int			search_exec(t_mshl *m, char ***pathtab)
 
 int			launch_exec(t_mshl *m, char *path)
 {
-	int			i;
 	char		**pathtab;
 
-	i = 0;
 	if (ft_strchr(m->cpargs[0], '/') || !getvar(m, "PATH")[0])
 	{
 		if (!check_fperm(m, m->cpargs[0], NULL))
