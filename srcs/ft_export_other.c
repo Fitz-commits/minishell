@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_other.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 23:12:11 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/07 11:08:18 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/07 19:10:26 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ char		*getvar(t_mshl *m, char *key)
 {
 	int nline;
 
-	signal(SIGINT, var_handler);
-	signal(SIGQUIT, var_handler);
 	if (key[0] == '?')
 		return (m->crvalue);
 	if (!key[0])

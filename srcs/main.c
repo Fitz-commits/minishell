@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/26 16:49:37 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/07 11:50:36 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/07 19:21:14 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int		g_ret = 0;
 
 int		get_args(t_mshl *m)
 {
@@ -50,20 +52,12 @@ int		choice_command(t_mshl *m)
 		return (launch_exec(m, getvar(m, "PATH")));
 }
 
-int		main_loop(t_mshl *m)
+int		main_loop_other(t_mshl *m)
 {
-	if (!m->buff_cmd)
+	if (g_ret != 0)
 	{
-		if ((m->err = get_args(m)))
-			return (main_error(m));
-		if ((find_dq(m->reader) >= 0))
-			if ((alloc_bufcmd(m)))
-				return (main_error(m));
-	}
-	else
-	{
-		if ((buf_cmd_to_args(m)))
-			return (main_error(m));
+		reat_crval(m, g_ret);
+		g_ret = 0;
 	}
 	if (m->reader)
 	{
@@ -79,13 +73,31 @@ int		main_loop(t_mshl *m)
 	return (0);
 }
 
+int		main_loop(t_mshl *m)
+{
+	if (!m->buff_cmd)
+	{
+		display_prompt();
+		if ((m->err = get_args(m)))
+			return (main_error(m));
+		if ((find_dq(m->reader) >= 0))
+			if ((alloc_bufcmd(m)))
+				return (main_error(m));
+	}
+	else
+	{
+		if ((buf_cmd_to_args(m)))
+			return (main_error(m));
+	}
+	return(main_loop_other(m));
+}
+
 int		main(int ac, char **av, char **envp)
 {
 	t_mshl	m;
 	int		ret;
 
-	signal(SIGINT, handler);
-	signal(SIGQUIT, handler);
+	start_sig();
 	if (prep_rv(&m))
 		return (EXIT_FAILURE);
 	ft_init(&m);

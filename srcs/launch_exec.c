@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   launch_exec.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 11:41:19 by chris             #+#    #+#             */
-/*   Updated: 2020/11/07 17:13:43 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/07 19:13:16 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,8 @@ int			launch_exec(t_mshl *m, char *path)
 {
 	char		**pathtab;
 
+	signal(SIGINT, var_handler);
+	signal(SIGQUIT, var_handler);
 	if (ft_strchr(m->cpargs[0], '/') || !getvar(m, "PATH")[0])
 	{
 		if (!check_fperm(m, m->cpargs[0], NULL))

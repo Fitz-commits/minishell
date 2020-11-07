@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 15:33:12 by chris             #+#    #+#             */
-/*   Updated: 2020/11/07 15:34:53 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/07 19:12:47 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 # include <dirent.h>
 
 # define NOT_VALID_ID 9
-# define SUCCESS 0
 
 typedef struct	s_proc
 {
@@ -147,6 +146,7 @@ void			handler(int sign);
 void			var_handler(int sign);
 int				init_ptf(int (*pt_f[6])(t_mshl*));
 int				n_command(t_mshl *m);
+void			start_sig(void);
 /*
 ** $?
 */
