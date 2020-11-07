@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/26 16:49:37 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/07 19:21:14 by marvin           ###   ########.fr       */
+/*   Updated: 2020/11/07 19:44:46 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int		main_loop(t_mshl *m)
 {
 	if (!m->buff_cmd)
 	{
-		display_prompt();
+		//display_prompt();
 		if ((m->err = get_args(m)))
 			return (main_error(m));
 		if ((find_dq(m->reader) >= 0))
