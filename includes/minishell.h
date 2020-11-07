@@ -161,4 +161,5 @@ void			ft_init(t_mshl *m);
 int				first_parsing(t_mshl *m, char *str);
 int				is_delim(char c);
 int				reset_struct(t_mshl *m);
+int				exp_error(t_mshl *m, int i);
 #endif

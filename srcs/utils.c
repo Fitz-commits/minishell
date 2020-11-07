@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/26 17:09:50 by marvin            #+#    #+#             */
-/*   Updated: 2020/03/26 17:09:50 by marvin           ###   ########.fr       */
+/*   Updated: 2020/11/07 12:22:34 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		tablen(char **tab)
+int			tablen(char **tab)
 {
 	int i;
 
@@ -24,13 +24,13 @@ int		tablen(char **tab)
 	return (i);
 }
 
-char **cpy_args(char **args, int beg, int end)
+char		**cpy_args(char **args, int beg, int end)
 {
 	char	**ret;
 	int		i;
 
 	i = 0;
-	if (!(ret = malloc (sizeof(char *) * (end - beg + 1))))
+	if (!(ret = malloc(sizeof(char *) * (end - beg + 1))))
 		return (NULL);
 	while (beg < end && (args[beg]))
 	{
@@ -40,7 +40,7 @@ char **cpy_args(char **args, int beg, int end)
 	return (ret);
 }
 
-int clear_std(t_mshl *m)
+int			clear_std(t_mshl *m)
 {
 	int i;
 
@@ -63,15 +63,16 @@ int clear_std(t_mshl *m)
 	return (0);
 }
 
-void print_tab(char **tab)
+void		print_tab(char **tab)
 {
 	int i;
+
 	i = 0;
 	while (tab[i])
 		ft_putendl_fd(tab[i++], 1);
 }
 
-void	display_prompt(void)
+void		display_prompt(void)
 {
 	write(1, "minishell$> ", 12);
 }

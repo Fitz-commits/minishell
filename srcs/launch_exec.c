@@ -1,17 +1,23 @@
-//need to check for leaks and error returns
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   launch_exec.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/11/07 11:41:19 by chris             #+#    #+#             */
+/*   Updated: 2020/11/07 11:47:11 by chris            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
-/*
-**cette fonction rassemble l'argument entré dans le shell avec un repertoire
-**path pour pouvoir lancer un programme
-**
-*/
-char	*path_join(char *path, char *arg)
+
+char		*path_join(char *path, char *arg)
 {
-	int len;
-	int i;
-	int j;
-	char *ret;
+	int		len;
+	int		i;
+	int		j;
+	char	*ret;
 
 	len = ft_strlen(path) + ft_strlen(arg) + 2;
 	if (!(ret = malloc(sizeof(char) * len)))
@@ -28,26 +34,19 @@ char	*path_join(char *path, char *arg)
 		ret[i++] = arg[j++];
 	ret[i] = 0;
 	return (ret);
-		
 }
-/*
-**lance un sous process avec fork et exec la commande donnée en args[0]
-**
-** might want to add after errno = 0 mechanism for std -1
-*/
-int	ft_exec(t_mshl *m, char *path)
-{
-	// need to close unused end
-	errno = 0;
 
+int			ft_exec(t_mshl *m, char *path)
+{
+	errno = 0;
 	m->proc.child_pid[m->proc.curpro] = fork();
 	if (m->proc.child_pid[m->proc.curpro] == 0)
-	{	
-		if (m->cp >= 0 && m->tstdout == 
-		m->tpiped[m->cp][1] && m->tpiped[m->cp][0])
+	{
+		if (m->cp >= 0 && m->tstdout ==
+				m->tpiped[m->cp][1] && m->tpiped[m->cp][0])
 			close(m->tpiped[m->cp][0]);
-		if (m->cp >= 0 && m->tstdin && m->tstdin == 
-		m->tpiped[m->cp][0] && m->tpiped[m->cp][1])
+		if (m->cp >= 0 && m->tstdin && m->tstdin ==
+				m->tpiped[m->cp][0] && m->tpiped[m->cp][1])
 			close(m->tpiped[m->cp][1]);
 		if (m->tstdin != 0)
 			dup2(m->tstdin, STDIN_FILENO);
@@ -61,38 +60,31 @@ int	ft_exec(t_mshl *m, char *path)
 	return (0);
 }
 
-int change_margs(t_mshl *m, char **path)
+int			change_margs(t_mshl *m, char **path)
 {
 	int i;
 
 	i = -1;
-
 	while (m->args[++i])
 	{
-		if (!ft_strcmp(m->args[i],m->cpargs[0]))
-			{
-				free(m->args[i]);
-				m->args[i] = *path;
-				m->cpargs[0] = *path;
-				return (EXIT_SUCCESS);
-			}
+		if (!ft_strcmp(m->args[i], m->cpargs[0]))
+		{
+			free(m->args[i]);
+			m->args[i] = *path;
+			m->cpargs[0] = *path;
+			return (EXIT_SUCCESS);
+		}
 	}
 	free(*path);
 	return (EXIT_FAILURE);
 }
-/*
-**
-**regarde d'abord sur c'est un path relative check avec stat si le fichier existe
-**puis l'execute
-**puis cherche dans tout les path si un ficher avec le nom existe et l'execute
-*/
 
-int search_exec(t_mshl *m, char ***pathtab)
+int			search_exec(t_mshl *m, char ***pathtab)
 {
-	int i;
-	char *tempc;
-	char **path;
-	struct stat buffer;
+	int				i;
+	char			*tempc;
+	char			**path;
+	struct stat		buffer;
 
 	i = 0;
 	path = *pathtab;
@@ -102,25 +94,24 @@ int search_exec(t_mshl *m, char ***pathtab)
 			return (set_err(m, 1, 0, strerror(ENOMEM)));
 		stat(tempc, &buffer);
 		if (S_ISREG(buffer.st_mode))
-        {	
+		{
 			free_tab(path, 1, 1);
 			change_margs(m, &tempc);
 			if (!(check_fperm(m, m->cpargs[0], &buffer)))
 				return (ft_exec(m, m->cpargs[0]));
 			return (EXIT_FAILURE);
-        }
+		}
 		free(tempc);
 		i++;
 	}
 	free_tab(path, 1, 1);
-	errno = 0;
 	return (set_err(m, 127, 1, m->cpargs[0], "command not found"));
 }
 
-int	launch_exec(t_mshl *m, char *path)
+int			launch_exec(t_mshl *m, char *path)
 {
-	int i;
-	char **pathtab;
+	int			i;
+	char		**pathtab;
 
 	i = 0;
 	if (ft_strchr(m->cpargs[0], '/') || !getvar(m, "PATH")[0])
@@ -131,6 +122,6 @@ int	launch_exec(t_mshl *m, char *path)
 			return (EXIT_FAILURE);
 	}
 	if (!(pathtab = ft_split(path, ':')))
-		return (set_err(m, 1, 0, strerror(ENOMEM))); // Memory error
+		return (set_err(m, 1, 0, strerror(ENOMEM)));
 	return (search_exec(m, &pathtab));
 }

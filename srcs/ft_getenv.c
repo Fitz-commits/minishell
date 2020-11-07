@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_getenv.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/05 23:19:55 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/05 23:42:15 by marvin           ###   ########.fr       */
+/*   Updated: 2020/11/07 11:32:28 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h" 
-  
+#include "minishell.h"
+
 /*
-** Most of the C compilers support a third parameter to main which 
-** store all envorinment variables 
+** Most of the C compilers support a third parameter to main which
+** store all envorinment variables
 ** int main(int argc, char *argv[], char * envp[])
 ** makes a copy of env to work with
 */
@@ -59,8 +59,8 @@ int		add_var(t_mshl *m)
 
 char	**ft_getenv(char **env)
 {
-	int i;
-	char **ret;
+	int		i;
+	char	**ret;
 
 	i = 0;
 	while (env[i])
@@ -81,8 +81,8 @@ char	**ft_getenv(char **env)
 int		env_init(t_mshl *m, char **env)
 {
 	if (!(m->cenv = ft_getenv(env)))
-		return (set_err(m, 1, 0, strerror(ENOMEM))); //memory error
+		return (set_err(m, 1, 0, strerror(ENOMEM)));
 	if (init_shlvl(m))
 		return (set_err(m, 1, 0, strerror(ENOMEM)));
-	return (0);
+	return (EXIT_SUCCESS);
 }

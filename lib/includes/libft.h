@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/07 09:59:42 by judecuyp          #+#    #+#             */
-/*   Updated: 2020/03/26 23:23:07 by marvin           ###   ########.fr       */
+/*   Updated: 2020/11/07 12:38:06 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,11 @@ char			*ft_strjoin(char const *s1, char const *s2);
 char			*ft_substr(char const *s, unsigned int start, size_t len);
 char			**ft_split(char const *s, char c);
 int				ft_find(char *str, char c);
-char            *ft_strncpy(char *dest, const char *src, size_t n);
-char            *ft_strndup(const char *src, size_t n);
-char            *ft_strnjoin(char const *s1, char const *s2,
-                int start, size_t len);
-char            *ft_strcat(char *dest, const char *src);
+char			*ft_strncpy(char *dest, const char *src, size_t n);
+char			*ft_strndup(const char *src, size_t n);
+char			*ft_strnjoin(char const *s1, char const *s2,
+				int start, size_t len);
+char			*ft_strcat(char *dest, const char *src);
 
 /*
 ** CHAR

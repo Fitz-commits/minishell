@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ext.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/05 23:32:11 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/05 23:32:11 by marvin           ###   ########.fr       */
+/*   Updated: 2020/11/07 11:24:41 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	init_shlvl2(t_mshl *m, int i, int len)
 	{
 		if (print_warning(m, nb))
 			return (3);
-		nb = 1;	
+		nb = 1;
 	}
 	free_str(&m->cenv[i], 0);
 	if (!(nbstr = ft_itoa(nb)))
@@ -33,7 +33,6 @@ static int	init_shlvl2(t_mshl *m, int i, int len)
 	if (!(m->cenv[i] = ft_strjoin("SHLVL=", nbstr)))
 		return (free_str(&nbstr, 3));
 	return (free_str(&nbstr, 0));
-
 }
 
 int			init_shlvl(t_mshl *m)
@@ -61,13 +60,13 @@ int			init_shlvl(t_mshl *m)
 
 int			go_home(t_mshl *m)
 {
-    if (find_env(m->cenv, "HOME") != -1)
-    {
-        chdir(getvar(m, "HOME"));
-        if (errno)
-            return (set_err(m, 1, 2, "cd", getvar(m, "HOME"), strerror(errno)));
-        change_pwd(m);
-        return (EXIT_SUCCESS);
-    }
-    return (set_err(m, 1, 1, "cd", "HOME not set"));
+	if (find_env(m->cenv, "HOME") != -1)
+	{
+		chdir(getvar(m, "HOME"));
+		if (errno)
+			return (set_err(m, 1, 2, "cd", getvar(m, "HOME"), strerror(errno)));
+		change_pwd(m);
+		return (EXIT_SUCCESS);
+	}
+	return (set_err(m, 1, 1, "cd", "HOME not set"));
 }

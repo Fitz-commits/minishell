@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 21:56:53 by chris             #+#    #+#             */
-/*   Updated: 2020/11/06 22:39:57 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/07 12:31:50 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int		reset_struct(t_mshl *m)
 	clean_args(m);
 	return (EXIT_SUCCESS);
 }
-// Neeed to refactor this
+
 int		main_error(t_mshl *m)
 {
 	handle_error(m);
@@ -28,11 +28,19 @@ int		main_error(t_mshl *m)
 	return (EXIT_SUCCESS);
 }
 
+int		exp_error(t_mshl *m, int i)
+{
+	set_err(m, 1, 3, "export", m->cpargs[i], "not a valid identifier");
+	ft_putendl_fd(m->err_to_print, 2);
+	m->err = -10;
+	return (EXIT_SUCCESS);
+}
+
 int		handle_error(t_mshl *m)
 {
 	if (m->err != -10 && m->err != 4)
-        ft_putendl_fd(m->err_to_print, 2);
-    m->err = 0;
-    errno = 0;
+		ft_putendl_fd(m->err_to_print, 2);
+	m->err = 0;
+	errno = 0;
 	return (EXIT_SUCCESS);
 }

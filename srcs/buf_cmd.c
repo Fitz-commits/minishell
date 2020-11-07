@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/26 16:49:37 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/07 00:18:21 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/07 10:38:21 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char		*copy_until_next_dq(char *src)
 
 int			alloc_bufcmd(t_mshl *m)
 {
-	int 	dq;
+	int		dq;
 
 	dq = find_dq(m->reader);
 	if (!(m->reader[dq + 1]))
@@ -71,8 +71,8 @@ int			alloc_bufcmd(t_mshl *m)
 
 int			buf_cmd_to_args(t_mshl *m)
 {
-	int 	dq;
-	int 	i;
+	int		dq;
+	int		i;
 
 	i = 0;
 	while (m->buff_cmd[i] && (dq = find_dq(&m->buff_cmd[i])) == 0)

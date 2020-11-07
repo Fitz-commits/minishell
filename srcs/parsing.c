@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 22:33:39 by chris             #+#    #+#             */
-/*   Updated: 2020/11/06 22:35:51 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/07 12:02:21 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,15 @@ int			set_quotes(int flag, char c)
 	if (flag == 2 && c == '"')
 		return (0);
 	if (flag == 0 && c == '\\')
-		return(3);
+		return (3);
 	if (flag == 3)
-		return 0;
+		return (0);
 	return (flag);
 }
 
-int			count_arg(char *line)
+int			count_arg(char *line, int i, int j)
 {
 	int flag;
-	int i;
-	int j;
 	int k;
 
 	flag = 0;
@@ -63,31 +61,29 @@ int			count_arg(char *line)
 			i++;
 		}
 		while (line[k + i] && !(!(flag) && is_delim(line[k + i])))
-				flag = set_quotes(flag, line[k++ + i]);
+			flag = set_quotes(flag, line[k++ + i]);
 		if (k != 0)
-			j ++;
+			j++;
 		i += k;
 	}
 	return (j);
 }
 
 /*
-**	need to differiencate between a delimiter and a space because the intaraction are not the same
-**	we need to split on an unquoted unescaped space and not keep it 
-**	and we need to split on an unquoted unescaped delimiter and keep it in a separate tab entry
-**
-**	things to do now : the line seems to be splitted accordingly now i need to perform shell expansions and manage redirections
-**	Considering the different options :
+**	need to differiencate between a delimiter and a space because the
+** intaraction are not the same
+**	we need to split on an unquoted unescaped space and not keep it
+**	and we need to split on an unquoted unescaped delimiter and keep
+** it in a separate tab entry
 **	| use the output of a commant as stdin of another command
 **	> redirect the standard output of a command
 **	< redirect the standard input of a command
-**
-**
 */
 
-char *alloc_sep(char c, int *i)
+char		*alloc_sep(char c, int *i)
 {
 	char *ret;
+
 	if (!(ret = malloc(sizeof(char) * 2)))
 		return (NULL);
 	ret[0] = c;
@@ -96,12 +92,12 @@ char *alloc_sep(char c, int *i)
 	return (ret);
 }
 
-int		triming(char **line, char ***ret, int *flag, int *j)
+int			triming(char **line, char ***ret, int *flag, int *j)
 {
-	int k;
-	char *nline;
-	char **nret;
-	int i;
+	int		k;
+	char	*nline;
+	char	**nret;
+	int		i;
 
 	i = 0;
 	nret = *ret;
@@ -109,13 +105,13 @@ int		triming(char **line, char ***ret, int *flag, int *j)
 	while (nline[i])
 	{
 		k = 0;
-		while(is_space(nline[i]))
+		while (is_space(nline[i]))
 			i += 1;
 		if (is_delim(nline[i]))
 			if (!(nret[(*j)++] = alloc_sep(nline[i], &i)))
 				return (EXIT_FAILURE);
 		while (nline[k + i] && !(!(*flag) && is_delim(nline[k + i])))
-				*flag = set_quotes(*flag, nline[k++ + i]);
+			*flag = set_quotes(*flag, nline[k++ + i]);
 		if (k != 0)
 			if (!(nret[(*j)++] = ft_strndup(&nline[i], k)))
 				return (EXIT_FAILURE);
@@ -126,28 +122,28 @@ int		triming(char **line, char ***ret, int *flag, int *j)
 
 char		**parse_cli(char *line, t_mshl *m)
 {
-	int j;
-	int flag;
-	char **ret;
+	int		j;
+	int		flag;
+	char	**ret;
 
-	if (!(ret = malloc(sizeof(char*) * (count_arg(line) + 1))))
-    {
-        set_err(m, 1, 0, strerror(ENOMEM));
+	if (!(ret = malloc(sizeof(char*) * (count_arg(line, 0, 0) + 1))))
+	{
+		set_err(m, 1, 0, strerror(ENOMEM));
 		return (NULL);
-    }
+	}
 	flag = 0;
 	j = 0;
 	if ((triming(&line, &ret, &flag, &j) == EXIT_FAILURE))
 	{
-        set_err(m, 1, 0, strerror(ENOMEM));
+		set_err(m, 1, 0, strerror(ENOMEM));
 		free_tab(ret, 0, 1);
 		return (NULL);
 	}
 	ret[j] = 0;
 	if (flag != 0)
-		{
-			set_err(m, 2, 0, "unexpected end of file");
-			return (free_tabs(ret)); 
-		}
+	{
+		set_err(m, 2, 0, "unexpected end of file");
+		return (free_tabs(ret));
+	}
 	return (ret);
 }

@@ -3,45 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/26 16:49:37 by marvin            #+#    #+#             */
-/*   Updated: 2020/03/26 16:49:37 by marvin           ###   ########.fr       */
+/*   Updated: 2020/11/07 11:50:36 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-** ajout de differentes fonction qui permettent
-** le quote_removal et l'env expansion
-** 
-*/
-
-int		get_args(t_mshl *m) 
+int		get_args(t_mshl *m)
 {
-    int ret;
+	int ret;
 
-
-    if (!m->reader)
-	    ret = get_next_line(0, &m->reader);
-    else
-        ret = 1;
+	if (!m->reader)
+		ret = get_next_line(0, &m->reader);
+	else
+		ret = 1;
 	if (ret == -1)
-        return (-1);
-    if (ret == 0)
-        ft_exit(m, 0); 
+		return (-1);
+	if (ret == 0)
+		ft_exit(m, 0);
 	if ((m->err = first_parsing(m, m->reader)))
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
-
-/*
-** ici on n'envoie plus m->args on envoi une copie
-** cette copie n'a plus les elements < > | ; car on ne peut envoyer ce genre
-** d'argument
-**
-*/
 
 int		choice_command(t_mshl *m)
 {
@@ -81,7 +67,7 @@ int		main_loop(t_mshl *m)
 	}
 	if (m->reader)
 	{
-        if ((check_for_exp(m)))
+		if ((check_for_exp(m)))
 			return (main_error(m));
 		if (!(m->args = parse_cli(m->reader, m)))
 			return (main_error(m));
@@ -99,28 +85,26 @@ int		main(int ac, char **av, char **envp)
 	int		ret;
 
 	signal(SIGINT, handler);
-    signal(SIGQUIT, handler);
-	//m.prompt = "minishell$> ";
+	signal(SIGQUIT, handler);
 	if (prep_rv(&m))
-		return (1);
+		return (EXIT_FAILURE);
 	ft_init(&m);
 	if (env_init(&m, envp))
-		exit(3); //modifier retour
-	//m.cenv = ft_getenv(envp);
-    complete_env(&m);
-    if (ac == 3)
-    {
-        if (!ft_strcmp(av[1], "-c"))
-            m.reader = ft_strdup(av[2]);
-    }
-    else
-        m.reader = NULL;
+		exit(EXIT_FAILURE);
+	complete_env(&m);
+	if (ac == 3)
+	{
+		if (!ft_strcmp(av[1], "-c"))
+			m.reader = ft_strdup(av[2]);
+	}
+	else
+		m.reader = NULL;
 	while (1)
 	{
 		if ((ret = main_loop(&m) < 0))
 			return (ft_exit(&m, ret));
-        if (ac == 3 && !m.buff_cmd)
-            exit(m.rvalue);
+		if (ac == 3 && !m.buff_cmd)
+			exit(m.rvalue);
 	}
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/05/13 17:50:00 by marvin            #+#    #+#             */
-/*   Updated: 2020/05/13 17:50:00 by marvin           ###   ########.fr       */
+/*   Updated: 2020/11/07 11:34:03 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int		check_varname(char *var)
 	return (0);
 }
 
-int		del_varenv(t_mshl *m, int j)
+int				del_varenv(t_mshl *m, int j)
 {
 	char	**nenv;
 	int		len;
@@ -71,7 +71,7 @@ static void		unset_loop(t_mshl *m, int i)
 		}
 		j++;
 	}
-}	
+}
 
 int				ft_unset(t_mshl *m)
 {
@@ -86,7 +86,8 @@ int				ft_unset(t_mshl *m)
 				unset_loop(m, i);
 			else
 			{
-				set_err(m, 1, 3, "unset", m->cpargs[i], "not a valid identifier");
+				set_err(m, 1, 3, "unset", m->cpargs[i],
+				"not a valid identifier");
 				ft_putendl_fd(m->err_to_print, 2);
 				m->err = -10;
 			}

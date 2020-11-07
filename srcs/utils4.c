@@ -3,39 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   utils4.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/05 23:14:08 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/05 23:14:08 by marvin           ###   ########.fr       */
+/*   Updated: 2020/11/07 12:27:02 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	itaob(int a, char **buff)
+void		itaob(int a, char **buff)
 {
-	int j;
-	char *buf;
+	int		j;
+	char	*buf;
 
 	buf = *buff;
-	j = size(a); 
+	j = size(a);
 	buf[j] = 0;
 	j -= 1;
-	while(j >= 0)
+	while (j >= 0)
 	{
 		buf[j--] = (a % 10) + 48;
 		a = a / 10;
 	}
 }
 
-int		reat_crval(t_mshl *m, int i)
+int			reat_crval(t_mshl *m, int i)
 {
 	m->rvalue = i;
 	itaob(i, &m->crvalue);
 	return (0);
 }
 
-int		find_equ(char *str)
+int			find_equ(char *str)
 {
 	int		i;
 
@@ -47,7 +47,7 @@ int		find_equ(char *str)
 	return (i);
 }
 
-char	**tabdup(char **tab)
+char		**tabdup(char **tab)
 {
 	int		i;
 	int		len;
@@ -62,7 +62,7 @@ char	**tabdup(char **tab)
 	i = 0;
 	while (i < len)
 	{
-		if(!(newtab[i] = strdup(tab[i])))
+		if (!(newtab[i] = strdup(tab[i])))
 		{
 			free_tab(newtab, 0, 1);
 			return (NULL);
@@ -72,7 +72,7 @@ char	**tabdup(char **tab)
 	return (newtab);
 }
 
-void	sort_tab(char **tab)
+void		sort_tab(char **tab)
 {
 	int		i;
 	int		len;
@@ -92,9 +92,9 @@ void	sort_tab(char **tab)
 				tmp = tab[i];
 				tab[i] = tab[i + 1];
 				tab[i + 1] = tmp;
-				loop = 1; 
+				loop = 1;
 			}
 			i++;
-		} 
+		}
 	}
 }

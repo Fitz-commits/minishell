@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 22:37:41 by chris             #+#    #+#             */
-/*   Updated: 2020/11/06 23:20:02 by marvin           ###   ########.fr       */
+/*   Updated: 2020/11/07 11:15:30 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ int			find_env_arg(char **env, char *arg)
 /*
 ** format the key and the value to put in cenv
 */
-
-
 
 int			parse_varname(char *str)
 {
@@ -100,7 +98,7 @@ static int	export_append(t_mshl *m, int i)
 	else
 	{
 		free(m->cenv[temp]);
-		if(!(m->cenv[temp] = ft_strdup(m->cpargs[i])))
+		if (!(m->cenv[temp] = ft_strdup(m->cpargs[i])))
 			return (ENOMEM);
 	}
 	return (EXIT_SUCCESS);
@@ -113,7 +111,7 @@ int			ft_export(t_mshl *m)
 
 	i = 1;
 	if (m->nb_cpargs == 1)
-	{	
+	{
 		if (printexp(m))
 			return (ENOMEM);
 		return (EXIT_SUCCESS);
@@ -121,11 +119,7 @@ int			ft_export(t_mshl *m)
 	while (m->cpargs[i])
 	{
 		if ((ret = parse_varname(m->cpargs[i])) > 0)
-		{
-			set_err(m, 1, 3, "export", m->cpargs[i], "not a valid identifier");
-			ft_putendl_fd(m->err_to_print, 2);
-			m->err = -10;
-		}
+			exp_error(m, i);
 		else if (!ret)
 		{
 			if (export_append(m, i))

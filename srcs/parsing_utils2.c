@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 21:25:44 by chris             #+#    #+#             */
-/*   Updated: 2020/11/06 22:34:26 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/07 11:55:25 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 int		check_for_pdq(t_mshl *m, char *str)
 {
-    char ret[2];
-	int i;
+	char	ret[2];
+	int		i;
 
 	i = 0;
 	if (str[0] == '|' || str[0] == ';')
 	{
 		ret[0] = str[0];
-        ret[1] = 0;
-        return (set_err(m, 2, 1, "parsing error near", ret));
+		ret[1] = 0;
+		return (set_err(m, 2, 1, "parsing error near", ret));
 	}
 	while (str[i] && is_space(str[i]))
 	{
@@ -30,8 +30,8 @@ int		check_for_pdq(t_mshl *m, char *str)
 		if (str[i] && (str[i] == ';' || str[i] == '|'))
 		{
 			ret[0] = str[i];
-            ret[1] = 0;
-            return (set_err(m, 2, 1, "parsing error near", ret));
+			ret[1] = 0;
+			return (set_err(m, 2, 1, "parsing error near", ret));
 		}
 	}
 	return (EXIT_SUCCESS);
@@ -61,14 +61,15 @@ int		first_parsing(t_mshl *m, char *str)
 	return (0);
 }
 
-int			is_space(char c)
+int		is_space(char c)
 {
-	if (c == ' ' || c == '\t' || c == '\r' || c == '\n' || c == '\v' || c == '\f')
-		return 1;
-	return 0;
+	if (c == ' ' || c == '\t' || c == '\r' || c == '\n' || c == '\v' ||
+	c == '\f')
+		return (1);
+	return (0);
 }
 
-int			is_delim(char c)
+int		is_delim(char c)
 {
 	if (c == ';' || c == '>' || c == '<' || c == '|' || is_space(c))
 		return (1);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_other.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 23:12:11 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/06 23:12:11 by marvin           ###   ########.fr       */
+/*   Updated: 2020/11/07 11:08:18 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char		*pair_value_key(char *value, char *key)
 ** get the value associated with "$key" variable
 */
 
-char	*getvar(t_mshl *m, char *key)
+char		*getvar(t_mshl *m, char *key)
 {
 	int nline;
 
@@ -50,7 +50,7 @@ char	*getvar(t_mshl *m, char *key)
 		return ("$");
 	nline = find_env(m->cenv, key);
 	if (nline == -1)
-		return "";
+		return ("");
 	else
 		return (&m->cenv[nline][until_dquotes(m->cenv[nline]) + 1]);
 }

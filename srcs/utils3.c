@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/05 22:43:22 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/05 22:43:22 by marvin           ###   ########.fr       */
+/*   Updated: 2020/11/07 12:25:14 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	**ft_append(t_mshl *m, char *str)
+char		**ft_append(t_mshl *m, char *str)
 {
 	char	**new_tab;
 	int		i;
@@ -34,19 +34,19 @@ char	**ft_append(t_mshl *m, char *str)
 	{
 		new_tab[i] = str;
 		i++;
-	}	
+	}
 	new_tab[i] = NULL;
 	return (new_tab);
 }
 
-int		close_reset(int fd, int nb)
+int			close_reset(int fd, int nb)
 {
 	if (close(fd) == -1)
 		return (nb);
 	return (nb);
 }
 
-int		close_rp(t_mshl *m)
+int			close_rp(t_mshl *m)
 {
 	if (m->cp >= 0 && m->tstdin && m->tstdin == m->tpiped[m->cp][0])
 	{
@@ -64,7 +64,7 @@ int		close_rp(t_mshl *m)
 	return (EXIT_SUCCESS);
 }
 
-int n_command(t_mshl *m)
+int			n_command(t_mshl *m)
 {
 	if (!ft_strcmp(m->cpargs[0], "echo"))
 		return (0);
@@ -76,21 +76,21 @@ int n_command(t_mshl *m)
 		return (3);
 	else if (!ft_strcmp(m->cpargs[0], "unset"))
 		return (2);
-    else if (!ft_strcmp(m->cpargs[0], "pwd"))
+	else if (!ft_strcmp(m->cpargs[0], "pwd"))
 		return (5);
 	else
 		return (-1);
 }
 
-int size(int a)
+int			size(int a)
 {
-    int i;
-    
-    i = 1;
-    while (a/10)
-    {
-        a = a/10;
-        i++;
-    }
-    return (i);
+	int i;
+
+	i = 1;
+	while (a / 10)
+	{
+		a = a / 10;
+		i++;
+	}
+	return (i);
 }

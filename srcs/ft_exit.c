@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/26 16:49:14 by marvin            #+#    #+#             */
-/*   Updated: 2020/03/26 16:49:14 by marvin           ###   ########.fr       */
+/*   Updated: 2020/11/07 11:06:13 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int check_nbr(char *str, int sign)
+int			check_nbr(char *str, int sign)
 {
 	int			i;
 	int			len;
@@ -43,7 +43,7 @@ int			parse_exit_code(char *str)
 	i = 0;
 	sign = 1;
 	while (str[i] && (str[i] == '\t' || str[i] == '\n' || str[i] == '\r'
-		|| str[i] == '\v' || str[i] == '\f' || str[i] == ' '))
+				|| str[i] == '\v' || str[i] == '\f' || str[i] == ' '))
 		i++;
 	if (str[i] == '+' || str[i] == '-')
 	{
@@ -70,7 +70,8 @@ int			ft_exit(t_mshl *m, int error)
 	{
 		if (parse_exit_code(m->cpargs[1]))
 		{
-			set_err(m, 255, 2, "exit", m->cpargs[1], "numeric argument required");
+			set_err(m, 255, 2, "exit", m->cpargs[1],
+					"numeric argument required");
 			ft_putendl_fd(m->err_to_print, 2);
 		}
 		else if (m->nb_cpargs > 2)
@@ -81,9 +82,9 @@ int			ft_exit(t_mshl *m, int error)
 		else
 			m->rvalue = ft_atoi(m->cpargs[1]);
 	}
-    free_all(m);
+	free_all(m);
 	if (error)
 		exit(error);
-    exit(m->rvalue);
+	exit(m->rvalue);
 	return (m->rvalue);
 }

@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*   ft_echo2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/03/26 17:17:27 by marvin            #+#    #+#             */
-/*   Updated: 2020/03/26 17:17:27 by marvin           ###   ########.fr       */
+/*   Created: 2020/11/07 10:56:26 by chris             #+#    #+#             */
+/*   Updated: 2020/11/07 10:56:27 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		is_n(char *str)
+int			is_n(char *str)
 {
 	int i;
 
@@ -27,14 +27,14 @@ int		is_n(char *str)
 	return (1);
 }
 
-int		ft_echo(t_mshl *m)
+int			ft_echo(t_mshl *m)
 {
 	int		i;
 	short	flag;
 
 	i = 1;
 	flag = 0;
-	if (m->nb_cpargs > 1 && m->cpargs[1]) 
+	if (m->nb_cpargs > 1 && m->cpargs[1])
 	{
 		while (m->cpargs[i] && !is_n(m->cpargs[i]))
 			i++;
@@ -50,6 +50,6 @@ int		ft_echo(t_mshl *m)
 	}
 	if (!flag)
 		ft_putchar_fd('\n', m->tstdout);
-    close_rp(m);
+	close_rp(m);
 	return (0);
 }
