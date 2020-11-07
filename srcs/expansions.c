@@ -6,18 +6,16 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 21:07:58 by chris             #+#    #+#             */
-/*   Updated: 2020/11/07 10:50:54 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/07 16:43:09 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char		*catch_key(char *str, int *to_erase)
+char		*catch_key(char *str, int *to_erase, int l)
 {
-	int			l;
 	char		*ret;
 
-	l = 0;
 	*to_erase = 1;
 	while (str[*to_erase])
 	{
@@ -38,6 +36,7 @@ char		*catch_key(char *str, int *to_erase)
 		l = 1;
 	if (!(ret = ft_strndup(&str[l + 1], *to_erase - l - 1)))
 		return (NULL);
+	*to_erase += l;
 	return (ret);
 }
 
@@ -75,7 +74,7 @@ int			env_expension(t_mshl *m, int i, int flag)
 		m->pos = 0;
 		if ((m->reader[i] == '$' && (flag == 0 || flag == 2)))
 		{
-			if (!(buffer = catch_key(&m->reader[i], &to_erase)))
+			if (!(buffer = catch_key(&m->reader[i], &to_erase, 0)))
 				return (set_err(m, 1, 0, strerror(ENOMEM)));
 			m->pos = i;
 			if (assemble_string(m, buffer, to_erase))

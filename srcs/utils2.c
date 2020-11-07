@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/26 16:49:37 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/07 14:38:24 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/07 20:36:49 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void		ft_init(t_mshl *m)
 	ft_bzero(m->err_to_print, PATH_MAX + 1);
 	m->args = NULL;
 	m->cpargs = NULL;
+	m->reader = NULL;
 	m->nb_cpargs = 0;
 	m->nb_args = 0;
 	m->tstdin = 0;

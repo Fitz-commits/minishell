@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/26 16:49:37 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/07 19:44:46 by marvin           ###   ########.fr       */
+/*   Updated: 2020/11/07 22:41:06 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int		main_loop(t_mshl *m)
 		if ((buf_cmd_to_args(m)))
 			return (main_error(m));
 	}
-	return(main_loop_other(m));
+	return (main_loop_other(m));
 }
 
 int		main(int ac, char **av, char **envp)
@@ -113,6 +113,7 @@ int		main(int ac, char **av, char **envp)
 		m.reader = NULL;
 	while (1)
 	{
+		start_sig();
 		if ((ret = main_loop(&m) < 0))
 			return (ft_exit(&m, ret));
 		if (ac == 3 && !m.buff_cmd)

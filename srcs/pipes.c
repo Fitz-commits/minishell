@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 22:33:26 by chris             #+#    #+#             */
-/*   Updated: 2020/11/07 12:04:47 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/07 23:40:08 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,13 +80,16 @@ int			waiter(t_mshl *m)
 
 	if (!m->proc.curpro)
 		return (0);
-	waitpid(m->proc.child_pid[m->proc.curpro], &o, 0);
+	waitpid(m->proc.child_pid[m->proc.curpro - 1], &o, 0);
 	if (m->rvalue != WEXITSTATUS(o))
 	{
 		if (reat_crval(m, WEXITSTATUS(o)))
 			return (1);
-		m->err = 4;
-		ft_bzero(m->err_to_print, PATH_MAX + 1);
+		if (!m->err)
+		{
+			m->err = 4;
+			ft_bzero(m->err_to_print, PATH_MAX + 1);
+		}
 	}
 	m->proc.child_pid[m->proc.curpro] = 0;
 	while (--m->proc.curpro != -1)

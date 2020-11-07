@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 12:28:49 by chris             #+#    #+#             */
-/*   Updated: 2020/11/07 12:31:03 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/07 23:21:44 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,9 @@ int			handle_cpargs(t_mshl *m, int (*pt_fr[6])(t_mshl *m))
 			reat_crval(m, 0);
 		else
 			reat_crval(m, 0);
-		if ((m->redir = check_red(m, 0)) == -1)
+		if (((m->redir = check_red(m, 0))) == -1)
 			break ;
-		if (m->redir >= 0 && m->redir <= 6 && (!errno ||
-					m->redir == 5 || m->redir == 4))
+		if (m->redir >= 0 && m->redir <= 6)
 			if (pt_fr[m->redir](m))
 				break ;
 		if ((m->redir == 5 || m->redir == 0) && !m->err && !errno)
