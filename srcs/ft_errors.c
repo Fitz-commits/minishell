@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 21:56:53 by chris             #+#    #+#             */
-/*   Updated: 2020/11/07 12:31:50 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/07 14:27:08 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int		reset_struct(t_mshl *m)
 {
+	m->nb_cpargs = 0;
 	set_zpb(m);
 	clear_std(m);
 	close_pipes(m);

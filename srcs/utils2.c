@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/26 16:49:37 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/07 12:23:47 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/07 14:38:24 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,7 @@ int			clean_args(t_mshl *m)
 void		set_zpb(t_mshl *m)
 {
 	m->progr = 0;
-	m->begin = 0;
-	m->error = 0;
 	m->err = 0;
-	m->ierr = -1;
-	m->errarg = -1;
 }
 
 int			prep_rv(t_mshl *m)
@@ -72,6 +68,7 @@ void		ft_init(t_mshl *m)
 	ft_bzero(m->err_to_print, PATH_MAX + 1);
 	m->args = NULL;
 	m->cpargs = NULL;
+	m->nb_cpargs = 0;
 	m->nb_args = 0;
 	m->tstdin = 0;
 	m->tstdout = 1;
@@ -80,10 +77,7 @@ void		ft_init(t_mshl *m)
 	m->rvalue = 0;
 	m->buff_cmd = NULL;
 	m->progr = 0;
-	m->begin = 0;
-	m->error = 0;
 	m->err = 0;
-	m->errarg = -1;
 	zeroing_pipes(m);
 	zeroing_process(m);
 }
