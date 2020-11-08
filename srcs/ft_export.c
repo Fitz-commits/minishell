@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 22:37:41 by chris             #+#    #+#             */
-/*   Updated: 2020/11/07 11:15:30 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/08 12:57:11 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static int	printexp(t_mshl *m)
 
 	i = -1;
 	if (!(tab = tabdup(m->cenv)))
-		return (set_err(m, 1, 0, strerror(ENOMEM)));
+		return (EXIT_FAILURE);
 	sort_tab(tab);
 	while (tab[++i])
 	{
@@ -97,9 +97,10 @@ static int	export_append(t_mshl *m, int i)
 	}
 	else
 	{
-		free(m->cenv[temp]);
-		if (!(m->cenv[temp] = ft_strdup(m->cpargs[i])))
+		if (!(tempc = ft_strdup(m->cpargs[i])))
 			return (ENOMEM);
+		free(m->cenv[temp]);
+		m->cenv[temp] = tempc;
 	}
 	return (EXIT_SUCCESS);
 }
@@ -113,7 +114,7 @@ int			ft_export(t_mshl *m)
 	if (m->nb_cpargs == 1)
 	{
 		if (printexp(m))
-			return (ENOMEM);
+			return (set_err(m, 1, 0, strerror(ENOMEM)));
 		return (EXIT_SUCCESS);
 	}
 	while (m->cpargs[i])
@@ -123,7 +124,7 @@ int			ft_export(t_mshl *m)
 		else if (!ret)
 		{
 			if (export_append(m, i))
-				return (ENOMEM);
+				return (set_err(m, 1, 0, strerror(ENOMEM)));
 		}
 		i++;
 	}

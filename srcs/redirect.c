@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 12:28:49 by chris             #+#    #+#             */
-/*   Updated: 2020/11/07 23:21:44 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/08 14:11:39 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,9 +103,10 @@ int			set_stdior(t_mshl *m)
 
 	init_ptfr(pt_fr);
 	if (!(m->cpargs = malloc(sizeof(char*) * (m->nb_args + 1))))
-		m->nb_args = 0;
+		m->nb_args = set_err(m, 0, 0, strerror(ENOMEM));
 	reset_cpargs(m);
-	handle_cpargs(m, pt_fr);
+	if (m->nb_args)
+		handle_cpargs(m, pt_fr);
 	if (errno || m->err)
 		handle_error(m);
 	else

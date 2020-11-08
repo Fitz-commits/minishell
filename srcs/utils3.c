@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/05 22:43:22 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/07 12:25:14 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/08 12:59:21 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char		**ft_append(t_mshl *m, char *str)
 	if (str)
 		i += 1;
 	if (!(new_tab = malloc((i + 1) * sizeof(char *))))
-		return (NULL);
+		return (m->cenv);
 	i = 0;
 	if (m->cenv)
 		while (m->cenv[i])

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   launch_exec.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/07 11:41:19 by chris             #+#    #+#             */
-/*   Updated: 2020/11/07 19:13:16 by marvin           ###   ########.fr       */
+/*   Updated: 2020/11/08 13:45:19 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ char		*path_join(char *path, char *arg)
 int			ft_exec(t_mshl *m, char *path)
 {
 	errno = 0;
-	m->proc.child_pid[m->proc.curpro] = fork();
+	if ((m->proc.child_pid[m->proc.curpro] = fork()) == -1)
+		return (set_err(m, 1, 1, "fork failed"));
 	if (m->proc.child_pid[m->proc.curpro] == 0)
 	{
 		if (m->cp >= 0 && m->tstdout ==
@@ -91,7 +92,7 @@ int			search_exec(t_mshl *m, char ***pathtab)
 	while (path[i])
 	{
 		if (!(tempc = path_join(path[i], m->cpargs[0])))
-			return (set_err(m, 1, 0, strerror(ENOMEM)));
+			return (free_tab(path, set_err(m, 1, 0, strerror(ENOMEM)), 1));
 		stat(tempc, &buffer);
 		if (S_ISREG(buffer.st_mode))
 		{

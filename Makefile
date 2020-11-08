@@ -41,10 +41,13 @@ $(NAME):	$(OBJS)
 clean:
 	@echo "Removing .o"
 	@$(RM) $(OBJS)
+	@echo "Removing lib .o"
+	@make -C $(LIB_REPO_PATH) clean
 
 fclean:	clean
 		@echo "Removing Minishell"
 		@$(RM) $(NAME)
+		@make -C $(LIB_REPO_PATH) fclean
 
 re: fclean all
 

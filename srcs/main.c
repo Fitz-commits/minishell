@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/26 16:49:37 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/07 22:41:06 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/08 14:27:24 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int		main_loop(t_mshl *m)
 {
 	if (!m->buff_cmd)
 	{
-		//display_prompt();
+		display_prompt();
 		if ((m->err = get_args(m)))
 			return (main_error(m));
 		if ((find_dq(m->reader) >= 0))
@@ -97,6 +97,8 @@ int		main(int ac, char **av, char **envp)
 	t_mshl	m;
 	int		ret;
 
+	(void)ac;
+	(void)av;
 	start_sig();
 	if (prep_rv(&m))
 		return (EXIT_FAILURE);
@@ -104,20 +106,11 @@ int		main(int ac, char **av, char **envp)
 	if (env_init(&m, envp))
 		exit(EXIT_FAILURE);
 	complete_env(&m);
-	if (ac == 3)
-	{
-		if (!ft_strcmp(av[1], "-c"))
-			m.reader = ft_strdup(av[2]);
-	}
-	else
-		m.reader = NULL;
 	while (1)
 	{
 		start_sig();
 		if ((ret = main_loop(&m) < 0))
 			return (ft_exit(&m, ret));
-		if (ac == 3 && !m.buff_cmd)
-			exit(m.rvalue);
 	}
 	return (0);
 }

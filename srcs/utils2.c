@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/26 16:49:37 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/07 20:36:49 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/08 14:07:11 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ int			clean_args(t_mshl *m)
 	{
 		while (m->args[i])
 			free(m->args[i++]);
+		free(m->args);
 	}
-	free(m->args);
 	m->args = NULL;
 	if (!m->buff_cmd)
 		if (m->reader)
@@ -58,7 +58,11 @@ void		set_zpb(t_mshl *m)
 int			prep_rv(t_mshl *m)
 {
 	if (!(m->crvalue = malloc(sizeof(char) * 10)))
+	{
+		set_err(m, 1, 1, "critical error", strerror(ENOMEM));
+		ft_putendl_fd(m->err_to_print, 2);
 		return (EXIT_FAILURE);
+	}
 	reat_crval(m, 0);
 	return (0);
 }

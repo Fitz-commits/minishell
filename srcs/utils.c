@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/26 17:09:50 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/07 12:22:34 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/08 14:05:17 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,6 @@ int			tablen(char **tab)
 	while (tab[i])
 		i++;
 	return (i);
-}
-
-char		**cpy_args(char **args, int beg, int end)
-{
-	char	**ret;
-	int		i;
-
-	i = 0;
-	if (!(ret = malloc(sizeof(char *) * (end - beg + 1))))
-		return (NULL);
-	while (beg < end && (args[beg]))
-	{
-		ret[i++] = args[beg++];
-	}
-	ret[i] = NULL;
-	return (ret);
 }
 
 int			clear_std(t_mshl *m)

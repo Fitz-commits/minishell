@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 22:32:39 by chris             #+#    #+#             */
-/*   Updated: 2020/11/07 12:07:37 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/08 14:04:06 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int			qr_line(t_mshl *m)
 	if (check_quotes(m->args[m->progr]))
 	{
 		if (!(temp = remove_quotes(m->args[m->progr], 0)))
-			return (EXIT_FAILURE);
+			return (set_err(m, 1, 0, strerror(ENOMEM)));
 		else
 			m->args[m->progr] = temp;
 	}
@@ -34,6 +34,8 @@ int			err_redir(t_mshl *m)
 
 int			reset_cpargs(t_mshl *m)
 {
+	if (!m->nb_args)
+		return (1);
 	if (m->cpargs)
 		ft_bzero(m->cpargs, (sizeof(char*) * (m->nb_args + 1)));
 	m->curs = 0;
@@ -47,8 +49,6 @@ int			is_redir(char *line)
 	else if (!ft_strcmp(line, ">"))
 		return (2);
 	else if (!ft_strcmp(line, "|"))
-		return (5);
-	else if (!ft_strcmp(line, ";"))
 		return (5);
 	else
 		return (0);

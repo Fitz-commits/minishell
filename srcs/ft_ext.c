@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/05 23:32:11 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/07 11:24:41 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/08 13:25:46 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static int	init_shlvl2(t_mshl *m, int i, int len)
 {
+	char	*tempc;
 	int		nb;
 	char	*nbstr;
 
@@ -27,11 +28,12 @@ static int	init_shlvl2(t_mshl *m, int i, int len)
 			return (3);
 		nb = 1;
 	}
-	free_str(&m->cenv[i], 0);
 	if (!(nbstr = ft_itoa(nb)))
+		return (EXIT_FAILURE);
+	if (!(tempc = ft_strjoin("SHLVL=", nbstr)))
 		return (free_str(&nbstr, 3));
-	if (!(m->cenv[i] = ft_strjoin("SHLVL=", nbstr)))
-		return (free_str(&nbstr, 3));
+	free_str(&m->cenv[i], 0);
+	m->cenv[i] = tempc;
 	return (free_str(&nbstr, 0));
 }
 
@@ -54,7 +56,7 @@ int			init_shlvl(t_mshl *m)
 		i++;
 	}
 	if (add_var(m))
-		return (set_err(m, 1, 0, strerror(ENOMEM)));
+		return (EXIT_FAILURE);
 	return (0);
 }
 

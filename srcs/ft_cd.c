@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/05 23:34:32 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/07 10:51:28 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/08 13:21:14 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,10 @@ int			set_oldpwd(t_mshl *m, int i, int j)
 	ft_strcpy(buffer, getvar(m, "PWD"));
 	if (i != -1 && j != -1)
 	{
-		free(m->cenv[i]);
-		if (!(m->cenv[i] = pair_value_key(buffer, "OLDPWD")))
+		if (!(tempc = pair_value_key(buffer, "OLDPWD")))
 			return (set_err(m, 1, 0, strerror(ENOMEM)));
+		free(m->cenv[i]);
+		m->cenv[i] = tempc;
 	}
 	else if (i == -1 && j != -1)
 	{
@@ -41,9 +42,10 @@ int			set_pwd(t_mshl *m, char buffer[1024], int j)
 
 	if (j != -1)
 	{
-		free(m->cenv[j]);
-		if (!(m->cenv[j] = pair_value_key(buffer, "PWD")))
+		if (!(tempc = pair_value_key(buffer, "PWD")))
 			return (set_err(m, 1, 0, strerror(ENOMEM)));
+		free(m->cenv[j]);
+		m->cenv[j] = tempc;
 	}
 	else
 	{

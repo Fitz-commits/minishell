@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 21:07:58 by chris             #+#    #+#             */
-/*   Updated: 2020/11/07 16:43:09 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/08 13:01:48 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int			env_expension(t_mshl *m, int i, int flag)
 		if ((m->reader[i] == '$' && (flag == 0 || flag == 2)))
 		{
 			if (!(buffer = catch_key(&m->reader[i], &to_erase, 0)))
-				return (set_err(m, 1, 0, strerror(ENOMEM)));
+				return (EXIT_FAILURE);
 			m->pos = i;
 			if (assemble_string(m, buffer, to_erase))
 				return (free_str(&buffer, EXIT_FAILURE));

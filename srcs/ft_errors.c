@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 21:56:53 by chris             #+#    #+#             */
-/*   Updated: 2020/11/07 23:10:22 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/08 13:11:57 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int		reset_struct(t_mshl *m)
 int		main_error(t_mshl *m)
 {
 	handle_error(m);
+	free_str(&m->reader, 0);
+	free_str(&m->buff_cmd, 0);
 	reset_struct(m);
 	return (EXIT_SUCCESS);
 }
