@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/05 23:14:08 by marvin            #+#    #+#             */
-/*   Updated: 2020/11/07 12:27:02 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/08 14:40:17 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char		**tabdup(char **tab)
 	i = 0;
 	while (i < len)
 	{
-		if (!(newtab[i] = strdup(tab[i])))
+		if (!(newtab[i] = ft_strdup(tab[i])))
 		{
 			free_tab(newtab, 0, 1);
 			return (NULL);

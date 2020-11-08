@@ -6,7 +6,7 @@
 /*   By: chris <chris@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 22:37:41 by chris             #+#    #+#             */
-/*   Updated: 2020/11/08 12:57:11 by chris            ###   ########.fr       */
+/*   Updated: 2020/11/08 14:41:38 by chris            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static int	printexp(t_mshl *m)
 		equ++;
 		write(m->tstdout, tab[i], equ);
 		ft_putchar_fd('\"', m->tstdout);
-		if (!strcmp(&tab[i][equ], "\""))
+		if (!ft_strcmp(&tab[i][equ], "\""))
 			ft_putstr_fd("\\", m->tstdout);
 		ft_putstr_fd(&tab[i][equ], m->tstdout);
 		ft_putchar_fd('\"', m->tstdout);
